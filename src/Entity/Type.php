@@ -66,22 +66,22 @@ class Type
         return $this->subtype;
     }
 
-    public function addSubtypes(SubType $subtype): self
+    public function addSubtype(SubType $subtypeItem): self
     {
-        if (!$this->subtypes->contains($subtype)) {
-            $this->subtypes[] = $subtype;
-            $subtype->setType($this);
+        if (!$this->subtype->contains($subtypeItem)) {
+            $this->subtype[] = $subtypeItem;
+            $subtypeItem->setType($this);
         }
 
         return $this;
     }
 
-    public function removeSubtypes(SubType $subtype): self
+    public function removeSubtype(SubType $subtypeItem): self
     {
-        if ($this->subtypes->removeElement($subtype)) {
+        if ($this->subtype->removeElement($subtypeItem)) {
             // set the owning side to null (unless already changed)
-            if ($subtype->getSubtype() === $this) {
-                $subtype->setSubtype(null);
+            if ($subtypeItem->getType() === $this) {
+                $subtypeItem->setType(null);
             }
         }
 

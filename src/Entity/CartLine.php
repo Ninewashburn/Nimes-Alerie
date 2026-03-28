@@ -15,8 +15,8 @@ class CartLine
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 10)]
-    private $quantity;
+    #[ORM\Column(type: 'integer')]
+    private ?int $quantity = null;
 
     #[ORM\OneToMany(mappedBy: 'cartLine', targetEntity: Product::class)]
     private $products;
@@ -34,12 +34,12 @@ class CartLine
         return $this->id;
     }
 
-    public function getQuantity(): ?string
+    public function getQuantity(): ?int
     {
         return $this->quantity;
     }
 
-    public function setQuantity(string $quantity): self
+    public function setQuantity(int $quantity): self
     {
         $this->quantity = $quantity;
 

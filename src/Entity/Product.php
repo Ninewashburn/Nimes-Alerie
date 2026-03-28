@@ -23,11 +23,11 @@ class Product
     #[ORM\Column(type: 'string', length: 255)]
     private $description;
 
-    #[ORM\Column(type: 'string', length: 10)]
-    private $price;
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
+    private ?string $price = null;
 
-    #[ORM\Column(type: 'string', length: 10)]
-    private $quantity;
+    #[ORM\Column(type: 'integer')]
+    private ?int $quantity = null;
 
     #[ORM\ManyToOne(targetEntity: Brand::class, inversedBy: 'products')]
     private $brand;
@@ -94,12 +94,12 @@ class Product
         return $this;
     }
 
-    public function getQuantity(): ?string
+    public function getQuantity(): ?int
     {
         return $this->quantity;
     }
 
-    public function setQuantity(string $quantity): self
+    public function setQuantity(int $quantity): self
     {
         $this->quantity = $quantity;
 
@@ -172,12 +172,12 @@ class Product
         return $this;
     }
 
-    public function getCartLine(): ?Cartline
+    public function getCartLine(): ?CartLine
     {
         return $this->cartLine;
     }
 
-    public function setCartLine(?Cartline $cartLine): self
+    public function setCartLine(?CartLine $cartLine): self
     {
         $this->cartLine = $cartLine;
 
