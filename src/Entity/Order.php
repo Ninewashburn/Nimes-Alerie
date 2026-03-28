@@ -36,12 +36,12 @@ class Order
         return $this->id;
     }
 
-    public function getCreatedAt(): ?string
+    public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(string $createdAt): self
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
