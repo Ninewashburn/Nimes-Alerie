@@ -7,12 +7,12 @@ use App\Form\UserFormType;
 use App\Repository\UserRepository;
 use App\Security\AppCustomAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 #[Route('/user')]
@@ -28,7 +28,7 @@ class UserController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les autorisations nécessaires', statusCode: 404)]
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/', name: 'user_index')]
     public function index(UserRepository $userRepository): Response
     {
@@ -38,7 +38,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[IsGranted('ROLE_ADMIN', message: 'Vous n\'avez pas les autorisations nécessaires', statusCode: 404)]
+    #[IsGranted('ROLE_ADMIN')]
     #[Route('/new', name: 'user_new')]
     public function new(Request $request): Response
     {
