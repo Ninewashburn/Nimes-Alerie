@@ -41,12 +41,9 @@ security:
         main:
             lazy: true
             provider: app_user_provider
-            custom_authenticator: App\Security\AppCustomAuthenticator
-            login_throttling:
-                max_attempts: 3
-                interval: '15 minutes'
-            logout:
-                path: app_logout
 
     access_control:
-        - { path: '^/user', roles: [IS_AUTHENTICATED_FULLY, ROLE_ADMIN] }
+        - { path: '^/api/login', roles: PUBLIC_ACCESS }
+        - { path: '^/api/register', roles: PUBLIC_ACCESS }
+        - { path: '^/api/docs', roles: PUBLIC_ACCESS }
+        - { path: '^/api', roles: IS_AUTHENTICATED_FULLY }
