@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\CartLineRepository;
@@ -13,16 +15,16 @@ class CartLine
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 10)]
-    private $quantity;
+    #[ORM\Column(type: 'integer')]
+    private ?int $quantity = null;
 
     #[ORM\OneToMany(mappedBy: 'cartLine', targetEntity: Product::class)]
-    private $products;
+    private Collection $products;
 
     #[ORM\OneToOne(mappedBy: 'cartLine', targetEntity: Cart::class, cascade: ['persist', 'remove'])]
-    private $cart;
+    private ?Cart $cart = null;
 
     public function __construct()
     {
@@ -34,12 +36,12 @@ class CartLine
         return $this->id;
     }
 
-    public function getQuantity(): ?string
+    public function getQuantity(): ?int
     {
         return $this->quantity;
     }
 
-    public function setQuantity(string $quantity): self
+    public function setQuantity(int $quantity): self
     {
         $this->quantity = $quantity;
 

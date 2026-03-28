@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -16,20 +18,20 @@ class Category
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank, Assert\Length(max: 100)]
-    private $title;
+    private ?string $title = null;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $description;
+    private ?string $description = null;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $parent;
+    private ?string $parent = null;
 
     #[ORM\ManyToMany(targetEntity: Product::class, mappedBy: 'category')]
-    private $products;
+    private Collection $products;
 
     public function __construct()
     {

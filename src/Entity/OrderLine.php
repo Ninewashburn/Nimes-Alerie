@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\OrderLineRepository;
@@ -11,13 +13,13 @@ class OrderLine
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'integer')]
-    private $quantity;
+    private ?int $quantity = null;
 
     #[ORM\OneToOne(mappedBy: 'orderLine', targetEntity: Delivery::class, cascade: ['persist', 'remove'])]
-    private $delivery;
+    private ?Delivery $delivery = null;
 
     public function getId(): ?int
     {

@@ -1,32 +1,39 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\SubTypeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ApiResource]
+#[ApiFilter(SearchFilter::class, properties: ['type' => 'exact'])]
 #[ORM\Entity(repositoryClass: SubTypeRepository::class)]
 class SubType
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $name;
+    private ?string $name = null;
 
     #[ORM\Column(type: 'text')]
-    private $description;
+    private ?string $description = null;
 
     #[ORM\ManyToOne(targetEntity: Type::class, inversedBy: 'subtypes')]
     #[ORM\JoinColumn(nullable: false)]
-    private $type;
+    private ?Type $type = null;
 
     #[ORM\OneToMany(mappedBy: 'subtype', targetEntity: Thread::class)]
-    private $threads;
+    private Collection $threads;
 
     public function __construct()
     {

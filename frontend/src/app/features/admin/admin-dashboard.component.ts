@@ -1,0 +1,35 @@
+import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
+
+@Component({
+  selector: 'app-admin-dashboard',
+  standalone: true,
+  imports: [RouterLink],
+  template: `
+    <div class="max-w-6xl mx-auto">
+      <h1 class="text-3xl font-bold mb-8">Administration</h1>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <a routerLink="/admin/products" class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition block">
+          <div class="text-3xl mb-3">📦</div>
+          <h2 class="text-xl font-semibold mb-1">Produits</h2>
+          <p class="text-gray-600 text-sm">Gérer le catalogue produits</p>
+        </a>
+
+        <a routerLink="/admin/users" class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition block">
+          <div class="text-3xl mb-3">👥</div>
+          <h2 class="text-xl font-semibold mb-1">Utilisateurs</h2>
+          <p class="text-gray-600 text-sm">Gérer les comptes utilisateurs</p>
+        </a>
+
+        <div class="bg-white rounded-xl shadow-md p-6">
+          <div class="text-3xl mb-3">📊</div>
+          <h2 class="text-xl font-semibold mb-1">Statistiques</h2>
+          <p class="text-gray-600 text-sm">Tableaux de bord et rapports</p>
+          <p class="text-xs text-gray-400 mt-2">Bientôt disponible</p>
+        </div>
+      </div>
+    </div>
+  `,
+})
+export class AdminDashboardComponent {}
