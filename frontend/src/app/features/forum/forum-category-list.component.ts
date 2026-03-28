@@ -1,0 +1,35 @@
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { ForumService } from '@core/services/forum.service';
+import { ForumType } from '@core/models/product.model';
+
+@Component({
+  selector: 'app-forum-category-list',
+  standalone: true,
+  imports: [RouterLink],
+  template: `
+    <div class="max-w-4xl mx-auto">
+      <h1 class="text-3xl font-bold mb-8">Forum</h1>
+
+      @for (type of types(); track type.id) {
+        <div class="bg-white rounded-xl shadow-md p-6 mb-4 hover:shadow-lg transition">
+          <h2 class="text-xl font-semibold uppercase mb-2">{{ type.name }}</h2>
+          <p class="text-gray-600 mb-4">{{ type.description }}</p>
+          <a [routerLink]="['/forum', type.id]" class="text-orange-500 hover:text-orange-600">
+            Voir les sous-catégories →
+          </a>
+        </div>
+      } @empty {
+        <p class="text-gray-500 text-center py-8">Aucune catégorie disponible.</p>
+      }
+    </div>
+  `,
+})
+export class ForumCategoryListComponent implements OnInit {
+  private forumService = inject(ForumService);
+  types = signal<ForumType[]>([]);
+
+  ngOnInit(): void {
+    this.forumService.getTypes().subscribe((types) => this.types.set(types));
+  }
+}

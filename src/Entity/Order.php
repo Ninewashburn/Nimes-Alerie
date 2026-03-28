@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\OrderRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,34 +16,34 @@ class Order
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'datetime')]
-    private $createdAt;
+    private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $status;
+    private ?string $status = null;
 
     #[ORM\OneToOne(targetEntity: OrderLine::class, cascade: ['persist', 'remove'])]
-    private $orderLine;
+    private ?OrderLine $orderLine = null;
 
     #[ORM\OneToOne(inversedBy: 'command', targetEntity: Bill::class, cascade: ['persist', 'remove'])]
-    private $bill;
+    private ?Bill $bill = null;
 
     #[ORM\OneToOne(mappedBy: 'command', targetEntity: Cart::class, cascade: ['persist', 'remove'])]
-    private $cart;
+    private ?Cart $cart = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getCreatedAt(): ?string
+    public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(string $createdAt): self
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 

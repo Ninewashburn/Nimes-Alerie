@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ApiResource]
@@ -15,37 +18,45 @@ class Product
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 30)]
-    private $title;
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 30)]
+    private ?string $title = null;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $description;
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
+    private ?string $description = null;
 
-    #[ORM\Column(type: 'string', length: 10)]
-    private $price;
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
+    #[Assert\NotBlank]
+    #[Assert\PositiveOrZero]
+    private ?string $price = null;
 
-    #[ORM\Column(type: 'string', length: 10)]
-    private $quantity;
+    #[ORM\Column(type: 'integer')]
+    #[Assert\NotBlank]
+    #[Assert\PositiveOrZero]
+    private ?int $quantity = null;
 
     #[ORM\ManyToOne(targetEntity: Brand::class, inversedBy: 'products')]
-    private $brand;
+    private ?Brand $brand = null;
 
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: Rate::class)]
-    private $rate;
+    private Collection $rate;
 
     #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'products')]
-    private $category;
+    private Collection $category;
 
     #[ORM\ManyToOne(targetEntity: CartLine::class, inversedBy: 'products')]
-    private $cartLine;
+    private ?CartLine $cartLine = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $image;
+    private ?string $image = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $cover;
+    private ?string $cover = null;
 
     public function __construct()
     {
@@ -94,12 +105,12 @@ class Product
         return $this;
     }
 
-    public function getQuantity(): ?string
+    public function getQuantity(): ?int
     {
         return $this->quantity;
     }
 
-    public function setQuantity(string $quantity): self
+    public function setQuantity(int $quantity): self
     {
         $this->quantity = $quantity;
 
@@ -172,12 +183,12 @@ class Product
         return $this;
     }
 
-    public function getCartLine(): ?Cartline
+    public function getCartLine(): ?CartLine
     {
         return $this->cartLine;
     }
 
-    public function setCartLine(?Cartline $cartLine): self
+    public function setCartLine(?CartLine $cartLine): self
     {
         $this->cartLine = $cartLine;
 

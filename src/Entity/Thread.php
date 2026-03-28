@@ -1,36 +1,43 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\ThreadRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ApiResource]
+#[ApiFilter(SearchFilter::class, properties: ['subtype' => 'exact'])]
 #[ORM\Entity(repositoryClass: ThreadRepository::class)]
 class Thread
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $subject;
+    private ?string $subject = null;
 
     #[ORM\Column(type: 'datetime')]
-    private $createdAt;
+    private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'threads')]
     #[ORM\JoinColumn(nullable: false)]
-    private $user;
+    private ?User $user = null;
 
     #[ORM\ManyToOne(targetEntity: SubType::class, inversedBy: 'threads')]
     #[ORM\JoinColumn(nullable: false)]
-    private $subtype;
+    private ?SubType $subtype = null;
 
     #[ORM\OneToMany(mappedBy: 'thread', targetEntity: Post::class, orphanRemoval: true)]
-    private $posts;
+    private Collection $posts;
 
     public function __construct()
     {

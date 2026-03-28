@@ -1,7 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,62 +15,65 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 
-/**
- * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
- */
+#[ApiResource(
+    operations: [
+        new Get(),
+        new GetCollection(),
+    ],
+)]
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     #[Assert\Email(message: 'The email {{ value }} is not a valid email.',)]
-    private $email;
+    private ?string $email = null;
 
     #[ORM\Column(type: 'json')]
-    private $roles = [];
+    private array $roles = [];
 
     #[ORM\Column(type: 'string')]
-    private $password;
+    private ?string $password = null;
 
     #[ORM\Column(type: 'string', length: 100)]
     #[Assert\NotBlank, Assert\Length(max: 50)]
-    private $firstName;
+    private ?string $firstName = null;
 
     #[ORM\Column(type: 'string', length: 100)]
     #[Assert\NotBlank, Assert\Length(max: 50)]
-    private $lastName;
+    private ?string $lastName = null;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    #[Assert\Type(type:'string', message:"This weight must be a phone number")]
-    private $telephone;
+    #[Assert\Type(type: 'string', message: 'This value must be a valid phone number.')]
+    private ?string $telephone = null;
 
     #[ORM\Column(type: 'date')]
     #[Assert\NotBlank]
-    private $birthAt;
+    private ?\DateTimeInterface $birthAt = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Rate::class)]
-    private $Rate;
+    private Collection $Rate;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Cart::class)]
-    private $carts;
+    private Collection $carts;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $address;
+    private ?string $address = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $secondAddress;
+    private ?string $secondAddress = null;
 
     #[ORM\Column(type: 'string', length: 100)]
-    private $city;
+    private ?string $city = null;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    private $country;
+    private ?string $country = null;
 
     public function __construct()
     {
@@ -100,13 +108,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->email;
     }
 
-    /**
-     * @deprecated since Symfony 5.3, use getUserIdentifier instead
-     */
-    public function getUsername(): string
-    {
-        return (string) $this->email;
-    }
+
 
     /**
      * @see UserInterface
@@ -140,17 +142,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->password = $password;
 
         return $this;
-    }
-
-    /**
-     * Returning a salt is only needed, if you are not using a modern
-     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
-     *
-     * @see UserInterface
-     */
-    public function getSalt(): ?string
-    {
-        return null;
     }
 
     /**

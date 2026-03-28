@@ -1,28 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\TypeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ApiResource]
 #[ORM\Entity(repositoryClass: TypeRepository::class)]
 class Type
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $name;
+    private ?string $name = null;
 
     #[ORM\Column(type: 'text')]
-    private $description;
+    private ?string $description = null;
 
     #[ORM\OneToMany(mappedBy: 'type', targetEntity: SubType::class, orphanRemoval: true)]
-    private $subtype;
+    private Collection $subtype;
 
     public function __construct()
     {
@@ -66,22 +70,22 @@ class Type
         return $this->subtype;
     }
 
-    public function addSubtypes(SubType $subtype): self
+    public function addSubtype(SubType $subtypeItem): self
     {
-        if (!$this->subtypes->contains($subtype)) {
-            $this->subtypes[] = $subtype;
-            $subtype->setType($this);
+        if (!$this->subtype->contains($subtypeItem)) {
+            $this->subtype[] = $subtypeItem;
+            $subtypeItem->setType($this);
         }
 
         return $this;
     }
 
-    public function removeSubtypes(SubType $subtype): self
+    public function removeSubtype(SubType $subtypeItem): self
     {
-        if ($this->subtypes->removeElement($subtype)) {
+        if ($this->subtype->removeElement($subtypeItem)) {
             // set the owning side to null (unless already changed)
-            if ($subtype->getSubtype() === $this) {
-                $subtype->setSubtype(null);
+            if ($subtypeItem->getType() === $this) {
+                $subtypeItem->setType(null);
             }
         }
 
