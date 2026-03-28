@@ -2,9 +2,14 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\PostRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ApiResource]
+#[ApiFilter(SearchFilter::class, properties: ['thread' => 'exact'])]
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post
 {

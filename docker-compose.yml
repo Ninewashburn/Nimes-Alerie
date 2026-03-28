@@ -1,0 +1,52 @@
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/var/www/html
+      - /var/www/html/vendor
+    depends_on:
+      - database
+    environment:
+      DATABASE_URL: mysql://app:PLACEHOLDER_DB_PWD@database:3306/nimes_alerie?serverVersion=8.0
+      APP_ENV: dev
+      APP_SECRET: PLACEHOLDER_APP_SECRET
+      JWT_SECRET_KEY: '%kernel.project_dir%/config/jwt/private.pem'
+      JWT_PUBLIC_KEY: '%kernel.project_dir%/config/jwt/public.pem'
+      JWT_PASSPHRASE: PLACEHOLDER_JWT_PASS
+      CORS_ALLOW_ORIGIN: '^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8000:80"
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./public:/var/www/html/public:ro
+    depends_on:
+      - php
+
+  database:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: PLACEHOLDER_ROOT_PWD
+      MYSQL_DATABASE: nimes_alerie
+      MYSQL_USER: app
+      MYSQL_PASSWORD: PLACEHOLDER_DB_PWD
+    volumes:
+      - db_data:/var/lib/mysql
+
+  node:
+    image: node:22-alpine
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    command: sh -c "npm install && npm start"
+    ports:
+      - "4200:4200"
+
+volumes:
+  db_data:
