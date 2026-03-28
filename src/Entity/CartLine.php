@@ -13,16 +13,16 @@ class CartLine
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'integer')]
     private ?int $quantity = null;
 
     #[ORM\OneToMany(mappedBy: 'cartLine', targetEntity: Product::class)]
-    private $products;
+    private Collection $products;
 
     #[ORM\OneToOne(mappedBy: 'cartLine', targetEntity: Cart::class, cascade: ['persist', 'remove'])]
-    private $cart;
+    private ?Cart $cart = null;
 
     public function __construct()
     {

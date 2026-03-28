@@ -11,27 +11,27 @@ class Post
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'text')]
-    private $content;
+    private ?string $content = null;
 
     #[ORM\Column(type: 'datetime')]
-    private $createdAt;
+    private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: 'integer')]
-    private $upVote;
+    private ?int $upVote = null;
 
     #[ORM\Column(type: 'integer')]
-    private $downVote;
+    private ?int $downVote = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
-    private $user;
+    private ?User $user = null;
 
     #[ORM\ManyToOne(targetEntity: Thread::class, inversedBy: 'posts')]
     #[ORM\JoinColumn(nullable: false)]
-    private $thread;
+    private ?Thread $thread = null;
 
     public function getId(): ?int
     {

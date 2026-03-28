@@ -13,19 +13,19 @@ class Cart
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'datetime')]
-    private $createdAt;
+    private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\OneToOne(inversedBy: 'cart', targetEntity: Order::class, cascade: ['persist', 'remove'])]
-    private $command;
+    private ?Order $command = null;
 
     #[ORM\OneToOne(inversedBy: 'cart', targetEntity: CartLine::class, cascade: ['persist', 'remove'])]
-    private $cartLine;
+    private ?CartLine $cartLine = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'carts')]
-    private $user;
+    private ?User $user = null;
 
     public function getId(): ?int
     {
@@ -56,12 +56,12 @@ class Cart
         return $this;
     }
 
-    public function getCartLine(): ?cartLine
+    public function getCartLine(): ?CartLine
     {
         return $this->cartLine;
     }
 
-    public function setCartLine(?cartLine $cartLine): self
+    public function setCartLine(?CartLine $cartLine): self
     {
         $this->cartLine = $cartLine;
 

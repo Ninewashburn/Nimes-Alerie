@@ -13,16 +13,16 @@ class Delivery
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $delivery_date;
+    private ?string $delivery_date = null;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $status;
+    private ?string $status = null;
 
     #[ORM\OneToOne(inversedBy: 'delivery', targetEntity: OrderLine::class, cascade: ['persist', 'remove'])]
-    private $orderLine;
+    private ?OrderLine $orderLine = null;
 
     public function getId(): ?int
     {

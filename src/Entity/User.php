@@ -18,51 +18,51 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     #[Assert\Email(message: 'The email {{ value }} is not a valid email.',)]
-    private $email;
+    private ?string $email = null;
 
     #[ORM\Column(type: 'json')]
-    private $roles = [];
+    private array $roles = [];
 
     #[ORM\Column(type: 'string')]
-    private $password;
+    private ?string $password = null;
 
     #[ORM\Column(type: 'string', length: 100)]
     #[Assert\NotBlank, Assert\Length(max: 50)]
-    private $firstName;
+    private ?string $firstName = null;
 
     #[ORM\Column(type: 'string', length: 100)]
     #[Assert\NotBlank, Assert\Length(max: 50)]
-    private $lastName;
+    private ?string $lastName = null;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
     #[Assert\Type(type: 'string', message: 'This value must be a valid phone number.')]
-    private $telephone;
+    private ?string $telephone = null;
 
     #[ORM\Column(type: 'date')]
     #[Assert\NotBlank]
-    private $birthAt;
+    private ?\DateTimeInterface $birthAt = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Rate::class)]
-    private $Rate;
+    private Collection $Rate;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Cart::class)]
-    private $carts;
+    private Collection $carts;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $address;
+    private ?string $address = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $secondAddress;
+    private ?string $secondAddress = null;
 
     #[ORM\Column(type: 'string', length: 100)]
-    private $city;
+    private ?string $city = null;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
-    private $country;
+    private ?string $country = null;
 
     public function __construct()
     {
