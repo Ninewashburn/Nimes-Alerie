@@ -13,16 +13,16 @@ class Type
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $name;
+    private ?string $name = null;
 
     #[ORM\Column(type: 'text')]
-    private $description;
+    private ?string $description = null;
 
     #[ORM\OneToMany(mappedBy: 'type', targetEntity: SubType::class, orphanRemoval: true)]
-    private $subtype;
+    private Collection $subtype;
 
     public function __construct()
     {

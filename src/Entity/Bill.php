@@ -13,19 +13,19 @@ class Bill
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $number;
+    private ?string $number = null;
 
     #[ORM\Column(type: 'datetime')]
-    private $createdAt;
+    private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $payment;
+    private ?string $payment = null;
 
     #[ORM\OneToOne(mappedBy: 'bill', targetEntity: Order::class, cascade: ['persist', 'remove'])]
-    private $command;
+    private ?Order $command = null;
 
     public function getId(): ?int
     {

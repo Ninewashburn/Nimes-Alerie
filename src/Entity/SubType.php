@@ -13,20 +13,20 @@ class SubType
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $name;
+    private ?string $name = null;
 
     #[ORM\Column(type: 'text')]
-    private $description;
+    private ?string $description = null;
 
     #[ORM\ManyToOne(targetEntity: Type::class, inversedBy: 'subtypes')]
     #[ORM\JoinColumn(nullable: false)]
-    private $type;
+    private ?Type $type = null;
 
     #[ORM\OneToMany(mappedBy: 'subtype', targetEntity: Thread::class)]
-    private $threads;
+    private Collection $threads;
 
     public function __construct()
     {

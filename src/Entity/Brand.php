@@ -16,17 +16,17 @@ class Brand
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 40)]
     #[Assert\NotBlank, Assert\Length(max: 255)]
-    private $name;
+    private ?string $name = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $logo;
+    private ?string $logo = null;
 
     #[ORM\OneToMany(mappedBy: 'brand', targetEntity: Product::class)]
-    private $products;
+    private Collection $products;
 
     public function __construct()
     {

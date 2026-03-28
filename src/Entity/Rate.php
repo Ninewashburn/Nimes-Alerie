@@ -13,19 +13,19 @@ class Rate
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    private $rate;
+    private ?int $rate = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    private $testimonial;
+    private ?string $testimonial = null;
 
     #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'rate')]
-    private $product;
+    private ?Product $product = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'Rate')]
-    private $user;
+    private ?User $user = null;
 
     public function getId(): ?int
     {
