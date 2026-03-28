@@ -5,16 +5,17 @@ namespace App\Controller;
 use App\Entity\Product;
 use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/cart', name: 'cart_')]
 class CartController extends AbstractController
 {
     #[Route('/', name: 'index')]
-    public function index(SessionInterface $session, ProductRepository $productsRepository)
+    public function index(Request $request, ProductRepository $productsRepository): Response
     {
-        $panier = $session->get("panier", []);
+        $panier = $request->getSession()->get("panier", []);
 
         $dataPanier = [];
         $total = 0;
@@ -32,8 +33,9 @@ class CartController extends AbstractController
     }
 
     #[Route('/add/{id}', name: 'add')]
-    public function add(Product $product, SessionInterface $session)
+    public function add(Product $product, Request $request): Response
     {
+        $session = $request->getSession();
         $panier = $session->get("panier", []);
         $id = $product->getId();
 
@@ -49,8 +51,9 @@ class CartController extends AbstractController
     }
 
     #[Route('/remove/{id}', name: 'remove')]
-    public function remove(Product $product, SessionInterface $session)
+    public function remove(Product $product, Request $request): Response
     {
+        $session = $request->getSession();
         $panier = $session->get("panier", []);
         $id = $product->getId();
 
@@ -68,8 +71,9 @@ class CartController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: 'delete')]
-    public function delete(Product $product, SessionInterface $session)
+    public function delete(Product $product, Request $request): Response
     {
+        $session = $request->getSession();
         $panier = $session->get("panier", []);
         $id = $product->getId();
 
@@ -83,9 +87,9 @@ class CartController extends AbstractController
     }
 
     #[Route('/delete', name: 'delete_all')]
-    public function deleteAll(SessionInterface $session)
+    public function deleteAll(Request $request): Response
     {
-        $session->remove("panier");
+        $request->getSession()->remove("panier");
 
         return $this->redirectToRoute("cart_index");
     }
