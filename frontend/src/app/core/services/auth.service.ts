@@ -1,9 +1,20 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, tap } from 'rxjs';
+import { Observable, switchMap, tap } from 'rxjs';
 import { environment } from '@env/environment';
 import { JwtToken, LoginCredentials, User } from '@core/models/product.model';
+
+export interface RegisterData {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  birthAt: string;
+  address: string;
+  city: string;
+  telephone?: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -23,6 +34,16 @@ export class AuthService {
     private router: Router,
   ) {
     this.checkToken();
+  }
+
+  register(data: RegisterData): Observable<JwtToken> {
+    return this.http
+      .post(`${environment.apiUrl}/register`, data)
+      .pipe(
+        switchMap(() =>
+          this.login({ email: data.email, password: data.password }),
+        ),
+      );
   }
 
   login(credentials: LoginCredentials): Observable<JwtToken> {

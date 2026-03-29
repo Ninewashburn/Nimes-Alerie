@@ -13,8 +13,15 @@ import { ForumType } from '@core/models/product.model';
 export class ForumCategoryListComponent implements OnInit {
   private forumService = inject(ForumService);
   types = signal<ForumType[]>([]);
+  loading = signal(true);
 
   ngOnInit(): void {
-    this.forumService.getTypes().subscribe((types) => this.types.set(types));
+    this.forumService.getTypes().subscribe({
+      next: (types) => {
+        this.types.set(types);
+        this.loading.set(false);
+      },
+      error: () => this.loading.set(false),
+    });
   }
 }
