@@ -58,7 +58,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?\DateTimeInterface $birthAt = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Rate::class)]
-    private Collection $Rate;
+    private Collection $rate;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Cart::class)]
     private Collection $carts;
@@ -77,7 +77,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->Rate = new ArrayCollection();
+        $this->rate = new ArrayCollection();
         $this->carts = new ArrayCollection();
     }
 
@@ -147,7 +147,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
@@ -208,13 +208,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRate(): Collection
     {
-        return $this->Rate;
+        return $this->rate;
     }
 
     public function addRate(Rate $rate): self
     {
-        if (!$this->Rate->contains($rate)) {
-            $this->Rate[] = $rate;
+        if (!$this->rate->contains($rate)) {
+            $this->rate[] = $rate;
             $rate->setUser($this);
         }
 
@@ -223,7 +223,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeRate(Rate $rate): self
     {
-        if ($this->Rate->removeElement($rate)) {
+        if ($this->rate->removeElement($rate)) {
             // set the owning side to null (unless already changed)
             if ($rate->getUser() === $this) {
                 $rate->setUser(null);
