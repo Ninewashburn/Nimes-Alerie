@@ -10,14 +10,14 @@ export const routes: Routes = [
   {
     path: 'products',
     loadComponent: () =>
-      import('@features/products/product-list').then(
+      import('@features/products/product-list/product-list').then(
         (m) => m.ProductListComponent,
       ),
   },
   {
     path: 'products/:id',
     loadComponent: () =>
-      import('@features/products/product-detail').then(
+      import('@features/products/product-detail/product-detail').then(
         (m) => m.ProductDetailComponent,
       ),
   },
@@ -29,54 +29,54 @@ export const routes: Routes = [
   {
     path: 'login',
     loadComponent: () =>
-      import('@features/auth/login').then((m) => m.LoginComponent),
+      import('@features/auth/login/login').then((m) => m.LoginComponent),
   },
   {
     path: 'register',
     loadComponent: () =>
-      import('@features/auth/register').then(
+      import('@features/auth/register/register').then(
         (m) => m.RegisterComponent,
       ),
   },
   {
     path: 'articles',
     loadComponent: () =>
-      import('@features/articles/article-list').then(
+      import('@features/articles/article-list/article-list').then(
         (m) => m.ArticleListComponent,
       ),
   },
   {
     path: 'articles/:id',
     loadComponent: () =>
-      import('@features/articles/article-detail').then(
+      import('@features/articles/article-detail/article-detail').then(
         (m) => m.ArticleDetailComponent,
       ),
   },
   {
     path: 'forum',
     loadComponent: () =>
-      import('@features/forum/forum-category-list').then(
+      import('@features/forum/category-list/forum-category-list').then(
         (m) => m.ForumCategoryListComponent,
       ),
   },
   {
     path: 'forum/:id',
     loadComponent: () =>
-      import('@features/forum/forum-subcategory').then(
+      import('@features/forum/subcategory/forum-subcategory').then(
         (m) => m.ForumSubcategoryComponent,
       ),
   },
   {
     path: 'forum/:id/threads',
     loadComponent: () =>
-      import('@features/forum/forum-thread-list').then(
+      import('@features/forum/thread-list/forum-thread-list').then(
         (m) => m.ForumThreadListComponent,
       ),
   },
   {
     path: 'forum/thread/:id',
     loadComponent: () =>
-      import('@features/forum/forum-thread').then(
+      import('@features/forum/thread/forum-thread').then(
         (m) => m.ForumThreadComponent,
       ),
   },
@@ -98,7 +98,7 @@ export const routes: Routes = [
     path: 'admin',
     canActivate: [adminGuard],
     loadComponent: () =>
-      import('@features/admin/admin-dashboard').then(
+      import('@features/admin/dashboard/admin-dashboard').then(
         (m) => m.AdminDashboardComponent,
       ),
   },
@@ -106,7 +106,7 @@ export const routes: Routes = [
     path: 'admin/products',
     canActivate: [adminGuard],
     loadComponent: () =>
-      import('@features/admin/admin-products').then(
+      import('@features/admin/products/admin-products').then(
         (m) => m.AdminProductsComponent,
       ),
   },
@@ -114,7 +114,7 @@ export const routes: Routes = [
     path: 'admin/users',
     canActivate: [adminGuard],
     loadComponent: () =>
-      import('@features/admin/admin-users').then(
+      import('@features/admin/users/admin-users').then(
         (m) => m.AdminUsersComponent,
       ),
   },
