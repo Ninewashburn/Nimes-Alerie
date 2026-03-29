@@ -11,9 +11,14 @@ import { FormsModule } from '@angular/forms';
 export class ContactComponent {
   form = { email: '', subject: 'general', message: '' };
   sent = signal(false);
+  sending = signal(false);
 
   onSubmit(): void {
-    this.sent.set(true);
-    this.form = { email: '', subject: 'general', message: '' };
+    this.sending.set(true);
+    setTimeout(() => {
+      this.sending.set(false);
+      this.sent.set(true);
+      this.form = { email: '', subject: 'general', message: '' };
+    }, 800);
   }
 }
