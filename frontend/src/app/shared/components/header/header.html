@@ -1,0 +1,54 @@
+<header class="bg-gray-900 text-white shadow-lg">
+  <nav class="container mx-auto px-4 py-3 flex items-center justify-between">
+    <a routerLink="/" class="text-xl font-bold text-orange-500 hover:text-orange-400">
+      La Nimes'Alerie
+    </a>
+
+    <div class="hidden md:flex items-center gap-6">
+      <a routerLink="/products" routerLinkActive="text-orange-400" class="hover:text-orange-400 transition">
+        Boutique
+      </a>
+      <a routerLink="/articles" routerLinkActive="text-orange-400" class="hover:text-orange-400 transition">
+        Articles
+      </a>
+      <a routerLink="/forum" routerLinkActive="text-orange-400" class="hover:text-orange-400 transition">
+        Forum
+      </a>
+      <a routerLink="/space" routerLinkActive="text-orange-400" class="hover:text-orange-400 transition">
+        Espace
+      </a>
+      <a routerLink="/contact" routerLinkActive="text-orange-400" class="hover:text-orange-400 transition">
+        Contact
+      </a>
+    </div>
+
+    <div class="flex items-center gap-4">
+      <a routerLink="/cart" class="relative hover:text-orange-400 transition">
+        🛒
+        @if (cartService.itemCount() > 0) {
+          <span class="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+            {{ cartService.itemCount() }}
+          </span>
+        }
+      </a>
+
+      @if (authService.loggedIn()) {
+        @if (authService.isAdmin()) {
+          <a routerLink="/admin" class="text-sm bg-orange-500 hover:bg-orange-600 px-3 py-1 rounded transition">
+            Admin
+          </a>
+        }
+        <button (click)="authService.logout()" class="text-sm hover:text-orange-400 transition">
+          Déconnexion
+        </button>
+      } @else {
+        <a routerLink="/login" class="text-sm hover:text-orange-400 transition">
+          Connexion
+        </a>
+        <a routerLink="/register" class="text-sm bg-orange-500 hover:bg-orange-600 px-3 py-1 rounded transition">
+          Inscription
+        </a>
+      }
+    </div>
+  </nav>
+</header>

@@ -28,26 +28,42 @@ class RegistrationController extends AbstractController
             return $this->json(['error' => 'Invalid JSON'], 400);
         }
 
-        $user = new User();
-        $user->setEmail($data['email'] ?? '');
-        $user->setFirstName($data['firstName'] ?? '');
-        $user->setLastName($data['lastName'] ?? '');
-        $user->setAddress($data['address'] ?? '');
-        $user->setCity($data['city'] ?? '');
-        $user->setBirthAt(new \DateTime($data['birthAt'] ?? 'now'));
+        $requiredFields = ['email', 'password', 'firstName', 'lastName', 'address', 'city', 'birthAt'];
+        $missing = array_filter($requiredFields, fn(string $f) => empty($data[$f]));
+        if ($missing) {
+            return $this->json(['error' => 'Missing required fields: ' . implode(', ', $missing)], 400);
+        }
 
-        if (isset($data['telephone'])) {
+        $plainPassword = $data['password'];
+        if (strlen($plainPassword) < 6) {
+            return $this->json(['error' => 'Password must be at least 6 characters'], 400);
+        }
+
+        $birthAt = \DateTime::createFromFormat('Y-m-d', $data['birthAt']);
+        if (!$birthAt) {
+            return $this->json(['error' => 'Invalid date format. Use YYYY-MM-DD'], 400);
+        }
+
+        $user = new User();
+        $user->setEmail($data['email']);
+        $user->setFirstName($data['firstName']);
+        $user->setLastName($data['lastName']);
+        $user->setAddress($data['address']);
+        $user->setCity($data['city']);
+        $user->setBirthAt($birthAt);
+
+        if (!empty($data['telephone'])) {
             $user->setTelephone($data['telephone']);
         }
-        if (isset($data['country'])) {
+        if (!empty($data['country'])) {
             $user->setCountry($data['country']);
         }
-        if (isset($data['secondAddress'])) {
+        if (!empty($data['secondAddress'])) {
             $user->setSecondAddress($data['secondAddress']);
         }
 
         $user->setPassword(
-            $passwordHasher->hashPassword($user, $data['password'] ?? '')
+            $passwordHasher->hashPassword($user, $plainPassword)
         );
 
         $errors = $validator->validate($user);

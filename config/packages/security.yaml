@@ -46,4 +46,12 @@ security:
         - { path: '^/api/login', roles: PUBLIC_ACCESS }
         - { path: '^/api/register', roles: PUBLIC_ACCESS }
         - { path: '^/api/docs', roles: PUBLIC_ACCESS }
+        - { path: '^/api/products', roles: PUBLIC_ACCESS, methods: [GET] }
+        - { path: '^/api/brands', roles: PUBLIC_ACCESS, methods: [GET] }
+        - { path: '^/api/categories', roles: PUBLIC_ACCESS, methods: [GET] }
+        - { path: '^/api/articles', roles: PUBLIC_ACCESS, methods: [GET] }
+        - { path: '^/api/types', roles: PUBLIC_ACCESS, methods: [GET] }
+        - { path: '^/api/sub_types', roles: PUBLIC_ACCESS, methods: [GET] }
+        - { path: '^/api/threads', roles: PUBLIC_ACCESS, methods: [GET] }
+        - { path: '^/api/posts', roles: PUBLIC_ACCESS, methods: [GET] }
         - { path: '^/api', roles: IS_AUTHENTICATED_FULLY }
