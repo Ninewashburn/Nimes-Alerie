@@ -1,0 +1,26 @@
+<div class="max-w-4xl mx-auto">
+  <div class="flex justify-between items-center mb-8">
+    <h1 class="text-3xl font-bold">Articles</h1>
+    @if (authService.loggedIn()) {
+      <button class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg transition">
+        Nouvel article
+      </button>
+    }
+  </div>
+
+  @if (loading()) {
+    <p class="text-gray-500 text-center py-8">Chargement des articles...</p>
+  } @else {
+    @for (article of articles(); track article.id) {
+      <div class="bg-white rounded-xl shadow-md p-6 mb-4 hover:shadow-lg transition">
+        <h2 class="text-xl font-semibold mb-2">{{ article.name }}</h2>
+        <p class="text-gray-600 line-clamp-3">{{ article.content }}</p>
+        <a [routerLink]="['/articles', article.id]" class="text-orange-500 hover:text-orange-600 mt-2 inline-block">
+          Lire la suite &rarr;
+        </a>
+      </div>
+    } @empty {
+      <p class="text-gray-500 text-center py-8">Aucun article disponible.</p>
+    }
+  }
+</div>

@@ -16,8 +16,15 @@ export class ArticleListComponent implements OnInit {
   authService = inject(AuthService);
 
   articles = signal<Article[]>([]);
+  loading = signal(true);
 
   ngOnInit(): void {
-    this.articleService.getAll().subscribe((articles) => this.articles.set(articles));
+    this.articleService.getAll().subscribe({
+      next: (articles) => {
+        this.articles.set(articles);
+        this.loading.set(false);
+      },
+      error: () => this.loading.set(false),
+    });
   }
 }
