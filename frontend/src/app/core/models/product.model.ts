@@ -80,6 +80,7 @@ export interface Post {
   createdAt: string;
   upVote: number;
   downVote: number;
+  thread?: string | Thread;
   user?: User;
 }
 
