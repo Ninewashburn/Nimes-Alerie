@@ -17,8 +17,8 @@ class Delivery
     #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private ?string $delivery_date = null;
+    #[ORM\Column(type: 'date', nullable: true)]
+    private ?\DateTimeInterface $deliveryDate = null;
 
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $status = null;
@@ -31,14 +31,14 @@ class Delivery
         return $this->id;
     }
 
-    public function getDeliveryDate(): ?string
+    public function getDeliveryDate(): ?\DateTimeInterface
     {
-        return $this->delivery_date;
+        return $this->deliveryDate;
     }
 
-    public function setDeliveryDate(string $delivery_date): self
+    public function setDeliveryDate(?\DateTimeInterface $deliveryDate): self
     {
-        $this->delivery_date = $delivery_date;
+        $this->deliveryDate = $deliveryDate;
 
         return $this;
     }

@@ -26,7 +26,7 @@ class Rate
     #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'rate')]
     private ?Product $product = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'Rate')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'rate')]
     private ?User $user = null;
 
     public function getId(): ?int

@@ -5,92 +5,92 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () =>
-      import('@features/home/home.component').then((m) => m.HomeComponent),
+      import('@features/home/home').then((m) => m.HomeComponent),
   },
   {
     path: 'products',
     loadComponent: () =>
-      import('@features/products/product-list.component').then(
+      import('@features/products/product-list').then(
         (m) => m.ProductListComponent,
       ),
   },
   {
     path: 'products/:id',
     loadComponent: () =>
-      import('@features/products/product-detail.component').then(
+      import('@features/products/product-detail').then(
         (m) => m.ProductDetailComponent,
       ),
   },
   {
     path: 'cart',
     loadComponent: () =>
-      import('@features/cart/cart.component').then((m) => m.CartComponent),
+      import('@features/cart/cart').then((m) => m.CartComponent),
   },
   {
     path: 'login',
     loadComponent: () =>
-      import('@features/auth/login.component').then((m) => m.LoginComponent),
+      import('@features/auth/login').then((m) => m.LoginComponent),
   },
   {
     path: 'register',
     loadComponent: () =>
-      import('@features/auth/register.component').then(
+      import('@features/auth/register').then(
         (m) => m.RegisterComponent,
       ),
   },
   {
     path: 'articles',
     loadComponent: () =>
-      import('@features/articles/article-list.component').then(
+      import('@features/articles/article-list').then(
         (m) => m.ArticleListComponent,
       ),
   },
   {
     path: 'articles/:id',
     loadComponent: () =>
-      import('@features/articles/article-detail.component').then(
+      import('@features/articles/article-detail').then(
         (m) => m.ArticleDetailComponent,
       ),
   },
   {
     path: 'forum',
     loadComponent: () =>
-      import('@features/forum/forum-category-list.component').then(
+      import('@features/forum/forum-category-list').then(
         (m) => m.ForumCategoryListComponent,
       ),
   },
   {
     path: 'forum/:id',
     loadComponent: () =>
-      import('@features/forum/forum-subcategory.component').then(
+      import('@features/forum/forum-subcategory').then(
         (m) => m.ForumSubcategoryComponent,
       ),
   },
   {
     path: 'forum/:id/threads',
     loadComponent: () =>
-      import('@features/forum/forum-thread-list.component').then(
+      import('@features/forum/forum-thread-list').then(
         (m) => m.ForumThreadListComponent,
       ),
   },
   {
     path: 'forum/thread/:id',
     loadComponent: () =>
-      import('@features/forum/forum-thread.component').then(
+      import('@features/forum/forum-thread').then(
         (m) => m.ForumThreadComponent,
       ),
   },
   {
     path: 'contact',
     loadComponent: () =>
-      import('@features/contact/contact.component').then(
+      import('@features/contact/contact').then(
         (m) => m.ContactComponent,
       ),
   },
   {
     path: 'space',
     loadComponent: () =>
-      import('@features/space/space-base.component').then(
+      import('@features/space/space-base').then(
         (m) => m.SpaceBaseComponent,
       ),
   },
@@ -98,7 +98,7 @@ export const routes: Routes = [
     path: 'admin',
     canActivate: [adminGuard],
     loadComponent: () =>
-      import('@features/admin/admin-dashboard.component').then(
+      import('@features/admin/admin-dashboard').then(
         (m) => m.AdminDashboardComponent,
       ),
   },
@@ -106,7 +106,7 @@ export const routes: Routes = [
     path: 'admin/products',
     canActivate: [adminGuard],
     loadComponent: () =>
-      import('@features/admin/admin-products.component').then(
+      import('@features/admin/admin-products').then(
         (m) => m.AdminProductsComponent,
       ),
   },
@@ -114,7 +114,7 @@ export const routes: Routes = [
     path: 'admin/users',
     canActivate: [adminGuard],
     loadComponent: () =>
-      import('@features/admin/admin-users.component').then(
+      import('@features/admin/admin-users').then(
         (m) => m.AdminUsersComponent,
       ),
   },

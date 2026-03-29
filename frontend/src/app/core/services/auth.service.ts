@@ -53,8 +53,10 @@ export class AuthService {
     if (token && !this.isTokenExpired(token)) {
       this.isAuthenticated.set(true);
       this.decodeAndSetUser(token);
-    } else {
-      this.logout();
+    } else if (token) {
+      localStorage.removeItem(this.tokenKey);
+      this.currentUser.set(null);
+      this.isAuthenticated.set(false);
     }
   }
 
