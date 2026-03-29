@@ -1,6 +1,15 @@
-@if (article(); as a) {
+@if (loading()) {
+  <div class="text-center py-12">
+    <p class="text-gray-500">Chargement de l'article...</p>
+  </div>
+} @else if (error()) {
   <div class="max-w-3xl mx-auto">
-    <a routerLink="/articles" class="text-orange-500 hover:text-orange-600 mb-4 inline-block">← Retour aux articles</a>
+    <a routerLink="/articles" class="text-orange-500 hover:text-orange-600 mb-4 inline-block">&larr; Retour aux articles</a>
+    <div class="bg-red-50 text-red-600 p-4 rounded-xl">{{ error() }}</div>
+  </div>
+} @else if (article(); as a) {
+  <div class="max-w-3xl mx-auto">
+    <a routerLink="/articles" class="text-orange-500 hover:text-orange-600 mb-4 inline-block">&larr; Retour aux articles</a>
     <div class="bg-white rounded-xl shadow-md p-8">
       <h1 class="text-3xl font-bold mb-4">{{ a.name }}</h1>
       <div class="prose text-gray-700 whitespace-pre-wrap">{{ a.content }}</div>

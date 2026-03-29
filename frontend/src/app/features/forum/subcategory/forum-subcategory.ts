@@ -15,10 +15,17 @@ export class ForumSubcategoryComponent implements OnInit {
   private forumService = inject(ForumService);
   type = signal<ForumType | null>(null);
   subTypes = signal<SubType[]>([]);
+  loading = signal(true);
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.forumService.getTypeById(id).subscribe((t) => this.type.set(t));
-    this.forumService.getSubTypes(id).subscribe((s) => this.subTypes.set(s));
+    this.forumService.getSubTypes(id).subscribe({
+      next: (s) => {
+        this.subTypes.set(s);
+        this.loading.set(false);
+      },
+      error: () => this.loading.set(false),
+    });
   }
 }

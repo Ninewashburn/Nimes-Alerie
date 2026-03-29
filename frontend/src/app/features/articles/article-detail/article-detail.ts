@@ -13,10 +13,22 @@ import { Article } from '@core/models/product.model';
 export class ArticleDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private articleService = inject(ArticleService);
+
   article = signal<Article | null>(null);
+  loading = signal(true);
+  error = signal('');
 
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.articleService.getById(id).subscribe((a) => this.article.set(a));
+    this.articleService.getById(id).subscribe({
+      next: (a) => {
+        this.article.set(a);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.error.set('Impossible de charger l\'article.');
+        this.loading.set(false);
+      },
+    });
   }
 }
