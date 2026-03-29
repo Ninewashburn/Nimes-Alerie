@@ -1,0 +1,19 @@
+{
+  "entrypoints": {
+    "scripts": {
+      "js": [
+        "/build/runtime.js",
+        "/build/vendors-node_modules_autocompleter_autocomplete_js-node_modules_bootstrap_dist_js_bootstrap_e-aa4d9b.js",
+        "/build/scripts.js"
+      ]
+    },
+    "styles": {
+      "js": [
+        "/build/runtime.js"
+      ],
+      "css": [
+        "/build/styles.css"
+      ]
+    }
+  }
+}
