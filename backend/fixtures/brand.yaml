@@ -1,0 +1,24 @@
+App\Entity\Brand:
+  brand_provence:
+    name: Provence Authentique
+    logo: ~
+
+  brand_camargue:
+    name: Maison de Camargue
+    logo: ~
+
+  brand_nimes:
+    name: Atelier Nîmois
+    logo: ~
+
+  brand_cevenol:
+    name: Cévenol & Co
+    logo: ~
+
+  brand_occitane:
+    name: Saveurs d'Occitanie
+    logo: ~
+
+  brand_gardoise:
+    name: La Gardoise
+    logo: ~

@@ -1,6 +1,0 @@
-App\Entity\Category:
-  category{1..30}:
-    title: '<numberBetween(1, 100000)>'
-    description: '<text(100)>'
-    parent: '<word()>'
-
