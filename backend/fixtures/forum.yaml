@@ -1,0 +1,178 @@
+App\Entity\Type:
+  type_general:
+    name: Discussions générales
+    description: Échangez sur tous les sujets autour de Nîmes, sa culture et ses traditions.
+
+  type_tourisme:
+    name: Tourisme & Découvertes
+    description: Partagez vos bons plans, itinéraires et recommandations pour visiter le Gard.
+
+  type_gastronomie:
+    name: Gastronomie & Terroir
+    description: Recettes, bonnes adresses et découvertes culinaires du pays nîmois.
+
+App\Entity\SubType:
+  sub_actualites:
+    name: Actualités nîmoises
+    description: Les dernières nouvelles de la ville et de la région.
+    type: '@type_general'
+
+  sub_evenements:
+    name: Événements & Sorties
+    description: Concerts, expositions, festivals et manifestations culturelles.
+    type: '@type_general'
+
+  sub_patrimoine:
+    name: Patrimoine & Histoire
+    description: Discussions autour des monuments et de l'histoire de Nîmes.
+    type: '@type_tourisme'
+
+  sub_randonnees:
+    name: Randonnées & Nature
+    description: Parcours de randonnée, spots nature et activités de plein air.
+    type: '@type_tourisme'
+
+  sub_recettes:
+    name: Recettes locales
+    description: Partagez vos recettes de brandade, gardiane et autres spécialités.
+    type: '@type_gastronomie'
+
+  sub_restaurants:
+    name: Restaurants & Bars
+    description: Vos adresses préférées pour bien manger et boire à Nîmes.
+    type: '@type_gastronomie'
+
+App\Entity\Thread:
+  thread_feria:
+    subject: Programme de la Féria de Pentecôte 2026
+    createdAt: <dateTimeBetween('-30 days', '-25 days')>
+    user: '@user_client'
+    subtype: '@sub_evenements'
+
+  thread_rando:
+    subject: Randonnée autour du Pont du Gard - conseils
+    createdAt: <dateTimeBetween('-20 days', '-15 days')>
+    user: '@user_sophie'
+    subtype: '@sub_randonnees'
+
+  thread_brandade:
+    subject: Meilleure recette de brandade de Nîmes ?
+    createdAt: <dateTimeBetween('-15 days', '-10 days')>
+    user: '@user_pierre'
+    subtype: '@sub_recettes'
+
+  thread_parking:
+    subject: Où se garer facilement en centre-ville ?
+    createdAt: <dateTimeBetween('-10 days', '-7 days')>
+    user: '@user_camille'
+    subtype: '@sub_actualites'
+
+  thread_restau:
+    subject: Restaurant pour un anniversaire aux Arènes ?
+    createdAt: <dateTimeBetween('-5 days', '-3 days')>
+    user: '@user_client'
+    subtype: '@sub_restaurants'
+
+  thread_maison_carree:
+    subject: Visite de la Maison Carrée - vos avis sur le film ?
+    createdAt: <dateTimeBetween('-3 days', '-1 days')>
+    user: '@user_sophie'
+    subtype: '@sub_patrimoine'
+
+App\Entity\Post:
+  post_feria_1:
+    content: Quelqu'un a des infos sur le programme de la Féria cette année ? J'ai entendu dire qu'il y aurait un concert gratuit sur l'Esplanade.
+    createdAt: <dateTimeBetween('-25 days', '-24 days')>
+    upVote: 5
+    downVote: 0
+    user: '@user_client'
+    thread: '@thread_feria'
+
+  post_feria_2:
+    content: Oui, cette année il y a un super programme ! Les bodégas ouvrent le jeudi soir. Je recommande celle de la place du Marché, ambiance top.
+    createdAt: <dateTimeBetween('-24 days', '-23 days')>
+    upVote: 8
+    downVote: 0
+    user: '@user_sophie'
+    thread: '@thread_feria'
+
+  post_feria_3:
+    content: N'oubliez pas les abrivados le samedi matin dans les rues du centre ! C'est toujours un moment incroyable.
+    createdAt: <dateTimeBetween('-23 days', '-22 days')>
+    upVote: 3
+    downVote: 0
+    user: '@user_pierre'
+    thread: '@thread_feria'
+
+  post_rando_1:
+    content: Je cherche un itinéraire sympa autour du Pont du Gard pour une rando d'environ 2h. Accessible pour des enfants de 8 ans si possible.
+    createdAt: <dateTimeBetween('-15 days', '-14 days')>
+    upVote: 2
+    downVote: 0
+    user: '@user_sophie'
+    thread: '@thread_rando'
+
+  post_rando_2:
+    content: |
+      Je te conseille le sentier de la rive droite (balisage jaune). Environ 6 km, assez plat, ombragé. Les enfants adorent la descente vers la rivière où on peut se baigner en été !
+
+      Pensez à prendre de l'eau, il fait chaud en été.
+    createdAt: <dateTimeBetween('-14 days', '-13 days')>
+    upVote: 12
+    downVote: 0
+    user: '@user_pierre'
+    thread: '@thread_rando'
+
+  post_brandade_1:
+    content: |
+      Ma recette familiale : 500g de morue dessalée, 20cl d'huile d'olive, 1 gousse d'ail, un peu de lait. Pas de pomme de terre pour la version traditionnelle !
+
+      Cuire la morue 10 min dans l'eau frémissante, l'effilocher, puis travailler avec l'huile d'olive chaude en tournant toujours dans le même sens. Servir tiède.
+    createdAt: <dateTimeBetween('-10 days', '-9 days')>
+    upVote: 15
+    downVote: 1
+    user: '@user_pierre'
+    thread: '@thread_brandade'
+
+  post_brandade_2:
+    content: Merci pour la recette ! Moi j'ajoute toujours un peu de pomme de terre, je sais que les puristes ne sont pas d'accord mais j'adore la texture que ça donne.
+    createdAt: <dateTimeBetween('-9 days', '-8 days')>
+    upVote: 4
+    downVote: 2
+    user: '@user_camille'
+    thread: '@thread_brandade'
+
+  post_parking_1:
+    content: Le parking des Arènes est pratique mais cher. Je recommande plutôt le parking Gare Centre, 15 min à pied du centre et tarifs raisonnables.
+    createdAt: <dateTimeBetween('-7 days', '-6 days')>
+    upVote: 7
+    downVote: 0
+    user: '@user_sophie'
+    thread: '@thread_parking'
+
+  post_restau_1:
+    content: |
+      Le Lisita, place de la Maison Carrée ! Cuisine gastronomique, cadre magnifique avec vue sur le temple. Comptez environ 45€ par personne pour le menu.
+
+      Réservez bien à l'avance, surtout le week-end.
+    createdAt: <dateTimeBetween('-3 days', '-2 days')>
+    upVote: 6
+    downVote: 0
+    user: '@user_pierre'
+    thread: '@thread_restau'
+
+  post_restau_2:
+    content: Je recommande aussi Le Vintage, ambiance bistrot chic. Très bon rapport qualité-prix et terrasse agréable l'été. Parfait pour un anniversaire décontracté.
+    createdAt: <dateTimeBetween('-2 days', '-1 days')>
+    upVote: 4
+    downVote: 0
+    user: '@user_camille'
+    thread: '@thread_restau'
+
+  post_maison_1:
+    content: J'ai vu le film immersif la semaine dernière, c'est vraiment bien fait ! On apprend plein de choses sur Nemausus. Je recommande vivement, surtout pour les enfants.
+    createdAt: <dateTimeBetween('-1 days', 'now')>
+    upVote: 3
+    downVote: 0
+    user: '@user_sophie'
+    thread: '@thread_maison_carree'

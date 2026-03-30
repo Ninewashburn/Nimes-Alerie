@@ -1,4 +1,0 @@
-App\Entity\Article:
-  article{1..10}:
-    name: '<word()> <numberBetween(1, 5)>'
-    content: '<text()>'

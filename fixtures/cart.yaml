@@ -1,3 +1,0 @@
-App\Entity\Cart:
-  cart{1..50}:
-    created_at: '<dateTimeBetween("-365 days", "now")>'

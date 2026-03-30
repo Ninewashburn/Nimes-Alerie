@@ -1,0 +1,30 @@
+App\Entity\Category:
+  cat_textile:
+    title: Textile
+    description: Vêtements, accessoires et tissus régionaux
+    parent: Boutique
+
+  cat_gastronomie:
+    title: Gastronomie
+    description: Produits du terroir et spécialités locales
+    parent: Boutique
+
+  cat_decoration:
+    title: Décoration
+    description: Objets décoratifs et artisanat local
+    parent: Boutique
+
+  cat_cosmetique:
+    title: Cosmétique
+    description: Soins naturels et parfums de Provence
+    parent: Boutique
+
+  cat_souvenir:
+    title: Souvenirs
+    description: Objets souvenirs et cadeaux de Nîmes
+    parent: Boutique
+
+  cat_livre:
+    title: Livres & Culture
+    description: Ouvrages sur l'histoire et la culture nîmoise
+    parent: Boutique

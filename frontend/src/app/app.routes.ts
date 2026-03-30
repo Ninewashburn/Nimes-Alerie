@@ -119,6 +119,11 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'bonus',
+    loadComponent: () =>
+      import('@features/bonus/bonus').then((m) => m.BonusComponent),
+  },
+  {
     path: '**',
     redirectTo: '',
   },

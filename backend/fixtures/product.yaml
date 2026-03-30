@@ -1,0 +1,96 @@
+App\Entity\Product:
+  product_chale:
+    title: Châle en soie nîmois
+    description: Magnifique châle en soie tissé à la main dans la tradition nîmoise. Couleurs chaudes inspirées des paysages du Gard. Idéal pour les soirées d'été en terrasse.
+    price: '45.00'
+    quantity: 25
+    brand: '@brand_provence'
+    category: ['@cat_textile']
+
+  product_huile:
+    title: Huile d'olive AOP Nîmes
+    description: Huile d'olive vierge extra, pressée à froid, issue des oliveraies du pays nîmois. Fruité vert, notes d'artichaut et d'amande. Bouteille 50cl.
+    price: '18.50'
+    quantity: 50
+    brand: '@brand_occitane'
+    category: ['@cat_gastronomie']
+
+  product_savon:
+    title: Savon de Marseille lavande
+    description: Savon artisanal à la lavande de Provence. Fabriqué selon la méthode traditionnelle au chaudron. 100% huiles végétales, sans colorant artificiel. 250g.
+    price: '8.90'
+    quantity: 100
+    brand: '@brand_provence'
+    category: ['@cat_cosmetique']
+
+  product_taureau:
+    title: Figurine taureau camarguais
+    description: Figurine artisanale en céramique peinte à la main représentant le célèbre taureau de Camargue. Pièce unique signée par l'artisan. Hauteur 15cm.
+    price: '35.00'
+    quantity: 15
+    brand: '@brand_camargue'
+    category: ['@cat_decoration', '@cat_souvenir']
+
+  product_brandade:
+    title: Brandade de Nîmes
+    description: La véritable brandade de Nîmes, préparée selon la recette traditionnelle. Morue effilochée, huile d'olive et pommes de terre. Bocal 350g.
+    price: '12.90'
+    quantity: 40
+    brand: '@brand_nimes'
+    category: ['@cat_gastronomie']
+
+  product_miel:
+    title: Miel des Cévennes
+    description: Miel de châtaignier récolté dans les Cévennes gardoises. Saveur intense et boisée. Pot en verre 500g. Récolte artisanale.
+    price: '14.50'
+    quantity: 35
+    brand: '@brand_cevenol'
+    category: ['@cat_gastronomie']
+
+  product_tshirt:
+    title: T-shirt Arènes de Nîmes
+    description: T-shirt 100% coton bio avec sérigraphie des Arènes de Nîmes. Design original par un artiste local. Disponible en plusieurs tailles.
+    price: '25.00'
+    quantity: 60
+    brand: '@brand_nimes'
+    category: ['@cat_textile', '@cat_souvenir']
+
+  product_carnet:
+    title: Carnet Pont du Gard
+    description: Carnet de notes illustré avec aquarelle du Pont du Gard. Couverture rigide, 120 pages lignées, papier recyclé. Format A5.
+    price: '15.00'
+    quantity: 45
+    brand: '@brand_gardoise'
+    category: ['@cat_souvenir']
+
+  product_livre:
+    title: Nîmes, 2000 ans d'histoire
+    description: Ouvrage illustré retraçant l'histoire de Nîmes de la période romaine à nos jours. 280 pages, photographies et plans d'époque. Édition reliée.
+    price: '32.00'
+    quantity: 20
+    brand: '@brand_nimes'
+    category: ['@cat_livre']
+
+  product_vin:
+    title: Costières de Nîmes rouge
+    description: Vin rouge AOP Costières de Nîmes, cuvée prestige. Assemblage Syrah-Grenache-Mourvèdre. Robe profonde, arômes de fruits noirs et garrigue. 75cl.
+    price: '16.00'
+    quantity: 30
+    brand: '@brand_gardoise'
+    category: ['@cat_gastronomie']
+
+  product_parfum:
+    title: Eau de toilette Garrigue
+    description: Eau de toilette aux senteurs de la garrigue nîmoise. Notes de thym, romarin et lavande. Flacon vaporisateur 100ml. Fabrication artisanale.
+    price: '42.00'
+    quantity: 18
+    brand: '@brand_provence'
+    category: ['@cat_cosmetique']
+
+  product_magnet:
+    title: Lot magnets Nîmes
+    description: Lot de 4 magnets illustrés avec les monuments emblématiques de Nîmes. Arènes, Maison Carrée, Tour Magne et Jardins de la Fontaine.
+    price: '9.90'
+    quantity: 80
+    brand: '@brand_nimes'
+    category: ['@cat_souvenir']
