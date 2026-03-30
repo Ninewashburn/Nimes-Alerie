@@ -1,6 +1,0 @@
-App\Entity\Bill:
-  bill{1..200}:
-    number: '<numberBetween(1, 100000)>'
-    created_at: '<dateTimeBetween("-365 days", "now")>'
-    payment: '<word()>'
-
