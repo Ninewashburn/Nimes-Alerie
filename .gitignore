@@ -23,6 +23,8 @@ backend/.phpunit.result.cache
 frontend/node_modules/
 frontend/dist/
 frontend/.angular/
+frontend/build_err*.txt
+frontend/build_error*.txt
 ###< Frontend (Angular) ###
 
 ###> Docker ###
