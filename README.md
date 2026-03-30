@@ -1,19 +1,59 @@
-# La Nîmes'Alerie
+# La Nimes'Alerie
 
 Application e-commerce avec forum communautaire, construite avec **Symfony 7.2** (API backend) et **Angular 19** (frontend SPA).
 
+Projet educatif fullstack realise dans le cadre d'une formation en reconversion professionnelle (2021-2022), modernise en 2026.
+
 ## Stack technique
 
-- **Backend** : Symfony 7.2, API Platform 3.4, Doctrine ORM 3.0
+- **Backend** : Symfony 7.2, API Platform 3.4, Doctrine ORM 3.0, PHP 8.2+
 - **Frontend** : Angular 19 (standalone components, signals, lazy-loaded routes)
-- **Auth** : JWT (Lexik JWT Authentication)
-- **Base de données** : MySQL 8.0
-- **PHP** : 8.2+ (8.3 recommandé)
-- **Qualité** : PHPStan (level 6), PHP-CS-Fixer, PHPUnit 10
+- **Auth** : JWT (Lexik JWT Authentication Bundle)
+- **Base de donnees** : MySQL 8.0
+- **Qualite** : PHPStan (level 6), PHP-CS-Fixer, PHPUnit 10
+- **Docker** : PHP 8.3-fpm-alpine, Nginx, MySQL 8.0, Node 22
 
-## Installation avec Docker (recommandé)
+## Architecture du projet
 
-### Prérequis
+```
+Nimes-Alerie/
+├── backend/                    # API Symfony 7.2
+│   ├── src/
+│   │   ├── Controller/         # Endpoints API (Registration, Security)
+│   │   ├── Entity/             # Entites Doctrine (16 entites)
+│   │   ├── EventListener/      # JWT custom claims
+│   │   ├── DataFixtures/       # Processor pour fixtures
+│   │   ├── Service/            # Couche service (Product, Cart, User, Forum)
+│   │   └── Repository/         # Repositories Doctrine
+│   ├── config/                 # Configuration Symfony
+│   ├── fixtures/               # Donnees de demonstration (Alice YAML)
+│   ├── migrations/             # Migrations Doctrine
+│   ├── tests/                  # Tests PHPUnit
+│   ├── Dockerfile              # Image PHP 8.3-fpm
+│   └── .env.example            # Variables d'environnement
+├── frontend/                   # SPA Angular 19
+│   └── src/app/
+│       ├── core/               # Services, guards, interceptors, modeles
+│       ├── features/           # Composants par fonctionnalite (lazy-loaded)
+│       │   ├── admin/          # Dashboard, gestion produits/utilisateurs
+│       │   ├── articles/       # Liste et detail des articles
+│       │   ├── auth/           # Login et inscription
+│       │   ├── bonus/          # Easter egg Space Invaders
+│       │   ├── cart/           # Panier
+│       │   ├── contact/        # Formulaire de contact
+│       │   ├── forum/          # Categories, sous-categories, threads, posts
+│       │   ├── home/           # Page d'accueil
+│       │   ├── products/       # Boutique et detail produit
+│       │   └── space/          # Espace utilisateur
+│       └── shared/             # Header, footer
+├── docker/                     # Configuration Nginx
+└── docker-compose.yml          # Orchestration Docker
+```
+
+## Installation avec Docker
+
+### Prerequis
+
 - Docker et Docker Compose
 
 ### Lancement
@@ -21,32 +61,35 @@ Application e-commerce avec forum communautaire, construite avec **Symfony 7.2**
 ```bash
 git clone https://github.com/Ninewashburn/Nimes-Alerie.git
 cd Nimes-Alerie
-cp .env.example .env
-# Modifiez .env avec vos secrets (APP_SECRET, JWT_PASSPHRASE)
-
 docker compose up -d
 ```
 
 Services disponibles :
 - **API Symfony** : http://localhost:8000
+- **API Docs** : http://localhost:8000/api/docs
 - **Frontend Angular** : http://localhost:4200
 
-### Initialisation de la base de données
+### Initialisation de la base de donnees
 
 ```bash
 docker compose exec php php bin/console doctrine:migrations:migrate
-docker compose exec php php bin/console hautelook:fixtures:load  # Données de test
-```
-
-### Génération des clés JWT
-
-```bash
 docker compose exec php php bin/console lexik:jwt:generate-keypair
+docker compose exec php php bin/console hautelook:fixtures:load
 ```
+
+### Comptes de demonstration
+
+| Email | Mot de passe | Role |
+|-------|-------------|------|
+| admin@nimes-alerie.fr | admin123 | Admin |
+| client@test.fr | client123 | Client |
+| sophie.legrand@email.com | sophie123 | Client |
+| pierre.roux@email.com | pierre123 | Client |
 
 ## Installation locale (sans Docker)
 
-### Prérequis
+### Prerequis
+
 - PHP >= 8.2 avec extensions intl, pdo_mysql, zip
 - Composer 2.x
 - Node.js >= 18
@@ -55,16 +98,18 @@ docker compose exec php php bin/console lexik:jwt:generate-keypair
 ### Backend
 
 ```bash
+cd backend
 composer install
 cp .env.example .env
 # Configurez DATABASE_URL dans .env
 php bin/console doctrine:database:create
 php bin/console doctrine:migrations:migrate
 php bin/console lexik:jwt:generate-keypair
+php bin/console hautelook:fixtures:load
 symfony serve
 ```
 
-### Frontend Angular
+### Frontend
 
 ```bash
 cd frontend
@@ -73,55 +118,20 @@ npm start
 # Accessible sur http://localhost:4200
 ```
 
-## Architecture
+## Securite
 
-```
-├── src/                    # Backend Symfony
-│   ├── Controller/         # Contrôleurs API et web
-│   ├── Entity/             # Entités Doctrine (16 entités)
-│   ├── Service/            # Couche service (Product, Cart, User, Forum)
-│   ├── Security/           # Authenticators
-│   └── Trait/              # TimestampableTrait
-├── frontend/               # Frontend Angular 19
-│   └── src/
-│       ├── app/core/       # Services, guards, interceptors, modèles
-│       ├── app/features/   # Composants par page (lazy-loaded)
-│       └── app/shared/     # Composants réutilisables
-├── config/                 # Configuration Symfony
-├── migrations/             # Migrations Doctrine
-├── docker/                 # Configuration Docker (nginx)
-├── Dockerfile              # Image PHP 8.3-fpm
-└── docker-compose.yml      # Stack complète (PHP, Nginx, MySQL, Node)
-```
-
-## Sécurité
-
-Les fichiers suivants ne doivent **jamais** être commités :
-- `.env` (secrets de production)
-- `.env.local` (configuration locale)
-- `config/jwt/*.pem` (clés JWT)
-
-### Génération de secrets
-
-```bash
-# APP_SECRET
-php -r "echo bin2hex(random_bytes(16));"
-
-# JWT_PASSPHRASE
-php -r "echo bin2hex(random_bytes(32));"
-```
+Les fichiers suivants ne doivent **jamais** etre commites :
+- `backend/.env` (secrets de production)
+- `backend/.env.local` (configuration locale)
+- `backend/config/jwt/*.pem` (cles JWT)
 
 ## Commandes utiles
 
 ```bash
-# Cache
+# Depuis le dossier backend/
 php bin/console cache:clear
-
-# Qualité du code
 vendor/bin/phpstan analyse
 vendor/bin/php-cs-fixer fix --dry-run
-
-# Tests
 vendor/bin/phpunit
 
 # Migrations
@@ -131,4 +141,4 @@ php bin/console doctrine:migrations:migrate
 
 ## Licence
 
-Propriétaire - Tous droits réservés
+Proprietaire - Tous droits reserves
