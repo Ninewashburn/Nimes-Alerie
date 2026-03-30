@@ -1,8 +1,0 @@
-App\Entity\User:
-  user{1..50}:
-    firstName: '<firstName()>'
-    lastName: '<lastName()>'
-    birthAt: '<dateTimeBetween("1950-01-01", "-18 years")>'
-    email: '<email()>'
-    password: '<password()>'
-    telephone: '<e164PhoneNumber()>'

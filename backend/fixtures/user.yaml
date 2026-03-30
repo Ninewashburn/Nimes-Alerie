@@ -1,0 +1,58 @@
+App\Entity\User:
+  user_admin:
+    email: admin@nimes-alerie.fr
+    password: admin123
+    roles: ['ROLE_ADMIN']
+    firstName: Alexandre
+    lastName: Dupont
+    telephone: '0466123456'
+    birthAt: <dateTimeBetween('1985-01-01', '1985-12-31')>
+    address: 12 Boulevard Victor Hugo
+    city: Nîmes
+    country: France
+
+  user_client:
+    email: client@test.fr
+    password: client123
+    roles: ['ROLE_USER']
+    firstName: Marie
+    lastName: Martin
+    telephone: '0612345678'
+    birthAt: <dateTimeBetween('1990-01-01', '1990-12-31')>
+    address: 5 Rue de la République
+    city: Nîmes
+    country: France
+
+  user_sophie:
+    email: sophie.legrand@email.com
+    password: sophie123
+    roles: ['ROLE_USER']
+    firstName: Sophie
+    lastName: Legrand
+    birthAt: <dateTimeBetween('1988-01-01', '1988-12-31')>
+    address: 23 Avenue Jean Jaurès
+    city: Montpellier
+    country: France
+
+  user_pierre:
+    email: pierre.roux@email.com
+    password: pierre123
+    roles: ['ROLE_USER']
+    firstName: Pierre
+    lastName: Roux
+    telephone: '0498765432'
+    birthAt: <dateTimeBetween('1975-01-01', '1975-12-31')>
+    address: 8 Place de la Comédie
+    city: Arles
+    country: France
+
+  user_camille:
+    email: camille.bernard@email.com
+    password: camille123
+    roles: ['ROLE_USER']
+    firstName: Camille
+    lastName: Bernard
+    birthAt: <dateTimeBetween('1995-01-01', '1995-12-31')>
+    address: 15 Rue Émile Zola
+    city: Avignon
+    country: France

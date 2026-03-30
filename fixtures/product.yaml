@@ -1,6 +1,0 @@
-App\Entity\Product:
-  product{1..100}:
-    title: '<word()> <numberBetween(1, 5)>'
-    description: '<word(1000)>'
-    price: '<numberBetween(1, 100)>'
-    quantity: '<numberBetween(1, 100)>'
