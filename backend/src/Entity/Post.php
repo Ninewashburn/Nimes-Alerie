@@ -4,13 +4,25 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post as ApiPost;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\PostRepository;
+use App\State\PostStateProcessor;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ApiResource]
+#[ApiResource(operations: [
+    new Get(),
+    new GetCollection(),
+    new ApiPost(processor: PostStateProcessor::class),
+    new Patch(processor: PostStateProcessor::class),
+    new Delete(),
+])]
 #[ApiFilter(SearchFilter::class, properties: ['thread' => 'exact'])]
 #[ORM\Entity(repositoryClass: PostRepository::class)]
 class Post

@@ -9,7 +9,7 @@ describe('AdminDashboardComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AdminDashboardComponent],
-      providers: [provideRouter([])]
+      providers: [provideRouter([])],
     }).compileComponents();
     fixture = TestBed.createComponent(AdminDashboardComponent);
     component = fixture.componentInstance;

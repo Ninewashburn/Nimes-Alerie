@@ -11,5 +11,5 @@ import { FooterComponent } from '@shared/components/footer/footer';
   styleUrl: './app.scss',
 })
 export class AppComponent {
-  title = 'La Nimes\'Alerie';
+  title = "La Nimes'Alerie";
 }

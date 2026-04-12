@@ -33,7 +33,15 @@ class Product
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
     #[Assert\NotBlank]
     #[Assert\PositiveOrZero]
-    private ?string $price = null;
+    private ?string $priceHT = null;
+
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
+    #[Assert\NotBlank]
+    #[Assert\PositiveOrZero]
+    private ?string $priceTTC = null;
+
+    #[ORM\Column(type: 'boolean')]
+    private bool $isActive = true;
 
     #[ORM\Column(type: 'integer')]
     #[Assert\NotBlank]
@@ -93,14 +101,38 @@ class Product
         return $this;
     }
 
-    public function getPrice(): ?string
+    public function getPriceHT(): ?string
     {
-        return $this->price;
+        return $this->priceHT;
     }
 
-    public function setPrice(string $price): self
+    public function setPriceHT(string $priceHT): self
     {
-        $this->price = $price;
+        $this->priceHT = $priceHT;
+
+        return $this;
+    }
+
+    public function getPriceTTC(): ?string
+    {
+        return $this->priceTTC;
+    }
+
+    public function setPriceTTC(string $priceTTC): self
+    {
+        $this->priceTTC = $priceTTC;
+
+        return $this;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }

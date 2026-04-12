@@ -11,7 +11,7 @@ describe('AdminProductsComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AdminProductsComponent],
-      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()]
+      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
     fixture = TestBed.createComponent(AdminProductsComponent);
     component = fixture.componentInstance;

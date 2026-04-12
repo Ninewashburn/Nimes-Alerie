@@ -16,8 +16,8 @@ describe('ForumThreadComponent', () => {
         provideRouter([]),
         provideHttpClient(),
         provideHttpClientTesting(),
-        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => '1' } } } }
-      ]
+        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => '1' } } } },
+      ],
     }).compileComponents();
     fixture = TestBed.createComponent(ForumThreadComponent);
     component = fixture.componentInstance;

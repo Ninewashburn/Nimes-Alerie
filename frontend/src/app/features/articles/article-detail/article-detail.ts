@@ -26,7 +26,7 @@ export class ArticleDetailComponent implements OnInit {
         this.loading.set(false);
       },
       error: () => {
-        this.error.set('Impossible de charger l\'article.');
+        this.error.set("Impossible de charger l'article.");
         this.loading.set(false);
       },
     });

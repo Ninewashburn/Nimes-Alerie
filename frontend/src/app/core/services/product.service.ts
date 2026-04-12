@@ -10,10 +10,10 @@ export class ProductService {
 
   constructor(private http: HttpClient) {}
 
-  getAll(): Observable<Product[]> {
+  getAll(page = 1, itemsPerPage = 9): Observable<{ items: Product[]; total: number }> {
     return this.http
-      .get<ApiCollection<Product>>(this.apiUrl)
-      .pipe(map((res) => res['hydra:member']));
+      .get<ApiCollection<Product>>(`${this.apiUrl}?page=${page}&itemsPerPage=${itemsPerPage}`)
+      .pipe(map((res) => ({ items: res['hydra:member'], total: res['hydra:totalItems'] })));
   }
 
   getById(id: number): Observable<Product> {

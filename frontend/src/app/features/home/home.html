@@ -1,39 +1,124 @@
-<div class="max-w-6xl mx-auto">
-  <section class="text-center py-16">
-    <h1 class="text-5xl font-bold text-gray-900 mb-4">
-      Bienvenue sur La Nimes'Alerie
-    </h1>
-    <p class="text-xl text-gray-600 mb-8">
-      Votre boutique en ligne - Mode, lifestyle et conquête spatiale
+<!-- Hero Section — full bleed (negate container padding) -->
+<section class="relative min-h-[640px] flex items-center justify-center overflow-hidden -mx-4 -mt-24 px-6 py-16">
+  <div class="absolute inset-0 z-0">
+    <img
+      src="assets/images/stitch/hero-bg.jpg"
+      alt="Fond spatial"
+      class="w-full h-full object-cover"
+    />
+    <div class="absolute inset-0 bg-gradient-to-b from-blue-950/70 via-blue-900/50 to-gray-900/80"></div>
+  </div>
+  <div class="relative z-10 max-w-md mx-auto text-center">
+    <div class="inline-block px-4 py-1 mb-6 rounded-full bg-blue-600/20 backdrop-blur-md border border-blue-500/30 text-blue-300 font-bold text-xs tracking-widest uppercase">
+      Pet Logistics Division
+    </div>
+    <h2 class="text-4xl font-black text-white leading-tight mb-6">
+      La Nîmes'Alerie vous souhaite la bienvenue&nbsp;!
+    </h2>
+    <p class="text-lg text-blue-100 mb-8 font-medium">
+      Votre compagnon mérite les étoiles. Livraison express en 24h à travers toute la galaxie (et Nîmes).
     </p>
-    <div class="flex justify-center gap-4">
-      <a routerLink="/products" class="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 rounded-lg font-semibold transition">
-        Découvrir la boutique
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a routerLink="/products"
+         class="px-8 py-4 rounded-full bg-gradient-to-r from-blue-600 to-blue-400 text-white font-bold text-lg shadow-xl shadow-blue-500/30 hover:scale-105 active:scale-95 transition-all text-center">
+        Décollage 🚀
       </a>
-      <a routerLink="/forum" class="border border-orange-500 text-orange-500 hover:bg-orange-50 px-8 py-3 rounded-lg font-semibold transition">
-        Rejoindre le forum
+      <a routerLink="/forum"
+         class="px-8 py-4 rounded-full bg-white/20 backdrop-blur-md border border-white/40 text-white font-bold text-lg hover:bg-white/30 active:scale-95 transition-all text-center">
+        Découvrir
       </a>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section class="grid grid-cols-1 md:grid-cols-3 gap-8 py-12">
-    <div class="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition">
-      <div class="text-4xl mb-4">🛍️</div>
-      <h3 class="text-xl font-semibold mb-2">Boutique</h3>
-      <p class="text-gray-600">Découvrez nos produits variés et tendances.</p>
-      <a routerLink="/products" class="text-orange-500 hover:text-orange-600 mt-4 inline-block">Explorer →</a>
+<!-- What is it section -->
+<section class="py-16 bg-gray-50 dark:bg-gray-800/50 -mx-4 px-6">
+  <h3 class="text-2xl font-black text-center mb-10 text-gray-900 dark:text-white">La Nîmes'Alerie ? C'est quoi ?</h3>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col items-center text-center">
+      <div class="w-16 h-16 bg-blue-50 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center mb-6">
+        <span class="material-symbols-outlined text-4xl text-blue-600">pets</span>
+      </div>
+      <h4 class="text-xl font-bold mb-3 dark:text-white">Un mode de vie !</h4>
+      <p class="text-gray-500 dark:text-gray-400">Plus qu'une boutique, une philosophie spatiale pour vos animaux terrestres.</p>
     </div>
-    <div class="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition">
-      <div class="text-4xl mb-4">🚀</div>
-      <h3 class="text-xl font-semibold mb-2">Espace</h3>
-      <p class="text-gray-600">Actualités et aventures spatiales.</p>
-      <a routerLink="/space" class="text-orange-500 hover:text-orange-600 mt-4 inline-block">Découvrir →</a>
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col items-center text-center">
+      <div class="w-16 h-16 bg-purple-50 dark:bg-purple-900/30 rounded-2xl flex items-center justify-center mb-6">
+        <span class="material-symbols-outlined text-4xl text-purple-600">computer</span>
+      </div>
+      <h4 class="text-xl font-bold mb-3 dark:text-white">Un site varié !</h4>
+      <p class="text-gray-500 dark:text-gray-400">Une interface cockpit optimisée pour commander vos croquettes au laser.</p>
     </div>
-    <div class="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition">
-      <div class="text-4xl mb-4">💬</div>
-      <h3 class="text-xl font-semibold mb-2">Forum</h3>
-      <p class="text-gray-600">Échangez avec la communauté Nimes'Alerie.</p>
-      <a routerLink="/forum" class="text-orange-500 hover:text-orange-600 mt-4 inline-block">Participer →</a>
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col items-center text-center">
+      <div class="w-16 h-16 bg-blue-50 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center mb-6">
+        <span class="material-symbols-outlined text-4xl text-blue-600">satellite_alt</span>
+      </div>
+      <h4 class="text-xl font-bold mb-3 dark:text-white">La conquête spatiale !</h4>
+      <p class="text-gray-500 dark:text-gray-400">Nous finançons l'envoi du premier Golden Retriever sur la face cachée de la Lune.</p>
     </div>
-  </section>
-</div>
+  </div>
+</section>
+
+<!-- Space Banner -->
+<section class="relative h-56 my-12 rounded-3xl overflow-hidden shadow-2xl">
+  <img
+    src="assets/images/stitch/banner-space.jpg"
+    alt="Planètes spatiales"
+    class="w-full h-full object-cover"
+  />
+  <!-- Overlay sombre pour lisibilité -->
+  <div class="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30"></div>
+  <div class="absolute inset-0 flex items-center justify-center p-8 text-center">
+    <div>
+      <h3 class="text-2xl font-black text-white leading-tight mb-3 drop-shadow-lg">Quoi de neuf dans l'espace ?</h3>
+      <a routerLink="/space" class="inline-block px-6 py-2 rounded-full bg-white/25 backdrop-blur-sm border border-white/50 text-white font-semibold hover:bg-white/40 transition-all text-sm shadow-lg">
+        Explorer ✨
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Products -->
+<section class="py-8 pb-16">
+  <div class="flex items-end justify-between mb-10">
+    <h3 class="text-2xl font-black text-gray-900 dark:text-white leading-none">Produits phares</h3>
+    <a routerLink="/products" class="text-blue-600 font-bold text-sm hover:text-purple-600 transition-colors">
+      Voir tout →
+    </a>
+  </div>
+
+  @if (featuredProducts().length === 0) {
+    <div class="text-center py-12 text-gray-400 dark:text-gray-500">Chargement des produits...</div>
+  } @else {
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      @for (product of featuredProducts(); track product.id; let i = $index) {
+        <div class="relative bg-white dark:bg-gray-800 rounded-[2rem] p-6 border border-gray-100 dark:border-gray-700 anti-gravity-shadow"
+             [class.-rotate-1]="i % 2 === 0"
+             [class.rotate-1]="i % 2 === 1">
+          <div class="h-48 w-full rounded-2xl overflow-hidden mb-6 bg-gray-100 dark:bg-gray-700">
+            @if (product.cover) {
+              <img [src]="product.cover" [alt]="product.title" class="w-full h-full object-cover" />
+            } @else {
+              <div class="w-full h-full flex items-center justify-center text-gray-300 dark:text-gray-500">
+                <span class="material-symbols-outlined text-6xl">pets</span>
+              </div>
+            }
+          </div>
+          <div class="px-1">
+            <span class="text-xs font-bold text-blue-600 uppercase tracking-wider">
+              {{ product.category?.[0]?.title ?? 'Produit' }}
+            </span>
+            <h4 class="text-lg font-bold text-gray-900 dark:text-white mt-1">{{ product.title }}</h4>
+            <div class="flex items-center justify-between mt-4">
+              <span class="text-xl font-black text-gray-900 dark:text-white">{{ +product.priceTTC | currency:'EUR' }}</span>
+              <button (click)="addToCart(product)"
+                      class="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-2xl active:scale-90 transition-transform">
+                <span class="material-symbols-outlined text-xl">add_shopping_cart</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</section>

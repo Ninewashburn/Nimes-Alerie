@@ -75,6 +75,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
     private ?string $country = null;
 
+    #[ORM\Column(type: 'string', length: 10, nullable: true)]
+    private ?string $postalCode = null;
+
+    #[ORM\Column(type: 'string', length: 10, nullable: true)]
+    private ?string $gender = null;
+
     public function __construct()
     {
         $this->rate = new ArrayCollection();
@@ -307,6 +313,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCountry(?string $country): self
     {
         $this->country = $country;
+
+        return $this;
+    }
+
+    public function getPostalCode(): ?string
+    {
+        return $this->postalCode;
+    }
+
+    public function setPostalCode(?string $postalCode): self
+    {
+        $this->postalCode = $postalCode;
+
+        return $this;
+    }
+
+    public function getGender(): ?string
+    {
+        return $this->gender;
+    }
+
+    public function setGender(?string $gender): self
+    {
+        $this->gender = $gender;
 
         return $this;
     }
