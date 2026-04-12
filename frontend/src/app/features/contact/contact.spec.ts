@@ -9,7 +9,7 @@ describe('ContactComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ContactComponent],
-      providers: [provideRouter([])]
+      providers: [provideRouter([])],
     }).compileComponents();
     fixture = TestBed.createComponent(ContactComponent);
     component = fixture.componentInstance;

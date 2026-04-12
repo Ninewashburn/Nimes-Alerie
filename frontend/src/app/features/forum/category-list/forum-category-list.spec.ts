@@ -11,7 +11,7 @@ describe('ForumCategoryListComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ForumCategoryListComponent],
-      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()]
+      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()],
     }).compileComponents();
     fixture = TestBed.createComponent(ForumCategoryListComponent);
     component = fixture.componentInstance;

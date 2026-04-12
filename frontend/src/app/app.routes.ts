@@ -4,15 +4,12 @@ import { authGuard, adminGuard } from '@core/guards/auth.guard';
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () =>
-      import('@features/home/home').then((m) => m.HomeComponent),
+    loadComponent: () => import('@features/home/home').then((m) => m.HomeComponent),
   },
   {
     path: 'products',
     loadComponent: () =>
-      import('@features/products/product-list/product-list').then(
-        (m) => m.ProductListComponent,
-      ),
+      import('@features/products/product-list/product-list').then((m) => m.ProductListComponent),
   },
   {
     path: 'products/:id',
@@ -23,27 +20,26 @@ export const routes: Routes = [
   },
   {
     path: 'cart',
-    loadComponent: () =>
-      import('@features/cart/cart').then((m) => m.CartComponent),
+    loadComponent: () => import('@features/cart/cart').then((m) => m.CartComponent),
+  },
+  {
+    path: 'checkout',
+    canActivate: [authGuard],
+    loadComponent: () => import('@features/checkout/checkout').then((m) => m.CheckoutComponent),
   },
   {
     path: 'login',
-    loadComponent: () =>
-      import('@features/auth/login/login').then((m) => m.LoginComponent),
+    loadComponent: () => import('@features/auth/login/login').then((m) => m.LoginComponent),
   },
   {
     path: 'register',
     loadComponent: () =>
-      import('@features/auth/register/register').then(
-        (m) => m.RegisterComponent,
-      ),
+      import('@features/auth/register/register').then((m) => m.RegisterComponent),
   },
   {
     path: 'articles',
     loadComponent: () =>
-      import('@features/articles/article-list/article-list').then(
-        (m) => m.ArticleListComponent,
-      ),
+      import('@features/articles/article-list/article-list').then((m) => m.ArticleListComponent),
   },
   {
     path: 'articles/:id',
@@ -76,52 +72,58 @@ export const routes: Routes = [
   {
     path: 'forum/thread/:id',
     loadComponent: () =>
-      import('@features/forum/thread/forum-thread').then(
-        (m) => m.ForumThreadComponent,
-      ),
+      import('@features/forum/thread/forum-thread').then((m) => m.ForumThreadComponent),
   },
   {
     path: 'contact',
-    loadComponent: () =>
-      import('@features/contact/contact').then(
-        (m) => m.ContactComponent,
-      ),
+    loadComponent: () => import('@features/contact/contact').then((m) => m.ContactComponent),
   },
   {
     path: 'space',
-    loadComponent: () =>
-      import('@features/space/space-base').then(
-        (m) => m.SpaceBaseComponent,
-      ),
+    canActivate: [authGuard],
+    loadComponent: () => import('@features/space/space-base').then((m) => m.SpaceBaseComponent),
+  },
+  {
+    path: 'profile',
+    canActivate: [authGuard],
+    loadComponent: () => import('@features/profile/profile').then((m) => m.ProfileComponent),
   },
   {
     path: 'admin',
     canActivate: [adminGuard],
     loadComponent: () =>
-      import('@features/admin/dashboard/admin-dashboard').then(
-        (m) => m.AdminDashboardComponent,
-      ),
+      import('@features/admin/dashboard/admin-dashboard').then((m) => m.AdminDashboardComponent),
   },
   {
     path: 'admin/products',
     canActivate: [adminGuard],
     loadComponent: () =>
-      import('@features/admin/products/admin-products').then(
-        (m) => m.AdminProductsComponent,
-      ),
+      import('@features/admin/products/admin-products').then((m) => m.AdminProductsComponent),
   },
   {
     path: 'admin/users',
     canActivate: [adminGuard],
     loadComponent: () =>
-      import('@features/admin/users/admin-users').then(
-        (m) => m.AdminUsersComponent,
-      ),
+      import('@features/admin/users/admin-users').then((m) => m.AdminUsersComponent),
   },
   {
     path: 'bonus',
-    loadComponent: () =>
-      import('@features/bonus/bonus').then((m) => m.BonusComponent),
+    loadComponent: () => import('@features/bonus/bonus').then((m) => m.BonusComponent),
+  },
+  {
+    path: 'legal/cgu',
+    loadComponent: () => import('@features/legal/legal').then((m) => m.LegalComponent),
+    data: { type: 'cgu' },
+  },
+  {
+    path: 'legal/cgv',
+    loadComponent: () => import('@features/legal/legal').then((m) => m.LegalComponent),
+    data: { type: 'cgv' },
+  },
+  {
+    path: 'legal/mentions',
+    loadComponent: () => import('@features/legal/legal').then((m) => m.LegalComponent),
+    data: { type: 'mentions' },
   },
   {
     path: '**',

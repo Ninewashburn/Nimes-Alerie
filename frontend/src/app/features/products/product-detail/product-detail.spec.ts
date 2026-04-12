@@ -16,8 +16,8 @@ describe('ProductDetailComponent', () => {
         provideRouter([]),
         provideHttpClient(),
         provideHttpClientTesting(),
-        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => '1' } } } }
-      ]
+        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => '1' } } } },
+      ],
     }).compileComponents();
     fixture = TestBed.createComponent(ProductDetailComponent);
     component = fixture.componentInstance;

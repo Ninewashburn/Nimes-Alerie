@@ -2,13 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '@env/environment';
-import {
-  ApiCollection,
-  ForumType,
-  SubType,
-  Thread,
-  Post,
-} from '@core/models/product.model';
+import { ApiCollection, ForumType, SubType, Thread, Post } from '@core/models/product.model';
 
 @Injectable({ providedIn: 'root' })
 export class ForumService {
@@ -34,9 +28,7 @@ export class ForumService {
 
   getThreads(subTypeId: number): Observable<Thread[]> {
     return this.http
-      .get<ApiCollection<Thread>>(
-        `${this.apiUrl}/threads?subtype=${subTypeId}`,
-      )
+      .get<ApiCollection<Thread>>(`${this.apiUrl}/threads?subtype=${subTypeId}`)
       .pipe(map((res) => res['hydra:member']));
   }
 
@@ -58,7 +50,19 @@ export class ForumService {
     return this.http.post<Post>(`${this.apiUrl}/posts`, post);
   }
 
+  updatePost(id: number, content: string): Observable<Post> {
+    return this.http.patch<Post>(
+      `${this.apiUrl}/posts/${id}`,
+      { content },
+      { headers: { 'Content-Type': 'application/merge-patch+json' } },
+    );
+  }
+
   deletePost(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/posts/${id}`);
+  }
+
+  deleteThread(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/threads/${id}`);
   }
 }

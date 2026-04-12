@@ -2,8 +2,10 @@ export interface Product {
   id: number;
   title: string;
   description: string;
-  price: string;
+  priceHT: string;
+  priceTTC: string;
   quantity: number;
+  isActive: boolean;
   image?: string;
   cover?: string;
   brand?: Brand;
@@ -20,13 +22,15 @@ export interface Category {
   id: number;
   title: string;
   description: string;
-  parent: string;
+  parent?: Category | null;
+  children?: Category[];
 }
 
 export interface Article {
   id: number;
   name: string;
   content: string;
+  cover?: string;
 }
 
 export interface User {
@@ -39,14 +43,47 @@ export interface User {
   address: string;
   secondAddress?: string;
   city: string;
+  postalCode?: string;
   country?: string;
+  gender?: string;
   roles: string[];
 }
 
 export interface Order {
   id: number;
   createdAt: string;
+  status: 'pending' | 'preparing' | 'shipped' | 'refunded';
+  total?: string;
+  items?: CheckoutItem[];
+  billNumber?: string;
+  payment?: 'card' | 'paypal';
+}
+
+export interface CheckoutItem {
+  productId: number;
+  title: string;
+  quantity: number;
+  priceTTC: string;
+}
+
+export interface CheckoutRequest {
+  items: CheckoutItem[];
+  deliveryAddress: string;
+  deliveryCity: string;
+  deliveryPostalCode: string;
+  deliveryCountry: string;
+  paymentMethod: 'card' | 'paypal';
+  total: number;
+}
+
+export interface OrderConfirmation {
+  id: number;
+  billNumber: string;
   status: string;
+  total: string;
+  itemsCount: number;
+  createdAt: string;
+  payment: string;
 }
 
 export interface Rate {
@@ -72,6 +109,7 @@ export interface Thread {
   subject: string;
   createdAt: string;
   user?: User;
+  subtype?: string | SubType;
 }
 
 export interface Post {

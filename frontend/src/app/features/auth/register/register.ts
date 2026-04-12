@@ -15,8 +15,14 @@ export class RegisterComponent {
   private router = inject(Router);
 
   form = {
-    email: '', password: '', firstName: '', lastName: '',
-    birthAt: '', address: '', city: '', telephone: '',
+    email: '',
+    password: '',
+    firstName: '',
+    lastName: '',
+    birthAt: '',
+    address: '',
+    city: '',
+    telephone: '',
   };
   error = signal('');
   loading = signal(false);

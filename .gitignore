@@ -33,3 +33,9 @@ compose.override.yaml
 ###< Docker ###
 
 node_modules
+
+###> Custom Tools & Temp ###
+.gemini/
+.claude/
+frontend/stitch_*.html
+###< Custom Tools & Temp ###

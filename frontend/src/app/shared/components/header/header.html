@@ -1,55 +1,71 @@
-<header class="bg-gray-900 text-white shadow-lg">
-  <nav class="container mx-auto px-4 py-3 flex items-center justify-between">
-    <a routerLink="/" class="text-xl font-bold text-orange-500 hover:text-orange-400">
-      La Nimes'Alerie
-    </a>
-    <a routerLink="/bonus" class="text-gray-800 hover:text-gray-600 text-xs ml-1 cursor-default" title="">.</a>
-
-    <div class="hidden md:flex items-center gap-6">
-      <a routerLink="/products" routerLinkActive="text-orange-400" class="hover:text-orange-400 transition">
-        Boutique
-      </a>
-      <a routerLink="/articles" routerLinkActive="text-orange-400" class="hover:text-orange-400 transition">
-        Articles
-      </a>
-      <a routerLink="/forum" routerLinkActive="text-orange-400" class="hover:text-orange-400 transition">
-        Forum
-      </a>
-      <a routerLink="/space" routerLinkActive="text-orange-400" class="hover:text-orange-400 transition">
-        Espace
-      </a>
-      <a routerLink="/contact" routerLinkActive="text-orange-400" class="hover:text-orange-400 transition">
-        Contact
+<header class="fixed top-0 w-full z-50 glass-panel dark:bg-gray-900/80 border-b border-white/20 dark:border-gray-800/50 shadow-lg shadow-blue-500/10 h-20 transition-colors">
+  <div class="container mx-auto px-4 h-full flex justify-between items-center">
+    <!-- Logo & Title -->
+    <div class="flex items-center gap-2">
+      <span class="material-symbols-outlined text-primary text-3xl" data-icon="rocket_launch">rocket_launch</span>
+      <a routerLink="/" class="text-2xl font-black bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary font-headline tracking-tight hover:opacity-80 transition-opacity dark:from-blue-400 dark:to-purple-400">
+        La Nîmes'Alerie
       </a>
     </div>
 
+    <!-- Navigation Links -->
+    <nav class="hidden lg:flex items-center gap-8 font-body font-bold text-gray-700 dark:text-gray-200">
+      <a routerLink="/products" routerLinkActive="text-primary bg-primary/10 dark:bg-primary/20 rounded-xl" class="px-3 py-2 hover:text-primary dark:hover:text-blue-400 transition-all duration-200">Boutique</a>
+      <a routerLink="/articles" routerLinkActive="text-primary bg-primary/10 dark:bg-primary/20 rounded-xl" class="px-3 py-2 hover:text-primary dark:hover:text-blue-400 transition-all duration-200">Articles</a>
+      <a routerLink="/forum" routerLinkActive="text-primary bg-primary/10 dark:bg-primary/20 rounded-xl" class="px-3 py-2 hover:text-primary dark:hover:text-blue-400 transition-all duration-200">Forum</a>
+      <a routerLink="/contact" routerLinkActive="text-primary bg-primary/10 dark:bg-primary/20 rounded-xl" class="px-3 py-2 hover:text-primary dark:hover:text-blue-400 transition-all duration-200">Contact</a>
+    </nav>
+
+    <!-- User & Actions -->
     <div class="flex items-center gap-4">
-      <a routerLink="/cart" class="relative hover:text-orange-400 transition">
-        🛒
+      <!-- Dark Mode Toggle -->
+      <button (click)="toggleTheme()" class="text-gray-700 dark:text-gray-200 hover:text-primary dark:hover:text-blue-400 transition bg-gray-100 dark:bg-gray-800 w-10 h-10 rounded-full flex items-center justify-center shadow-inner" title="Basculer le mode sombre">
+        <span class="material-symbols-outlined text-xl">
+          {{ isDarkMode() ? 'light_mode' : 'dark_mode' }}
+        </span>
+      </button>
+
+      <!-- Mini Game Bonus Button -->
+      <a routerLink="/bonus" class="bg-gradient-to-r from-purple-500 to-secondary text-white w-10 h-10 rounded-full flex items-center justify-center hover:scale-110 transition-transform shadow-lg shadow-purple-500/30" title="Jouer au mini-jeu !">
+        <span class="material-symbols-outlined text-xl" data-icon="cruelty_free">cruelty_free</span>
+      </a>
+
+      <!-- Cart Button -->
+      <a routerLink="/cart" class="relative text-gray-700 dark:text-gray-200 hover:text-primary dark:hover:text-blue-400 transition bg-gray-100 dark:bg-gray-800 w-10 h-10 rounded-full flex items-center justify-center">
+        <span class="material-symbols-outlined font-light text-xl" data-icon="shopping_basket">shopping_basket</span>
         @if (cartService.itemCount() > 0) {
-          <span class="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+          <span class="absolute -top-1 -right-1 bg-secondary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md">
             {{ cartService.itemCount() }}
           </span>
         }
       </a>
 
+      <!-- Auth / Profile -->
       @if (authService.loggedIn()) {
         @if (authService.isAdmin()) {
-          <a routerLink="/admin" class="text-sm bg-orange-500 hover:bg-orange-600 px-3 py-1 rounded transition">
+          <a routerLink="/admin" class="text-sm font-bold bg-primary/10 dark:bg-primary/20 text-primary dark:text-blue-400 hover:bg-primary hover:text-white dark:hover:text-white px-4 py-2 rounded-full transition-colors">
             Admin
           </a>
+        } @else {
+          <a routerLink="/space" class="text-sm font-bold bg-primary/10 dark:bg-primary/20 text-primary dark:text-blue-400 hover:bg-primary hover:text-white dark:hover:text-white px-4 py-2 rounded-full transition-colors">
+            Mon Espace
+          </a>
         }
-        <button (click)="authService.logout()" class="text-sm hover:text-orange-400 transition">
+        <button (click)="authService.logout()" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-400 transition px-2">
           Déconnexion
         </button>
+        <a routerLink="/profile" class="w-10 h-10 rounded-full border-2 border-primary dark:border-blue-400 overflow-hidden shadow-sm hover:scale-105 transition-transform" title="Mon profil">
+          <img alt="Mon profil" class="w-full h-full object-cover"
+            [src]="'https://ui-avatars.com/api/?name=' + (authService.user()?.firstName ?? 'U') + '+' + (authService.user()?.lastName ?? '') + '&background=0052FF&color=fff'" />
+        </a>
       } @else {
-        <a routerLink="/login" class="text-sm hover:text-orange-400 transition">
+        <a routerLink="/login" class="text-sm font-bold text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-blue-400 transition px-2">
           Connexion
         </a>
-        <a routerLink="/register" class="text-sm bg-orange-500 hover:bg-orange-600 px-3 py-1 rounded transition">
-          Inscription
+        <a routerLink="/register" class="text-sm font-bold bg-gradient-to-r from-primary to-blue-400 text-white px-5 py-2.5 rounded-full hover:shadow-lg hover:shadow-primary/30 active:scale-95 transition-all w-max whitespace-nowrap">
+          S'inscrire
         </a>
       }
     </div>
-  </nav>
+  </div>
 </header>

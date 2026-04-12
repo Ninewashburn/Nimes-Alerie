@@ -35,6 +35,7 @@ export class BonusComponent implements AfterViewInit, OnDestroy {
   hasGameStarted = false;
   private spriteSheetImg!: HTMLImageElement;
   private bulletImg!: HTMLImageElement;
+  private audioCtx: AudioContext | null = null;
 
   private readonly CANVAS_WIDTH = 640;
   private readonly CANVAS_HEIGHT = 640;
@@ -80,6 +81,83 @@ export class BonusComponent implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     cancelAnimationFrame(this.animationId);
+    this.audioCtx?.close();
+  }
+
+  // ── Web Audio helpers ──────────────────────────────────────────────────────
+
+  private getAudioCtx(): AudioContext {
+    if (!this.audioCtx) {
+      this.audioCtx = new AudioContext();
+    }
+    return this.audioCtx;
+  }
+
+  private playTone(
+    frequency: number,
+    duration: number,
+    type: OscillatorType = 'square',
+    volume = 0.15,
+    freqEnd?: number,
+  ): void {
+    const ctx = this.getAudioCtx();
+    const oscillator = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    oscillator.connect(gain);
+    gain.connect(ctx.destination);
+
+    oscillator.type = type;
+    oscillator.frequency.setValueAtTime(frequency, ctx.currentTime);
+    if (freqEnd !== undefined) {
+      oscillator.frequency.linearRampToValueAtTime(freqEnd, ctx.currentTime + duration);
+    }
+
+    gain.gain.setValueAtTime(volume, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+
+    oscillator.start(ctx.currentTime);
+    oscillator.stop(ctx.currentTime + duration);
+  }
+
+  private playNoise(duration: number, volume = 0.1): void {
+    const ctx = this.getAudioCtx();
+    const bufferSize = ctx.sampleRate * duration;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      data[i] = Math.random() * 2 - 1;
+    }
+    const source = ctx.createBufferSource();
+    source.buffer = buffer;
+
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(volume, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+
+    source.connect(gain);
+    gain.connect(ctx.destination);
+    source.start();
+  }
+
+  private soundShoot(): void {
+    this.playTone(880, 0.08, 'square', 0.12, 440);
+  }
+
+  private soundAlienExplode(): void {
+    this.playNoise(0.18, 0.2);
+    this.playTone(150, 0.18, 'sawtooth', 0.1, 60);
+  }
+
+  private soundPlayerHit(): void {
+    this.playTone(200, 0.4, 'sawtooth', 0.15, 50);
+    this.playNoise(0.4, 0.15);
+  }
+
+  private soundWaveClear(): void {
+    [523, 659, 784, 1047].forEach((f, i) => {
+      setTimeout(() => this.playTone(f, 0.15, 'square', 0.12), i * 120);
+    });
   }
 
   @HostListener('window:keydown', ['$event'])
@@ -166,7 +244,10 @@ export class BonusComponent implements AfterViewInit, OnDestroy {
       this.aliens.push(
         this.createEnemy(
           clipRects,
-          this.CANVAS_WIDTH / 2 - this.ALIEN_SQUAD_WIDTH / 2 + this.ALIEN_X_MARGIN / 2 + gridX * this.ALIEN_X_MARGIN,
+          this.CANVAS_WIDTH / 2 -
+            this.ALIEN_SQUAD_WIDTH / 2 +
+            this.ALIEN_X_MARGIN / 2 +
+            gridX * this.ALIEN_X_MARGIN,
           this.CANVAS_HEIGHT / 3.25 - gridY * 40,
         ),
       );
@@ -189,15 +270,18 @@ export class BonusComponent implements AfterViewInit, OnDestroy {
       const h = ~~(0.5 + entity.clipRect.h * entity.scale.y);
       entity.bounds = { x: entity.position.x - w / 2, y: entity.position.y - h / 2, w, h };
     } else {
-      entity.bounds = { x: entity.position.x, y: entity.position.y, w: entity.img.width, h: entity.img.height };
+      entity.bounds = {
+        x: entity.position.x,
+        y: entity.position.y,
+        w: entity.img.width,
+        h: entity.img.height,
+      };
     }
   }
 
   private checkCollision(a: any, b: any): boolean {
-    const xOverlap =
-      (a.x >= b.x && a.x <= b.x + b.w) || (b.x >= a.x && b.x <= a.x + a.w);
-    const yOverlap =
-      (a.y >= b.y && a.y <= b.y + b.h) || (b.y >= a.y && b.y <= a.y + a.h);
+    const xOverlap = (a.x >= b.x && a.x <= b.x + b.w) || (b.x >= a.x && b.x <= a.x + a.w);
+    const yOverlap = (a.y >= b.y && a.y <= b.y + b.h) || (b.y >= a.y && b.y <= a.y + a.h);
     return xOverlap && yOverlap;
   }
 
@@ -213,6 +297,7 @@ export class BonusComponent implements AfterViewInit, OnDestroy {
           this.createBullet(this.player.position.x, this.player.position.y - 20, 1, 1000),
         );
         this.player.bulletDelayAccumulator = 0;
+        this.soundShoot();
       }
     }
 
@@ -244,11 +329,12 @@ export class BonusComponent implements AfterViewInit, OnDestroy {
         if (this.alienCount < 1) {
           this.wave++;
           this.setupAlienFormation();
+          this.soundWaveClear();
         }
         continue;
       }
 
-      alien.stepDelay = ((this.alienCount * 20) - (this.wave * 10)) / 1000;
+      alien.stepDelay = (this.alienCount * 20 - this.wave * 10) / 1000;
       if (alien.stepDelay <= 0.05) alien.stepDelay = 0.05;
 
       alien.stepAccumulator += dt;
@@ -294,6 +380,7 @@ export class BonusComponent implements AfterViewInit, OnDestroy {
           bullet.alive = false;
           this.createExplosion(alien.position.x, alien.position.y, 'white', 70, 5, 5, 3, 0.15, 50);
           this.player.score += 25;
+          this.soundAlienExplode();
         }
       }
     }
@@ -305,9 +392,20 @@ export class BonusComponent implements AfterViewInit, OnDestroy {
           this.hasGameStarted = false;
         } else {
           alien.bullet.alive = false;
-          this.createExplosion(this.player.position.x, this.player.position.y, 'green', 100, 8, 8, 6, 0.001, 40);
+          this.createExplosion(
+            this.player.position.x,
+            this.player.position.y,
+            'green',
+            100,
+            8,
+            8,
+            6,
+            0.001,
+            40,
+          );
           this.player.position = { x: this.CANVAS_WIDTH / 2, y: this.CANVAS_HEIGHT - 70 };
           this.player.lives--;
+          this.soundPlayerHit();
         }
         break;
       }
@@ -317,19 +415,33 @@ export class BonusComponent implements AfterViewInit, OnDestroy {
   }
 
   private createExplosion(
-    x: number, y: number, color: string, count: number,
-    w: number, h: number, spd: number, grav: number, lif: number,
+    x: number,
+    y: number,
+    color: string,
+    count: number,
+    w: number,
+    h: number,
+    spd: number,
+    grav: number,
+    lif: number,
   ): void {
     for (let i = 0; i < count; i++) {
       const angle = Math.random() * 360;
-      const speed = Math.random() * spd / 2 + spd;
+      const speed = (Math.random() * spd) / 2 + spd;
       const life = Math.floor(Math.random() * lif) + lif / 2;
       const rad = (angle * Math.PI) / 180;
       this.particleManager.particles.push({
-        x, y,
+        x,
+        y,
         xunits: Math.cos(rad) * speed,
         yunits: Math.sin(rad) * speed,
-        life, maxLife: life, color, width: w, height: h, gravity: grav, moves: 0,
+        life,
+        maxLife: life,
+        color,
+        width: w,
+        height: h,
+        gravity: grav,
+        moves: 0,
       });
     }
   }
@@ -358,8 +470,25 @@ export class BonusComponent implements AfterViewInit, OnDestroy {
 
     // Player
     ctx.save();
-    ctx.transform(this.player.scale.x, 0, 0, this.player.scale.y, this.player.position.x, this.player.position.y);
-    ctx.drawImage(this.spriteSheetImg, this.player.clipRect.x, this.player.clipRect.y, this.player.clipRect.w, this.player.clipRect.h, -this.player.clipRect.w / 2, -this.player.clipRect.h / 2, this.player.clipRect.w, this.player.clipRect.h);
+    ctx.transform(
+      this.player.scale.x,
+      0,
+      0,
+      this.player.scale.y,
+      this.player.position.x,
+      this.player.position.y,
+    );
+    ctx.drawImage(
+      this.spriteSheetImg,
+      this.player.clipRect.x,
+      this.player.clipRect.y,
+      this.player.clipRect.w,
+      this.player.clipRect.h,
+      -this.player.clipRect.w / 2,
+      -this.player.clipRect.h / 2,
+      this.player.clipRect.w,
+      this.player.clipRect.h,
+    );
     ctx.restore();
 
     // Player bullets
@@ -372,7 +501,17 @@ export class BonusComponent implements AfterViewInit, OnDestroy {
       if (!alien.alive) continue;
       ctx.save();
       ctx.transform(alien.scale.x, 0, 0, alien.scale.y, alien.position.x, alien.position.y);
-      ctx.drawImage(this.spriteSheetImg, alien.clipRect.x, alien.clipRect.y, alien.clipRect.w, alien.clipRect.h, -alien.clipRect.w / 2, -alien.clipRect.h / 2, alien.clipRect.w, alien.clipRect.h);
+      ctx.drawImage(
+        this.spriteSheetImg,
+        alien.clipRect.x,
+        alien.clipRect.y,
+        alien.clipRect.w,
+        alien.clipRect.h,
+        -alien.clipRect.w / 2,
+        -alien.clipRect.h / 2,
+        alien.clipRect.w,
+        alien.clipRect.h,
+      );
       ctx.restore();
 
       if (alien.bullet?.alive) {
@@ -389,7 +528,17 @@ export class BonusComponent implements AfterViewInit, OnDestroy {
     ctx.font = '20px Play, monospace';
     ctx.fillStyle = 'white';
     ctx.fillText(this.player.lives + ' x ', 10, this.CANVAS_HEIGHT - 7.5);
-    ctx.drawImage(this.spriteSheetImg, this.player.clipRect.x, this.player.clipRect.y, this.player.clipRect.w, this.player.clipRect.h, 45, this.CANVAS_HEIGHT - 23, this.player.clipRect.w * 0.5, this.player.clipRect.h * 0.5);
+    ctx.drawImage(
+      this.spriteSheetImg,
+      this.player.clipRect.x,
+      this.player.clipRect.y,
+      this.player.clipRect.w,
+      this.player.clipRect.h,
+      45,
+      this.CANVAS_HEIGHT - 23,
+      this.player.clipRect.w * 0.5,
+      this.player.clipRect.h * 0.5,
+    );
 
     const scoreText = 'SCORE: ' + this.player.score;
     const scoreMetrics = ctx.measureText(scoreText);
@@ -408,7 +557,11 @@ export class BonusComponent implements AfterViewInit, OnDestroy {
     if (~~(0.5 + Date.now() / 500) % 2) {
       const startText = 'Press Enter to play !';
       const startMetrics = ctx.measureText(startText);
-      ctx.fillText(startText, this.CANVAS_WIDTH / 2 - startMetrics.width / 2, this.CANVAS_HEIGHT / 2);
+      ctx.fillText(
+        startText,
+        this.CANVAS_WIDTH / 2 - startMetrics.width / 2,
+        this.CANVAS_HEIGHT / 2,
+      );
     }
   }
 
@@ -418,6 +571,7 @@ export class BonusComponent implements AfterViewInit, OnDestroy {
     if (dt > 100) dt = 100;
 
     if (!this.prevKeyStates[13] && this.keyStates[13] && !this.hasGameStarted) {
+      this.getAudioCtx(); // unlock audio on first user gesture
       this.initGame();
       this.hasGameStarted = true;
     }

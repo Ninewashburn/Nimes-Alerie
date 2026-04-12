@@ -23,6 +23,18 @@ class Delivery
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $status = null;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    private ?string $deliveryAddress = null;
+
+    #[ORM\Column(type: 'string', length: 100)]
+    private ?string $deliveryCity = null;
+
+    #[ORM\Column(type: 'string', length: 10)]
+    private ?string $deliveryPostalCode = null;
+
+    #[ORM\Column(type: 'string', length: 100)]
+    private ?string $deliveryCountry = null;
+
     #[ORM\OneToOne(inversedBy: 'delivery', targetEntity: OrderLine::class, cascade: ['persist', 'remove'])]
     private ?OrderLine $orderLine = null;
 
@@ -55,6 +67,54 @@ class Delivery
         return $this;
     }
 
+    public function getDeliveryAddress(): ?string
+    {
+        return $this->deliveryAddress;
+    }
+
+    public function setDeliveryAddress(string $deliveryAddress): self
+    {
+        $this->deliveryAddress = $deliveryAddress;
+
+        return $this;
+    }
+
+    public function getDeliveryCity(): ?string
+    {
+        return $this->deliveryCity;
+    }
+
+    public function setDeliveryCity(string $deliveryCity): self
+    {
+        $this->deliveryCity = $deliveryCity;
+
+        return $this;
+    }
+
+    public function getDeliveryPostalCode(): ?string
+    {
+        return $this->deliveryPostalCode;
+    }
+
+    public function setDeliveryPostalCode(string $deliveryPostalCode): self
+    {
+        $this->deliveryPostalCode = $deliveryPostalCode;
+
+        return $this;
+    }
+
+    public function getDeliveryCountry(): ?string
+    {
+        return $this->deliveryCountry;
+    }
+
+    public function setDeliveryCountry(string $deliveryCountry): self
+    {
+        $this->deliveryCountry = $deliveryCountry;
+
+        return $this;
+    }
+
     public function getOrderLine(): ?OrderLine
     {
         return $this->orderLine;
@@ -66,5 +126,4 @@ class Delivery
 
         return $this;
     }
-
 }

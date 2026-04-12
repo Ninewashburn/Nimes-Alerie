@@ -1,7 +1,7 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, switchMap, tap } from 'rxjs';
+import { Observable, switchMap, tap, map } from 'rxjs';
 import { environment } from '@env/environment';
 import { JwtToken, LoginCredentials, User } from '@core/models/product.model';
 
@@ -39,11 +39,7 @@ export class AuthService {
   register(data: RegisterData): Observable<JwtToken> {
     return this.http
       .post(`${environment.apiUrl}/register`, data)
-      .pipe(
-        switchMap(() =>
-          this.login({ email: data.email, password: data.password }),
-        ),
-      );
+      .pipe(switchMap(() => this.login({ email: data.email, password: data.password })));
   }
 
   login(credentials: LoginCredentials): Observable<JwtToken> {
@@ -63,39 +59,36 @@ export class AuthService {
     return localStorage.getItem(this.tokenKey);
   }
 
+  updateProfile(
+    data: Partial<User> & { currentPassword?: string; newPassword?: string },
+  ): Observable<void> {
+    return this.http
+      .patch<void>(`${environment.apiUrl}/me`, data)
+      .pipe(tap(() => this.fetchProfile()));
+  }
+
+  fetchProfile(): void {
+    this.http.get<User>(`${environment.apiUrl}/me`).subscribe({
+      next: (user) => this.currentUser.set(user),
+      error: () => this.logout(),
+    });
+  }
+
   private setToken(token: string): void {
     localStorage.setItem(this.tokenKey, token);
     this.isAuthenticated.set(true);
-    this.decodeAndSetUser(token);
+    this.fetchProfile();
   }
 
   private checkToken(): void {
     const token = this.getToken();
     if (token && !this.isTokenExpired(token)) {
       this.isAuthenticated.set(true);
-      this.decodeAndSetUser(token);
+      this.fetchProfile();
     } else if (token) {
       localStorage.removeItem(this.tokenKey);
       this.currentUser.set(null);
       this.isAuthenticated.set(false);
-    }
-  }
-
-  private decodeAndSetUser(token: string): void {
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      this.currentUser.set({
-        id: payload.id ?? 0,
-        email: payload.username ?? payload.email ?? '',
-        firstName: payload.firstName ?? '',
-        lastName: payload.lastName ?? '',
-        roles: payload.roles ?? [],
-        address: '',
-        city: '',
-        birthAt: '',
-      });
-    } catch {
-      this.currentUser.set(null);
     }
   }
 

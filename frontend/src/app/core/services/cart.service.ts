@@ -7,16 +7,13 @@ export class CartService {
   private readonly items = signal<CartItem[]>(this.loadCart());
 
   readonly cartItems = this.items.asReadonly();
-  readonly itemCount = computed(() =>
-    this.items().reduce((sum, item) => sum + item.quantity, 0),
-  );
+  readonly itemCount = computed(() => this.items().reduce((sum, item) => sum + item.quantity, 0));
   readonly totalHT = computed(() =>
-    this.items().reduce(
-      (sum, item) => sum + parseFloat(item.product.price) * item.quantity,
-      0,
-    ),
+    this.items().reduce((sum, item) => sum + parseFloat(item.product.priceHT) * item.quantity, 0),
   );
-  readonly totalTTC = computed(() => this.totalHT() * 1.2);
+  readonly totalTTC = computed(() =>
+    this.items().reduce((sum, item) => sum + parseFloat(item.product.priceTTC) * item.quantity, 0),
+  );
 
   addProduct(product: Product): void {
     const current = this.items();
@@ -25,9 +22,7 @@ export class CartService {
     if (existing) {
       this.items.set(
         current.map((item) =>
-          item.product.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item,
+          item.product.id === product.id ? { ...item, quantity: item.quantity + 1 } : item,
         ),
       );
     } else {
@@ -44,9 +39,7 @@ export class CartService {
     if (existing && existing.quantity > 1) {
       this.items.set(
         current.map((item) =>
-          item.product.id === productId
-            ? { ...item, quantity: item.quantity - 1 }
-            : item,
+          item.product.id === productId ? { ...item, quantity: item.quantity - 1 } : item,
         ),
       );
     } else {
@@ -57,9 +50,7 @@ export class CartService {
   }
 
   removeProduct(productId: number): void {
-    this.items.set(
-      this.items().filter((item) => item.product.id !== productId),
-    );
+    this.items.set(this.items().filter((item) => item.product.id !== productId));
     this.saveCart();
   }
 

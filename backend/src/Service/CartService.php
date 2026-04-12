@@ -30,7 +30,7 @@ class CartService
                     'produit' => $product,
                     'quantite' => $quantite,
                 ];
-                $total += (float) $product->getPrice() * $quantite;
+                $total += (float) $product->getPriceTTC() * $quantite;
             }
         }
 

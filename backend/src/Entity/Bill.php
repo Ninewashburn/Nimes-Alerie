@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use App\Enum\PaymentMethod;
 use App\Repository\BillRepository;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -23,8 +24,8 @@ class Bill
     #[ORM\Column(type: 'datetime')]
     private ?\DateTimeInterface $createdAt = null;
 
-    #[ORM\Column(type: 'string', length: 255)]
-    private ?string $payment = null;
+    #[ORM\Column(type: 'string', length: 20, enumType: PaymentMethod::class)]
+    private PaymentMethod $payment = PaymentMethod::CARD;
 
     #[ORM\OneToOne(mappedBy: 'bill', targetEntity: Order::class, cascade: ['persist', 'remove'])]
     private ?Order $command = null;
@@ -58,12 +59,12 @@ class Bill
         return $this;
     }
 
-    public function getPayment(): ?string
+    public function getPayment(): PaymentMethod
     {
         return $this->payment;
     }
 
-    public function setPayment(string $payment): self
+    public function setPayment(PaymentMethod $payment): self
     {
         $this->payment = $payment;
 

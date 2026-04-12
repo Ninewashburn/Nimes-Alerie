@@ -9,7 +9,7 @@ describe('SpaceBaseComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [SpaceBaseComponent],
-      providers: [provideRouter([])]
+      providers: [provideRouter([])],
     }).compileComponents();
     fixture = TestBed.createComponent(SpaceBaseComponent);
     component = fixture.componentInstance;
