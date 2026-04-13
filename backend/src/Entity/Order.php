@@ -5,13 +5,20 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use App\Enum\OrderStatus;
 use App\Repository\OrderRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: '`order`')]
-#[ApiResource]
+#[ApiResource(operations: [
+    new Get(security: "is_granted('ROLE_ADMIN') or object.getUser() == user"),
+    new GetCollection(security: "is_granted('ROLE_ADMIN')"),
+    new Patch(security: "is_granted('ROLE_ADMIN')"),
+])]
 class Order
 {
     #[ORM\Id]

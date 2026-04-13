@@ -12,11 +12,13 @@ use App\Entity\User;
 use App\Enum\OrderStatus;
 use App\Enum\PaymentMethod;
 use App\Repository\OrderRepository;
+use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class OrderController extends AbstractController
 {
@@ -25,13 +27,11 @@ class OrderController extends AbstractController
     ) {}
 
     #[Route('/api/my-orders', name: 'api_my_orders', methods: ['GET'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function myOrders(OrderRepository $orderRepo): JsonResponse
     {
-        /** @var User|null $user */
+        /** @var User $user */
         $user = $this->getUser();
-        if (!$user) {
-            return $this->json(['error' => 'Authentication required'], 401);
-        }
 
         $orders = $orderRepo->findBy(['user' => $user], ['id' => 'DESC']);
 
@@ -47,14 +47,11 @@ class OrderController extends AbstractController
     }
 
     #[Route('/api/orders', name: 'api_create_order', methods: ['POST'])]
-    public function createOrder(Request $request): JsonResponse
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function createOrder(Request $request, ProductRepository $productRepo): JsonResponse
     {
-        /** @var User|null $user */
+        /** @var User $user */
         $user = $this->getUser();
-
-        if (!$user) {
-            return $this->json(['error' => 'Authentication required'], 401);
-        }
 
         $data = json_decode($request->getContent(), true);
 
@@ -62,13 +59,12 @@ class OrderController extends AbstractController
             return $this->json(['error' => 'Invalid request body'], 400);
         }
 
-        $items           = $data['items']           ?? [];
-        $deliveryAddress = $data['deliveryAddress'] ?? '';
-        $deliveryCity    = $data['deliveryCity']    ?? '';
+        $items           = $data['items']              ?? [];
+        $deliveryAddress = $data['deliveryAddress']    ?? '';
+        $deliveryCity    = $data['deliveryCity']       ?? '';
         $deliveryPostal  = $data['deliveryPostalCode'] ?? '';
-        $deliveryCountry = $data['deliveryCountry'] ?? 'France';
-        $paymentMethod   = $data['paymentMethod']   ?? 'card';
-        $total           = $data['total']           ?? 0;
+        $deliveryCountry = $data['deliveryCountry']    ?? 'France';
+        $paymentMethod   = $data['paymentMethod']      ?? 'card';
 
         if (empty($items)) {
             return $this->json(['error' => 'Cart is empty'], 400);
@@ -78,12 +74,57 @@ class OrderController extends AbstractController
             return $this->json(['error' => 'Delivery address is incomplete'], 400);
         }
 
-        // --- OrderLine (total quantity snapshot) ---
-        $totalQty = array_sum(array_column($items, 'quantity'));
+        // ── Vérification stock + calcul du total côté serveur ──────────────
+        $serverTotal     = 0.0;
+        $enrichedItems   = [];
+        $totalQty        = 0;
+        $productsToFlush = [];
+
+        foreach ($items as $item) {
+            $productId = (int) ($item['productId'] ?? 0);
+            $requested = (int) ($item['quantity']  ?? 0);
+
+            if ($productId <= 0 || $requested <= 0) {
+                return $this->json(['error' => "Invalid item (id={$productId})"], 400);
+            }
+
+            $product = $productRepo->find($productId);
+
+            if (!$product) {
+                return $this->json(['error' => "Product #{$productId} not found"], 404);
+            }
+
+            if ($product->getQuantity() < $requested) {
+                return $this->json([
+                    'error' => sprintf(
+                        'Stock insuffisant pour "%s" : %d disponible(s), %d demandé(s).',
+                        $product->getTitle(),
+                        $product->getQuantity(),
+                        $requested,
+                    ),
+                ], 409);
+            }
+
+            $unitPrice    = (float) $product->getPriceTTC();
+            $serverTotal += $unitPrice * $requested;
+            $totalQty    += $requested;
+
+            $enrichedItems[] = [
+                'productId' => $productId,
+                'title'     => $product->getTitle(),
+                'quantity'  => $requested,
+                'priceTTC'  => $product->getPriceTTC(),
+            ];
+
+            // Décrémentation du stock (flush groupé après validation complète)
+            $product->setQuantity($product->getQuantity() - $requested);
+            $productsToFlush[] = $product;
+        }
+
+        // ── Création de la commande ─────────────────────────────────────────
         $orderLine = new OrderLine();
         $orderLine->setQuantity($totalQty);
 
-        // --- Delivery ---
         $delivery = new Delivery();
         $delivery->setDeliveryAddress($deliveryAddress);
         $delivery->setDeliveryCity($deliveryCity);
@@ -93,18 +134,16 @@ class OrderController extends AbstractController
         $delivery->setOrderLine($orderLine);
         $orderLine->setDelivery($delivery);
 
-        // --- Bill ---
         $bill = new Bill();
         $bill->setPayment(PaymentMethod::from($paymentMethod));
         $bill->setNumber('BILL-' . strtoupper(uniqid()));
         $bill->setCreatedAt(new \DateTimeImmutable());
 
-        // --- Order ---
         $order = new Order();
         $order->setStatus(OrderStatus::PENDING);
         $order->setCreatedAt(new \DateTimeImmutable());
-        $order->setTotal((string) $total);
-        $order->setItems($items);
+        $order->setTotal((string) round($serverTotal, 2));
+        $order->setItems($enrichedItems);
         $order->setOrderLine($orderLine);
         $order->setBill($bill);
         $order->setUser($user);
@@ -116,13 +155,13 @@ class OrderController extends AbstractController
         $this->em->flush();
 
         return $this->json([
-            'id'          => $order->getId(),
-            'billNumber'  => $bill->getNumber(),
-            'status'      => $order->getStatus()->value,
-            'total'       => $order->getTotal(),
-            'itemsCount'  => $totalQty,
-            'createdAt'   => $order->getCreatedAt()->format('Y-m-d H:i:s'),
-            'payment'     => $bill->getPayment()->value,
+            'id'         => $order->getId(),
+            'billNumber' => $bill->getNumber(),
+            'status'     => $order->getStatus()->value,
+            'total'      => $order->getTotal(),
+            'itemsCount' => $totalQty,
+            'createdAt'  => $order->getCreatedAt()->format('Y-m-d H:i:s'),
+            'payment'    => $bill->getPayment()->value,
         ], 201);
     }
 }
