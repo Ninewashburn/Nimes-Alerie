@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class SecurityController extends AbstractController
 {
@@ -19,6 +20,7 @@ class SecurityController extends AbstractController
         Request $request,
         EntityManagerInterface $em,
         UserPasswordHasherInterface $hasher,
+        ValidatorInterface $validator,
     ): JsonResponse {
         /** @var User $user */
         $user = $this->getUser();
@@ -41,6 +43,15 @@ class SecurityController extends AbstractController
                 return $this->json(['error' => 'Mot de passe actuel incorrect'], 400);
             }
             $user->setPassword($hasher->hashPassword($user, $data['newPassword']));
+        }
+
+        $errors = $validator->validate($user);
+        if (count($errors) > 0) {
+            $errorMessages = [];
+            foreach ($errors as $error) {
+                $errorMessages[$error->getPropertyPath()] = $error->getMessage();
+            }
+            return $this->json(['errors' => $errorMessages], 422);
         }
 
         $em->flush();

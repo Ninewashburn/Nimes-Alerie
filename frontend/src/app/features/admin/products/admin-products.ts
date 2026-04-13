@@ -94,4 +94,20 @@ export class AdminProductsComponent implements OnInit {
       this.productService.delete(id).subscribe(() => this.loadProducts());
     }
   }
+
+  uploadingImageId = signal<number | null>(null);
+
+  onImageSelected(product: Product, event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    this.uploadingImageId.set(product.id);
+    this.productService.uploadImage(product.id, file).subscribe({
+      next: (updated) => {
+        this.products.set(this.products().map((p) => (p.id === updated.id ? updated : p)));
+        this.uploadingImageId.set(null);
+      },
+      error: () => this.uploadingImageId.set(null),
+    });
+  }
 }

@@ -107,6 +107,43 @@ export const routes: Routes = [
       import('@features/admin/users/admin-users').then((m) => m.AdminUsersComponent),
   },
   {
+    path: 'admin/orders',
+    canActivate: [adminGuard],
+    loadComponent: () =>
+      import('@features/admin/orders/admin-orders/admin-orders').then((m) => m.AdminOrdersComponent),
+  },
+  {
+    path: 'my-orders',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('@features/orders/my-orders/my-orders').then((m) => m.MyOrdersComponent),
+  },
+  {
+    path: 'forgot-password',
+    loadComponent: () =>
+      import('@features/auth/forgot-password/forgot-password').then(
+        (m) => m.ForgotPasswordComponent,
+      ),
+  },
+  {
+    path: 'reset-password',
+    loadComponent: () =>
+      import('@features/auth/reset-password/reset-password').then(
+        (m) => m.ResetPasswordComponent,
+      ),
+  },
+  {
+    path: 'verify-email',
+    loadComponent: () =>
+      import('@features/auth/verify-email/verify-email').then((m) => m.VerifyEmailComponent),
+  },
+  {
+    path: 'admin/contacts',
+    canActivate: [adminGuard],
+    loadComponent: () =>
+      import('@features/admin/contacts/admin-contacts').then((m) => m.AdminContactsComponent),
+  },
+  {
     path: 'bonus',
     loadComponent: () => import('@features/bonus/bonus').then((m) => m.BonusComponent),
   },

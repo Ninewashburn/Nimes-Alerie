@@ -1,3 +1,7 @@
+includes:
+    - vendor/phpstan/phpstan-symfony/extension.neon
+    - vendor/phpstan/phpstan-doctrine/extension.neon
+
 parameters:
     level: 6
     paths:
@@ -8,3 +12,6 @@ parameters:
         containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
     doctrine:
         objectManagerLoader: tests/bootstrap.php
+    ignoreErrors:
+        # Dynamic setters via magic calls in SecurityController
+        - '#Call to an undefined method App\\Entity\\User::\$setter\(\)#'

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ForumService } from '@core/services/forum.service';
@@ -19,19 +19,31 @@ export class ForumThreadListComponent implements OnInit {
   private forumService = inject(ForumService);
   authService = inject(AuthService);
 
+  readonly itemsPerPage = 10;
+
   threads = signal<Thread[]>([]);
   loading = signal(true);
   showForm = signal(false);
   submitting = signal(false);
   subTypeId = 0;
-
   newSubject = '';
+
+  currentPage = signal(1);
+  totalItems = signal(0);
+  totalPages = computed(() => Math.ceil(this.totalItems() / this.itemsPerPage));
 
   ngOnInit(): void {
     this.subTypeId = Number(this.route.snapshot.paramMap.get('id'));
-    this.forumService.getThreads(this.subTypeId).subscribe({
-      next: (t) => {
-        this.threads.set(t);
+    this.loadPage(1);
+  }
+
+  loadPage(page: number): void {
+    this.loading.set(true);
+    this.forumService.getThreads(this.subTypeId, page, this.itemsPerPage).subscribe({
+      next: ({ items, total }) => {
+        this.threads.set(items);
+        this.totalItems.set(total);
+        this.currentPage.set(page);
         this.loading.set(false);
       },
       error: () => this.loading.set(false),

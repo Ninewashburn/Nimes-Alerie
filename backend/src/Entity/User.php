@@ -86,6 +86,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 10, nullable: true)]
     private ?string $gender = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $isVerified = false;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $emailVerifyToken = null;
+
     public function __construct()
     {
         $this->rate = new ArrayCollection();
@@ -342,6 +348,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setGender(?string $gender): self
     {
         $this->gender = $gender;
+
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function getEmailVerifyToken(): ?string
+    {
+        return $this->emailVerifyToken;
+    }
+
+    public function setEmailVerifyToken(?string $emailVerifyToken): self
+    {
+        $this->emailVerifyToken = $emailVerifyToken;
 
         return $this;
     }

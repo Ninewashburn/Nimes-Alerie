@@ -15,6 +15,15 @@ export class HeaderComponent implements OnInit {
   cartService = inject(CartService);
 
   isDarkMode = signal(false);
+  mobileMenuOpen = signal(false);
+
+  toggleMobileMenu(): void {
+    this.mobileMenuOpen.update(v => !v);
+  }
+
+  closeMobileMenu(): void {
+    this.mobileMenuOpen.set(false);
+  }
 
   ngOnInit() {
     // Check if user previously set dark mode or prefers it in OS

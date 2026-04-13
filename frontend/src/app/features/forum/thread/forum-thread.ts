@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ForumService } from '@core/services/forum.service';
 import { AuthService } from '@core/services/auth.service';
@@ -19,18 +19,34 @@ export class ForumThreadComponent implements OnInit {
   private forumService = inject(ForumService);
   authService = inject(AuthService);
 
+  readonly itemsPerPage = 20;
+
   thread = signal<Thread | null>(null);
   posts = signal<Post[]>([]);
   newPostContent = '';
+
+  currentPage = signal(1);
+  totalItems = signal(0);
+  totalPages = computed(() => Math.ceil(this.totalItems() / this.itemsPerPage));
 
   editingPostId = signal<number | null>(null);
   editContent = '';
   savingEdit = signal(false);
 
+  private threadId = 0;
+
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.forumService.getThread(id).subscribe((t) => this.thread.set(t));
-    this.forumService.getPosts(id).subscribe((p) => this.posts.set(p));
+    this.threadId = Number(this.route.snapshot.paramMap.get('id'));
+    this.forumService.getThread(this.threadId).subscribe((t) => this.thread.set(t));
+    this.loadPage(1);
+  }
+
+  loadPage(page: number): void {
+    this.forumService.getPosts(this.threadId, page, this.itemsPerPage).subscribe(({ items, total }) => {
+      this.posts.set(items);
+      this.totalItems.set(total);
+      this.currentPage.set(page);
+    });
   }
 
   canEditPost(post: Post): boolean {
@@ -38,19 +54,17 @@ export class ForumThreadComponent implements OnInit {
     return !!me && (this.authService.isAdmin() || post.user?.id === me.id);
   }
 
-  /* ---- New post ---- */
   submitPost(): void {
     if (!this.newPostContent.trim()) return;
-    const threadId = Number(this.route.snapshot.paramMap.get('id'));
     this.forumService
-      .createPost({ content: this.newPostContent, thread: `/api/threads/${threadId}` as any })
+      .createPost({ content: this.newPostContent, thread: `/api/threads/${this.threadId}` as any })
       .subscribe((post) => {
         this.posts.set([...this.posts(), post]);
         this.newPostContent = '';
+        this.totalItems.update(n => n + 1);
       });
   }
 
-  /* ---- Edit post ---- */
   startEdit(post: Post): void {
     this.editingPostId.set(post.id);
     this.editContent = post.content;
@@ -75,20 +89,29 @@ export class ForumThreadComponent implements OnInit {
     });
   }
 
-  /* ---- Delete post ---- */
   deletePost(id: number): void {
     if (!confirm('Supprimer ce message ?')) return;
     this.forumService.deletePost(id).subscribe(() => {
       this.posts.set(this.posts().filter((p) => p.id !== id));
+      this.totalItems.update(n => n - 1);
     });
   }
 
-  /* ---- Delete thread ---- */
   deleteThread(): void {
     const t = this.thread();
     if (!t || !confirm('Supprimer tout ce canal de transmission ?')) return;
     this.forumService.deleteThread(t.id).subscribe(() => {
       this.router.navigate(['/forum']);
+    });
+  }
+
+  votePost(post: Post, direction: 'upvote' | 'downvote'): void {
+    this.forumService.votePost(post.id, direction).subscribe((counts) => {
+      this.posts.set(
+        this.posts().map((p) =>
+          p.id === post.id ? { ...p, upVote: counts.upVote, downVote: counts.downVote } : p,
+        ),
+      );
     });
   }
 }
