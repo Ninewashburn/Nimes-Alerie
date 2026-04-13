@@ -26,6 +26,7 @@ export class ProductListComponent implements OnInit {
   readonly pageSize = 9;
 
   search = signal('');
+  searchQuery = signal('');
   selectedCategoryId = signal<number | null>(null);
   maxPrice = signal(1000);
   maxProductPrice = signal(1000);
@@ -109,8 +110,26 @@ export class ProductListComponent implements OnInit {
     });
   }
 
+  onSearch(q: string): void {
+    this.searchQuery.set(q);
+    if (q.length > 2 || q === '') {
+      this.loading.set(true);
+      this.currentPage = 1;
+      this.productService.getAll(1, this.pageSize, q).subscribe({
+        next: ({ items, total }) => {
+          this.products.set(items);
+          this.totalProducts = total;
+          this.search.set(q);
+          this.loading.set(false);
+        },
+        error: () => this.loading.set(false),
+      });
+    }
+  }
+
   resetFilters(): void {
     this.search.set('');
+    this.searchQuery.set('');
     this.selectedCategoryId.set(null);
   }
 

@@ -10,9 +10,10 @@ export class ProductService {
 
   constructor(private http: HttpClient) {}
 
-  getAll(page = 1, itemsPerPage = 9): Observable<{ items: Product[]; total: number }> {
+  getAll(page = 1, itemsPerPage = 9, search = ''): Observable<{ items: Product[]; total: number }> {
+    const searchParam = search ? `&title=${encodeURIComponent(search)}` : '';
     return this.http
-      .get<ApiCollection<Product>>(`${this.apiUrl}?page=${page}&itemsPerPage=${itemsPerPage}`)
+      .get<ApiCollection<Product>>(`${this.apiUrl}?page=${page}&itemsPerPage=${itemsPerPage}${searchParam}`)
       .pipe(map((res) => ({ items: res['hydra:member'], total: res['hydra:totalItems'] })));
   }
 
@@ -32,6 +33,12 @@ export class ProductService {
 
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  uploadImage(id: number, file: File): Observable<Product> {
+    const formData = new FormData();
+    formData.append('image', file);
+    return this.http.post<Product>(`${this.apiUrl}/${id}/image`, formData);
   }
 
   getBrands(): Observable<Brand[]> {

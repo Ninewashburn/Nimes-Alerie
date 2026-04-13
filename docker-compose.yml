@@ -11,10 +11,11 @@ services:
     environment:
       DATABASE_URL: mysql://app:secret@database:3306/nimes_alerie?serverVersion=8.0
       APP_ENV: dev
-      APP_SECRET: change-me-in-production
+      # ⚠️  PRODUCTION : remplacer ces valeurs par des secrets forts avant tout déploiement
+      APP_SECRET: change-me-in-production      # ex: php -r "echo bin2hex(random_bytes(16));"
       JWT_SECRET_KEY: '%kernel.project_dir%/config/jwt/private.pem'
       JWT_PUBLIC_KEY: '%kernel.project_dir%/config/jwt/public.pem'
-      JWT_PASSPHRASE: change-me
+      JWT_PASSPHRASE: change-me               # clé de déchiffrement de la clé privée JWT
       CORS_ALLOW_ORIGIN: '^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'
 
   nginx:
@@ -30,12 +31,13 @@ services:
   database:
     image: mysql:8.0
     ports:
+      # ⚠️  PRODUCTION : ne pas exposer le port 3306 publiquement — supprimer cette ligne
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root     # ⚠️  PRODUCTION : utiliser un mot de passe fort
       MYSQL_DATABASE: nimes_alerie
       MYSQL_USER: app
-      MYSQL_PASSWORD: secret
+      MYSQL_PASSWORD: secret        # ⚠️  PRODUCTION : utiliser un mot de passe fort
     volumes:
       - db_data:/var/lib/mysql
 

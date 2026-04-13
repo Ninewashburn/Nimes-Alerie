@@ -26,20 +26,24 @@ export class ForumService {
       .pipe(map((res) => res['hydra:member']));
   }
 
-  getThreads(subTypeId: number): Observable<Thread[]> {
+  getThreads(subTypeId: number, page = 1, itemsPerPage = 10): Observable<{ items: Thread[]; total: number }> {
     return this.http
-      .get<ApiCollection<Thread>>(`${this.apiUrl}/threads?subtype=${subTypeId}`)
-      .pipe(map((res) => res['hydra:member']));
+      .get<ApiCollection<Thread>>(
+        `${this.apiUrl}/threads?subtype=${subTypeId}&page=${page}&itemsPerPage=${itemsPerPage}`,
+      )
+      .pipe(map((res) => ({ items: res['hydra:member'], total: res['hydra:totalItems'] })));
   }
 
   getThread(id: number): Observable<Thread> {
     return this.http.get<Thread>(`${this.apiUrl}/threads/${id}`);
   }
 
-  getPosts(threadId: number): Observable<Post[]> {
+  getPosts(threadId: number, page = 1, itemsPerPage = 20): Observable<{ items: Post[]; total: number }> {
     return this.http
-      .get<ApiCollection<Post>>(`${this.apiUrl}/posts?thread=${threadId}`)
-      .pipe(map((res) => res['hydra:member']));
+      .get<ApiCollection<Post>>(
+        `${this.apiUrl}/posts?thread=${threadId}&page=${page}&itemsPerPage=${itemsPerPage}`,
+      )
+      .pipe(map((res) => ({ items: res['hydra:member'], total: res['hydra:totalItems'] })));
   }
 
   createThread(thread: Partial<Thread>): Observable<Thread> {
@@ -64,5 +68,13 @@ export class ForumService {
 
   deleteThread(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/threads/${id}`);
+  }
+
+  votePost(id: number, direction: 'upvote' | 'downvote'): Observable<{ upVote: number; downVote: number }> {
+    return this.http.patch<{ upVote: number; downVote: number }>(
+      `${this.apiUrl}/posts/${id}/${direction}`,
+      {},
+      { headers: { 'Content-Type': 'application/merge-patch+json' } },
+    );
   }
 }

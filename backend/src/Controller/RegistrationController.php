@@ -10,7 +10,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class RegistrationController extends AbstractController
@@ -21,7 +24,13 @@ class RegistrationController extends AbstractController
         UserPasswordHasherInterface $passwordHasher,
         EntityManagerInterface $entityManager,
         ValidatorInterface $validator,
+        RateLimiterFactory $apiRegisterLimiter,
+        MailerInterface $mailer,
     ): JsonResponse {
+        $limiter = $apiRegisterLimiter->create($request->getClientIp());
+        if (!$limiter->consume(1)->isAccepted()) {
+            return $this->json(['error' => 'Trop de tentatives. Réessayez dans une minute.'], 429);
+        }
         $data = json_decode($request->getContent(), true);
 
         if (!$data) {
@@ -77,6 +86,28 @@ class RegistrationController extends AbstractController
 
         $entityManager->persist($user);
         $entityManager->flush();
+
+        // Generate email verification token
+        $token = bin2hex(random_bytes(32));
+        $user->setEmailVerifyToken($token);
+        $entityManager->flush();
+
+        $frontendUrl = $this->getParameter('frontend_url');
+        $verifyLink = $frontendUrl . '/verify-email?token=' . $token;
+
+        $verificationEmail = (new Email())
+            ->from('noreply@nimes-alerie.gal')
+            ->to($user->getEmail())
+            ->subject('Confirmez votre adresse email')
+            ->text(
+                "Bonjour {$user->getFirstName()},\n\n"
+                . "Merci de vous être inscrit(e) sur Nimes-Algérie.\n\n"
+                . "Veuillez confirmer votre adresse email en cliquant sur le lien suivant :\n"
+                . $verifyLink . "\n\n"
+                . "L'équipe Nimes-Algérie"
+            );
+
+        $mailer->send($verificationEmail);
 
         return $this->json([
             'id' => $user->getId(),

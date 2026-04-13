@@ -1,9 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '@env/environment';
-import { User, ApiCollection } from '@core/models/product.model';
-import { map } from 'rxjs';
+import { UserService } from '@core/services/user.service';
+import { User } from '@core/models/product.model';
 
 @Component({
   selector: 'app-admin-users',
@@ -13,13 +11,10 @@ import { map } from 'rxjs';
   styleUrl: './admin-users.scss',
 })
 export class AdminUsersComponent implements OnInit {
-  private http = inject(HttpClient);
+  private userService = inject(UserService);
   users = signal<User[]>([]);
 
   ngOnInit(): void {
-    this.http
-      .get<ApiCollection<User>>(`${environment.apiUrl}/users`)
-      .pipe(map((res) => res['hydra:member']))
-      .subscribe((users) => this.users.set(users));
+    this.userService.getAll().subscribe((users) => this.users.set(users));
   }
 }

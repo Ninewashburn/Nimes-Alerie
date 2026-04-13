@@ -42,6 +42,14 @@ export class AuthService {
       .pipe(switchMap(() => this.login({ email: data.email, password: data.password })));
   }
 
+  forgotPassword(email: string): Observable<void> {
+    return this.http.post<void>(`${environment.apiUrl}/reset-password/request`, { email });
+  }
+
+  resetPassword(token: string, password: string): Observable<void> {
+    return this.http.post<void>(`${environment.apiUrl}/reset-password/confirm`, { token, password });
+  }
+
   login(credentials: LoginCredentials): Observable<JwtToken> {
     return this.http
       .post<JwtToken>(environment.loginUrl, credentials)

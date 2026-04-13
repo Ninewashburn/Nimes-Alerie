@@ -47,7 +47,11 @@
       "Bash(grep -v \"^$\")",
       "Bash(composer show:*)",
       "Bash(php -r \"echo PHP_VERSION;\")",
-      "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\('Angular:',p.dependencies['@angular/core'],'TypeScript:',p.devDependencies['typescript']\\)\")"
+      "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\('Angular:',p.dependencies['@angular/core'],'TypeScript:',p.devDependencies['typescript']\\)\")",
+      "Bash(php bin/console doctrine:migrations:migrate --no-interaction)",
+      "Bash(composer require:*)",
+      "Bash(composer dump-autoload:*)",
+      "Bash(php vendor/bin/phpunit tests/Entity tests/Service --no-coverage)"
     ]
   }
 }

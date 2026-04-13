@@ -21,8 +21,11 @@ class ProductTest extends TestCase
         $product->setDescription('A test product');
         $this->assertSame('A test product', $product->getDescription());
 
-        $product->setPrice('29.99');
-        $this->assertSame('29.99', $product->getPrice());
+        $product->setPriceHT('24.99');
+        $this->assertSame('24.99', $product->getPriceHT());
+
+        $product->setPriceTTC('29.99');
+        $this->assertSame('29.99', $product->getPriceTTC());
 
         $product->setQuantity(10);
         $this->assertSame(10, $product->getQuantity());
