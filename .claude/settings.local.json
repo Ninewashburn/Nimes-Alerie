@@ -44,7 +44,10 @@
       "Bash(php bin/console cache:warmup)",
       "Bash(php bin/console debug:router --no-ansi)",
       "Bash(ls frontend/stitch_*.html)",
-      "Bash(grep -v \"^$\")"
+      "Bash(grep -v \"^$\")",
+      "Bash(composer show:*)",
+      "Bash(php -r \"echo PHP_VERSION;\")",
+      "Bash(node -e \"const p=require\\('./package.json'\\); console.log\\('Angular:',p.dependencies['@angular/core'],'TypeScript:',p.devDependencies['typescript']\\)\")"
     ]
   }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
@@ -18,8 +19,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ApiResource(
     operations: [
-        new Get(),
-        new GetCollection(),
+        new Get(security: "is_granted('ROLE_ADMIN') or object == user"),
+        new GetCollection(security: "is_granted('ROLE_ADMIN')"),
     ],
 )]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
@@ -39,6 +40,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private array $roles = [];
 
     #[ORM\Column(type: 'string')]
+    #[ApiProperty(readable: false, writable: false)]
     private ?string $password = null;
 
     #[ORM\Column(type: 'string', length: 100)]
@@ -50,7 +52,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $lastName = null;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    #[Assert\Type(type: 'string', message: 'This value must be a valid phone number.')]
+    #[Assert\Regex(
+        pattern: '/^\+?[0-9\s\-\(\)\.]{6,20}$/',
+        message: 'Le numéro de téléphone n\'est pas valide. Formats acceptés : +33 6 12 34 56 78, 0612345678…',
+    )]
     private ?string $telephone = null;
 
     #[ORM\Column(type: 'date')]

@@ -21,9 +21,17 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource(operations: [
     new Get(),
     new GetCollection(),
-    new ApiPost(processor: ThreadStateProcessor::class),
-    new Patch(processor: ThreadStateProcessor::class),
-    new Delete(),
+    new ApiPost(
+        security: "is_granted('IS_AUTHENTICATED_FULLY')",
+        processor: ThreadStateProcessor::class,
+    ),
+    new Patch(
+        security: "is_granted('ROLE_ADMIN') or object.getUser() == user",
+        processor: ThreadStateProcessor::class,
+    ),
+    new Delete(
+        security: "is_granted('ROLE_ADMIN') or object.getUser() == user",
+    ),
 ])]
 #[ApiFilter(SearchFilter::class, properties: ['subtype' => 'exact'])]
 #[ORM\Entity(repositoryClass: ThreadRepository::class)]
