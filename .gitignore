@@ -4,7 +4,8 @@
 ###< IDE ###
 
 ###> Backend (Symfony) ###
-backend/.env
+# backend/.env is committed with safe default values (Symfony convention).
+# Real secrets and environment-specific overrides go in backend/.env.local.
 backend/.env.local
 backend/.env.local.php
 backend/.env.*.local

@@ -47,6 +47,8 @@ jobs:
       JWT_PASSPHRASE: ci-test-passphrase
       CORS_ALLOW_ORIGIN: '^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'
       LOCK_DSN: semaphore
+      MAILER_DSN: null://null
+      FRONTEND_URL: http://localhost:4200
 
     steps:
       - uses: actions/checkout@v4
@@ -86,11 +88,9 @@ jobs:
 
       - name: Run migrations
         run: php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
-        continue-on-error: true
 
       - name: PHPUnit
         run: vendor/bin/phpunit --no-coverage
-        continue-on-error: true
 
   # ─────────────────────────────────────────────
   # Frontend — Angular
