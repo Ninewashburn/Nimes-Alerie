@@ -38,6 +38,16 @@ jobs:
       run:
         working-directory: backend
 
+    env:
+      APP_ENV: test
+      APP_SECRET: ci-test-secret-not-a-real-value
+      DATABASE_URL: mysql://app:secret@127.0.0.1:3306/nimes_alerie_test
+      JWT_SECRET_KEY: '%kernel.project_dir%/config/jwt/private.pem'
+      JWT_PUBLIC_KEY: '%kernel.project_dir%/config/jwt/public.pem'
+      JWT_PASSPHRASE: ci-test-passphrase
+      CORS_ALLOW_ORIGIN: '^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'
+      LOCK_DSN: semaphore
+
     steps:
       - uses: actions/checkout@v4
 
@@ -58,14 +68,13 @@ jobs:
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
-      - name: Copy .env
-        run: cp .env .env.test.local
-        continue-on-error: true
-
-      - name: Warm up cache
-        run: php bin/console cache:warmup --env=dev
-        env:
-          DATABASE_URL: mysql://app:secret@127.0.0.1:3306/nimes_alerie_test
+      - name: Generate JWT keys
+        run: |
+          mkdir -p config/jwt
+          openssl genpkey -algorithm RSA -out config/jwt/private.pem -aes256 \
+            -pass pass:$JWT_PASSPHRASE -pkeyopt rsa_keygen_bits:2048
+          openssl pkey -in config/jwt/private.pem -passin pass:$JWT_PASSPHRASE \
+            -out config/jwt/public.pem -pubout
 
       - name: PHP-CS-Fixer (dry-run)
         run: vendor/bin/php-cs-fixer fix --dry-run --diff --no-interaction
@@ -75,10 +84,12 @@ jobs:
         run: vendor/bin/phpstan analyse --no-progress --memory-limit=512M
         continue-on-error: true
 
+      - name: Run migrations
+        run: php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
+        continue-on-error: true
+
       - name: PHPUnit
         run: vendor/bin/phpunit --no-coverage
-        env:
-          DATABASE_URL: mysql://app:secret@127.0.0.1:3306/nimes_alerie_test
         continue-on-error: true
 
   # ─────────────────────────────────────────────

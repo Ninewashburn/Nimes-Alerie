@@ -8,11 +8,14 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class RegistrationControllerTest extends WebTestCase
 {
+    // Non-production fixture. Value is only used inside PHPUnit and never reaches any environment.
+    private const TEST_PASSWORD = 'fixture-value-not-a-secret';
+
     private function validPayload(array $overrides = []): array
     {
         return array_merge([
             'email'     => 'nouveau@nimes-alerie.gal',
-            'password'  => 'motdepasse123',
+            'password'  => self::TEST_PASSWORD,
             'firstName' => 'Astro',
             'lastName'  => 'Chien',
             'address'   => '42 rue de l\'Orbite',

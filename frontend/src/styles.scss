@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;600;700;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+/* Fonts are loaded via <link> tags in index.html to avoid Angular's
+   build-time font inlining which requires network access during CI. */
 
 @tailwind base;
 @tailwind components;
