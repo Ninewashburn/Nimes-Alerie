@@ -11,7 +11,7 @@ interface ContactMessage {
   subject: string;
   message: string;
   createdAt: string;
-  read: boolean;
+  isRead: boolean;
 }
 
 @Component({
@@ -54,11 +54,11 @@ export class AdminContactsComponent implements OnInit {
   }
 
   markRead(msg: ContactMessage): void {
-    if (msg.read) return;
+    if (msg.isRead) return;
     this.http
       .patch<ContactMessage>(
         `${environment.apiUrl}/contact_messages/${msg.id}`,
-        { read: true },
+        { isRead: true },
         { headers: { 'Content-Type': 'application/merge-patch+json' } },
       )
       .subscribe((updated) => {
@@ -86,6 +86,6 @@ export class AdminContactsComponent implements OnInit {
   }
 
   unreadCount(): number {
-    return this.messages().filter((m) => !m.read).length;
+    return this.messages().filter((m) => !m.isRead).length;
   }
 }
