@@ -1,3 +1,9 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# DEVELOPMENT-ONLY compose file.
+# Every credential below is a dummy placeholder for local dev.
+# NEVER deploy this file as-is: override via a `docker-compose.override.yml`,
+# a `.env` file, or a dedicated prod compose with secrets from a vault.
+# ─────────────────────────────────────────────────────────────────────────────
 services:
   php:
     build:
@@ -17,6 +23,8 @@ services:
       JWT_PUBLIC_KEY: '%kernel.project_dir%/config/jwt/public.pem'
       JWT_PASSPHRASE: PLACEHOLDER_JWT_PASS               # clé de déchiffrement de la clé privée JWT
       CORS_ALLOW_ORIGIN: '^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'
+      MAILER_DSN: null://null                 # ⚠️  PRODUCTION : smtp://user:pass@host:port
+      FRONTEND_URL: http://localhost:4200
 
   nginx:
     image: nginx:alpine

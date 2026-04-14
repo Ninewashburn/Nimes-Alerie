@@ -209,10 +209,13 @@ Copiez `backend/.env.example` vers `backend/.env` et renseignez :
 
 | Email | Mot de passe | Rôle |
 |---|---|---|
-| admin@nimes-alerie.fr | admin123 | Admin |
-| client@test.fr | client123 | Client |
-| sophie.legrand@email.com | sophie123 | Client |
-| pierre.roux@email.com | pierre123 | Client |
+| admin@nimes-alerie.fr | fixture-password-admin | Admin |
+| client@test.fr | fixture-password-client | Client |
+| sophie.legrand@email.com | fixture-password-sophie | Client |
+| pierre.roux@email.com | fixture-password-pierre | Client |
+
+> Ces comptes et mots de passe sont des **fixtures de développement** uniquement.
+> Ne jamais réutiliser ces valeurs ailleurs.
 
 ---
 
