@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ForgotPasswordComponent } from './forgot-password';
 
 describe('ForgotPasswordComponent', () => {
@@ -29,12 +29,11 @@ describe('ForgotPasswordComponent', () => {
   });
 
   it('should set sent to true on success', () => {
-    const { HttpTestingController } = require('@angular/common/http/testing');
     const httpMock = TestBed.inject(HttpTestingController);
     component.email = 'test@test.com';
     component.onSubmit();
     expect(component.loading()).toBeTrue();
-    const req = httpMock.expectOne((r: any) => r.url.includes('reset-password/request'));
+    const req = httpMock.expectOne((r) => r.url.includes('reset-password/request'));
     req.flush(null);
     expect(component.sent()).toBeTrue();
     expect(component.loading()).toBeFalse();
