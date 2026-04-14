@@ -19,6 +19,7 @@ interface ContactMessage {
   standalone: true,
   imports: [RouterLink, DatePipe],
   templateUrl: './admin-contacts.html',
+  styleUrl: './admin-contacts.scss',
 })
 export class AdminContactsComponent implements OnInit {
   private http = inject(HttpClient);

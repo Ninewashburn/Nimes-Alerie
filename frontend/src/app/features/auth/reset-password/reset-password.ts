@@ -8,6 +8,7 @@ import { AuthService } from '@core/services/auth.service';
   standalone: true,
   imports: [FormsModule, RouterLink],
   templateUrl: './reset-password.html',
+  styleUrl: './reset-password.scss',
 })
 export class ResetPasswordComponent implements OnInit {
   private authService = inject(AuthService);

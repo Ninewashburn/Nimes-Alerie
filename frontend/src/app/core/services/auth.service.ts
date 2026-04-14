@@ -1,7 +1,7 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, switchMap, tap, map } from 'rxjs';
+import { Observable, tap, map } from 'rxjs';
 import { environment } from '@env/environment';
 import { JwtToken, LoginCredentials, User } from '@core/models/product.model';
 
@@ -36,10 +36,8 @@ export class AuthService {
     this.checkToken();
   }
 
-  register(data: RegisterData): Observable<JwtToken> {
-    return this.http
-      .post(`${environment.apiUrl}/register`, data)
-      .pipe(switchMap(() => this.login({ email: data.email, password: data.password })));
+  register(data: RegisterData): Observable<void> {
+    return this.http.post<void>(`${environment.apiUrl}/register`, data);
   }
 
   forgotPassword(email: string): Observable<void> {

@@ -53,7 +53,8 @@
       "Bash(composer dump-autoload:*)",
       "Bash(php vendor/bin/phpunit tests/Entity tests/Service --no-coverage)",
       "Bash(docker-compose ps *)",
-      "Bash(docker compose *)"
+      "Bash(docker compose *)",
+      "Bash(php bin/console debug:router --show-controllers)"
     ]
   }
 }

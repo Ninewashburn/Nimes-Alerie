@@ -26,16 +26,25 @@ export class RegisterComponent {
   };
   error = signal('');
   loading = signal(false);
+  registered = signal(false);
 
   onSubmit(): void {
     this.loading.set(true);
     this.error.set('');
 
     this.authService.register(this.form).subscribe({
-      next: () => this.router.navigate(['/']),
-      error: () => {
+      next: () => {
         this.loading.set(false);
-        this.error.set('Erreur lors de la création du compte.');
+        this.registered.set(true);
+      },
+      error: (err) => {
+        this.loading.set(false);
+        const detail = err?.error?.detail ?? err?.error?.['hydra:description'];
+        if (detail?.includes('email')) {
+          this.error.set('Cette adresse email est déjà utilisée.');
+        } else {
+          this.error.set(detail ?? 'Erreur lors de la création du compte.');
+        }
       },
     });
   }
