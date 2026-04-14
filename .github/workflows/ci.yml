@@ -41,7 +41,7 @@ jobs:
     env:
       APP_ENV: test
       APP_SECRET: ci-test-secret-not-a-real-value
-      DATABASE_URL: mysql://app:secret@127.0.0.1:3306/nimes_alerie_test
+      DATABASE_URL: mysql://root:root@127.0.0.1:3306/nimes_alerie_test?serverVersion=8.0.32
       JWT_SECRET_KEY: '%kernel.project_dir%/config/jwt/private.pem'
       JWT_PUBLIC_KEY: '%kernel.project_dir%/config/jwt/public.pem'
       JWT_PASSPHRASE: ci-test-passphrase
