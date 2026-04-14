@@ -27,8 +27,8 @@ class ContactMessage
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $createdAt;
 
-    #[ORM\Column(type: 'boolean')]
-    private bool $read = false;
+    #[ORM\Column(name: 'is_read', type: 'boolean')]
+    private bool $isRead = false;
 
     public function __construct()
     {
@@ -83,12 +83,12 @@ class ContactMessage
 
     public function isRead(): bool
     {
-        return $this->read;
+        return $this->isRead;
     }
 
-    public function setRead(bool $read): self
+    public function setIsRead(bool $isRead): self
     {
-        $this->read = $read;
+        $this->isRead = $isRead;
 
         return $this;
     }
