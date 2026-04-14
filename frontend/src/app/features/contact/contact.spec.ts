@@ -4,7 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
 import { ContactComponent } from './contact';
-import { environment } from '@environments/environment';
+import { environment } from '@env/environment';
 
 describe('ContactComponent', () => {
   let component: ContactComponent;

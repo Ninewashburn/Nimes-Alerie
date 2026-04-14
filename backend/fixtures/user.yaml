@@ -1,7 +1,7 @@
 App\Entity\User:
   user_admin:
     email: admin@nimes-alerie.fr
-    password: admin123
+    password: fixture-password-admin
     roles: ['ROLE_ADMIN']
     firstName: Alexandre
     lastName: Dupont
@@ -13,7 +13,7 @@ App\Entity\User:
 
   user_client:
     email: client@test.fr
-    password: client123
+    password: fixture-password-client
     roles: ['ROLE_USER']
     firstName: Marie
     lastName: Martin
@@ -25,7 +25,7 @@ App\Entity\User:
 
   user_sophie:
     email: sophie.legrand@email.com
-    password: sophie123
+    password: fixture-password-sophie
     roles: ['ROLE_USER']
     firstName: Sophie
     lastName: Legrand
@@ -36,7 +36,7 @@ App\Entity\User:
 
   user_pierre:
     email: pierre.roux@email.com
-    password: pierre123
+    password: fixture-password-pierre
     roles: ['ROLE_USER']
     firstName: Pierre
     lastName: Roux
@@ -48,7 +48,7 @@ App\Entity\User:
 
   user_camille:
     email: camille.bernard@email.com
-    password: camille123
+    password: fixture-password-camille
     roles: ['ROLE_USER']
     firstName: Camille
     lastName: Bernard
