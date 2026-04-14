@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ArticleService } from '@core/services/article.service';
@@ -18,6 +18,15 @@ export class ArticleListComponent implements OnInit {
 
   articles = signal<Article[]>([]);
   loading = signal(true);
+  searchQuery = signal('');
+
+  filteredArticles = computed(() => {
+    const q = this.searchQuery().toLowerCase().trim();
+    if (!q) return this.articles();
+    return this.articles().filter(
+      (a) => a.name?.toLowerCase().includes(q) || a.content?.toLowerCase().includes(q),
+    );
+  });
 
   /* Create form */
   showForm = signal(false);

@@ -10,9 +10,10 @@ export class ArticleService {
 
   constructor(private http: HttpClient) {}
 
-  getAll(): Observable<Article[]> {
+  getAll(search = ''): Observable<Article[]> {
+    const params = search ? `?name=${encodeURIComponent(search)}` : '';
     return this.http
-      .get<ApiCollection<Article>>(this.apiUrl)
+      .get<ApiCollection<Article>>(`${this.apiUrl}${params}`)
       .pipe(map((res) => res['hydra:member']));
   }
 
