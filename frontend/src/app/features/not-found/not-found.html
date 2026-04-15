@@ -1,12 +1,41 @@
-<div class="min-h-[80vh] flex items-center justify-center text-center px-4">
-  <div class="space-y-6">
-    <h1 class="text-9xl font-black font-headline text-slate-200 dark:text-slate-800">404</h1>
-    <p class="text-2xl font-bold text-slate-700 dark:text-slate-300">Page introuvable</p>
-    <p class="text-slate-500 dark:text-slate-400">La page que vous cherchez n'existe pas ou a été déplacée.</p>
-    <a routerLink="/"
-      class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-bold transition-all hover:scale-105 shadow-lg">
-      <span class="material-symbols-outlined text-sm">home</span>
-      Retour à l'accueil
-    </a>
+<div class="artisanal-404-container min-h-screen flex items-center justify-center p-6 bg-[#F9F7F2]">
+  <!-- Fond 404 subtil -->
+  <div class="absolute inset-0 flex items-center justify-center overflow-hidden pointer-events-none">
+    <span class="text-[30rem] md:text-[50rem] font-serif font-black text-[#C05E42]/5 select-none leading-none">404</span>
+  </div>
+
+  <div class="relative z-10 max-w-xl text-center space-y-12">
+    <div class="space-y-4">
+      <span class="inline-block px-4 py-1.5 rounded-full bg-[#C05E42]/10 text-[#C05E42] text-[10px] font-bold uppercase tracking-[0.2em] font-sans">
+        Égaré dans l'atelier
+      </span>
+      <h1 class="text-5xl md:text-7xl font-serif text-[#2A2A2A] leading-tight">
+        L'objet de votre <br>
+        <span class="italic font-light">quête a disparu.</span>
+      </h1>
+    </div>
+
+    <p class="text-lg md:text-xl text-[#2A2A2A]/60 font-sans font-light leading-relaxed max-w-md mx-auto">
+      La pièce que vous cherchez n'est plus à son établi. Elle a sans doute été déplacée ou n'a jamais été forgée.
+    </p>
+
+    <div class="pt-8">
+      <a routerLink="/"
+        class="inline-flex items-center gap-4 px-10 py-5 bg-[#C05E42] hover:bg-[#A64F36] text-white rounded-full font-bold transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-[#C05E42]/30 active:scale-[0.98]">
+        <span class="material-symbols-outlined text-xl">temp_preferences_custom</span>
+        <span class="uppercase tracking-widest text-xs">Retour à l'Atelier</span>
+      </a>
+    </div>
+
+    <div class="pt-24 flex justify-center gap-12">
+      <div class="text-left py-4 border-l border-[#C05E42]/20 pl-6">
+        <p class="text-[10px] font-bold uppercase tracking-widest text-[#C05E42] mb-1">Assistance</p>
+        <p class="text-xs text-[#2A2A2A]/40 font-light">— hello@nimes-alerie.gal</p>
+      </div>
+      <div class="text-left py-4 border-l border-[#C05E42]/20 pl-6">
+        <p class="text-[10px] font-bold uppercase tracking-widest text-[#C05E42] mb-1">Navigation</p>
+        <p class="text-xs text-[#2A2A2A]/40 font-light">— nimes-alerie.gal/catalogue</p>
+      </div>
+    </div>
   </div>
 </div>
