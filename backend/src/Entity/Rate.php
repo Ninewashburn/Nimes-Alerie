@@ -5,11 +5,22 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
 use App\Repository\RateRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RateRepository::class)]
-#[ApiResource]
+#[ApiResource(operations: [
+    new GetCollection(),
+    new Get(),
+    new Post(security: "is_granted('ROLE_USER')"),
+    new Patch(security: "is_granted('ROLE_ADMIN') or object.getUser() == user"),
+    new Delete(security: "is_granted('ROLE_ADMIN') or object.getUser() == user"),
+])]
 class Rate
 {
     #[ORM\Id]
