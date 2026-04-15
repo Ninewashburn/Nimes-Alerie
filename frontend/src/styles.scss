@@ -51,3 +51,27 @@ html.dark .glass-panel {
 .anti-gravity-shadow {
   box-shadow: 0 20px 40px -15px rgba(0, 82, 255, 0.2);
 }
+
+/* --- Galactic HUD System --- */
+.scanning-line {
+  animation: scan 4s linear infinite;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(0, 82, 255, 0.4),
+    transparent
+  );
+}
+
+@keyframes scan {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(1000%); }
+}
+
+.glass-panel-heavy {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}

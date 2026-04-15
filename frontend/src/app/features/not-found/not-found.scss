@@ -1,16 +1,6 @@
-.scanning-line {
-  animation: scan 4s linear infinite;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    rgba(0, 82, 255, 0.4),
-    transparent
-  );
-}
 
-@keyframes scan {
-  from { transform: translateY(-100%); }
-  to { transform: translateY(1000%); }
+main {
+  animation: fadeIn 1s ease-out forwards;
 }
 
 main {

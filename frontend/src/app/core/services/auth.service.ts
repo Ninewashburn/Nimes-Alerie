@@ -76,8 +76,14 @@ export class AuthService {
   fetchProfile(): void {
     this.http.get<User>(`${environment.apiUrl}/me`).subscribe({
       next: (user) => this.currentUser.set(user),
-      error: () => this.logout(),
+      error: () => this.clearAuth(),
     });
+  }
+
+  private clearAuth(): void {
+    localStorage.removeItem(this.tokenKey);
+    this.currentUser.set(null);
+    this.isAuthenticated.set(false);
   }
 
   private setToken(token: string): void {
@@ -92,9 +98,7 @@ export class AuthService {
       this.isAuthenticated.set(true);
       this.fetchProfile();
     } else if (token) {
-      localStorage.removeItem(this.tokenKey);
-      this.currentUser.set(null);
-      this.isAuthenticated.set(false);
+      this.clearAuth();
     }
   }
 
