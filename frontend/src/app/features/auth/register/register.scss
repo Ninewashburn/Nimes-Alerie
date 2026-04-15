@@ -1,1 +1,23 @@
-/* register styles */
+.scanning-line {
+  animation: scan 4s linear infinite;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(0, 82, 255, 0.4),
+    transparent
+  );
+}
+
+@keyframes scan {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(1000%); }
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.5) sepia(1) saturate(5) hue-rotate(175deg);
+  cursor: pointer;
+}
+
+.glass-panel {
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}

@@ -9,7 +9,9 @@ App\Entity\User:
     birthAt: <dateTimeBetween('1985-01-01', '1985-12-31')>
     address: 12 Boulevard Victor Hugo
     city: Nîmes
+    postalCode: '30000'
     country: France
+    isVerified: true
 
   user_client:
     email: client@test.fr
@@ -21,7 +23,9 @@ App\Entity\User:
     birthAt: <dateTimeBetween('1990-01-01', '1990-12-31')>
     address: 5 Rue de la République
     city: Nîmes
+    postalCode: '30000'
     country: France
+    isVerified: true
 
   user_sophie:
     email: sophie.legrand@email.com
@@ -32,7 +36,9 @@ App\Entity\User:
     birthAt: <dateTimeBetween('1988-01-01', '1988-12-31')>
     address: 23 Avenue Jean Jaurès
     city: Montpellier
+    postalCode: '34000'
     country: France
+    isVerified: true
 
   user_pierre:
     email: pierre.roux@email.com
@@ -44,7 +50,9 @@ App\Entity\User:
     birthAt: <dateTimeBetween('1975-01-01', '1975-12-31')>
     address: 8 Place de la Comédie
     city: Arles
+    postalCode: '13200'
     country: France
+    isVerified: true
 
   user_camille:
     email: camille.bernard@email.com
@@ -55,4 +63,6 @@ App\Entity\User:
     birthAt: <dateTimeBetween('1995-01-01', '1995-12-31')>
     address: 15 Rue Émile Zola
     city: Avignon
+    postalCode: '84000'
     country: France
+    isVerified: true
