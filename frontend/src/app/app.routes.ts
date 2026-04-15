@@ -138,6 +138,12 @@ export const routes: Routes = [
       import('@features/auth/verify-email/verify-email').then((m) => m.VerifyEmailComponent),
   },
   {
+    path: 'admin/articles',
+    canActivate: [adminGuard],
+    loadComponent: () =>
+      import('@features/admin/articles/admin-articles').then((m) => m.AdminArticlesComponent),
+  },
+  {
     path: 'admin/contacts',
     canActivate: [adminGuard],
     loadComponent: () =>

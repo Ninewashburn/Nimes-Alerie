@@ -89,7 +89,9 @@ export interface OrderConfirmation {
 export interface Rate {
   id: number;
   rate: number;
-  testimonial: string;
+  testimonial: string | null;
+  user?: { id: number; firstName: string; lastName: string };
+  product?: string;
 }
 
 export interface ForumType {

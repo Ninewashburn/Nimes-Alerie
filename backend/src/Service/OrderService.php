@@ -14,12 +14,15 @@ use App\Enum\PaymentMethod;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\LockMode;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 
 class OrderService
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly ProductRepository $productRepo,
+        private readonly MailerInterface $mailer,
     ) {}
 
     /**
@@ -131,5 +134,44 @@ class OrderService
 
             return $order;
         });
+
+        $this->sendConfirmationEmail($user, $order);
+
+        return $order;
+    }
+
+    private function sendConfirmationEmail(User $user, Order $order): void
+    {
+        $items = $order->getItems() ?? [];
+        $itemLines = implode("\n", array_map(
+            fn (array $i) => sprintf('  - %s × %d : %.2f €', $i['title'], $i['quantity'], (float) $i['priceTTC'] * $i['quantity']),
+            $items,
+        ));
+
+        $paymentLabel = match ($order->getBill()?->getPayment()?->value) {
+            'paypal' => 'PayPal',
+            default  => 'Carte bancaire',
+        };
+
+        $email = (new Email())
+            ->from('noreply@nimes-alerie.gal')
+            ->to((string) $user->getEmail())
+            ->subject('Confirmation de votre commande ' . $order->getBill()?->getNumber())
+            ->text(
+                "Bonjour {$user->getFirstName()},\n\n"
+                . "Votre commande a bien été enregistrée. Voici le récapitulatif :\n\n"
+                . "  Référence    : " . $order->getBill()?->getNumber() . "\n"
+                . "  Mode de paiement : {$paymentLabel}\n\n"
+                . "Articles commandés :\n{$itemLines}\n\n"
+                . "  TOTAL TTC : " . number_format((float) $order->getTotal(), 2, ',', ' ') . " €\n\n"
+                . "Merci pour votre confiance.\n"
+                . "L'équipe La Nîmes'Alerie"
+            );
+
+        try {
+            $this->mailer->send($email);
+        } catch (\Throwable) {
+            // L'envoi d'email ne doit jamais bloquer la création de commande.
+        }
     }
 }

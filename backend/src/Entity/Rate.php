@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
@@ -20,6 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: RateRepository::class)]
 #[ORM\UniqueConstraint(name: 'uq_rate_user_product', columns: ['user_id', 'product_id'])]
 #[UniqueEntity(fields: ['user', 'product'], message: 'Vous avez déjà noté ce produit.')]
+#[ApiFilter(SearchFilter::class, properties: ['product' => 'exact', 'user' => 'exact'])]
 #[ApiResource(operations: [
     new GetCollection(),
     new Get(),
