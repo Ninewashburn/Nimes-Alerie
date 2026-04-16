@@ -21,8 +21,8 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-# Copy composer files first for better caching
-COPY composer.json ./
+# Copy composer files first for better caching (lock file for reproducible builds)
+COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist
 
 # Copy application code

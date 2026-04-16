@@ -11,18 +11,24 @@ use App\Service\OrderService;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Mailer\MailerInterface;
 
 class OrderServiceTest extends TestCase
 {
     private EntityManagerInterface&MockObject $em;
     private ProductRepository&MockObject $productRepo;
+    private MailerInterface&MockObject $mailer;
     private OrderService $orderService;
 
     protected function setUp(): void
     {
         $this->em          = $this->createMock(EntityManagerInterface::class);
         $this->productRepo = $this->createMock(ProductRepository::class);
-        $this->orderService = new OrderService($this->em, $this->productRepo);
+        $this->mailer      = $this->createMock(MailerInterface::class);
+        $this->orderService = new OrderService($this->em, $this->productRepo, $this->mailer);
+
+        $this->em->method('wrapInTransaction')
+            ->willReturnCallback(fn (callable $fn) => $fn());
     }
 
     public function testCreateOrderThrowsOnEmptyItems(): void
@@ -107,7 +113,6 @@ class OrderServiceTest extends TestCase
 
         $this->productRepo->method('find')->willReturn($product);
         $this->em->expects($this->atLeastOnce())->method('persist');
-        $this->em->expects($this->once())->method('flush');
 
         $order = $this->orderService->createOrder(
             user: new User(),
@@ -132,7 +137,6 @@ class OrderServiceTest extends TestCase
 
         $this->productRepo->method('find')->willReturn($product);
         $this->em->method('persist');
-        $this->em->method('flush');
 
         $order = $this->orderService->createOrder(
             user: new User(),

@@ -15,6 +15,7 @@ use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\PostRepository;
 use App\State\PostStateProcessor;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(operations: [
     new Get(),
@@ -41,6 +42,8 @@ class Post
     private ?int $id = null;
 
     #[ORM\Column(type: 'text')]
+    #[Assert\NotBlank(message: 'Le contenu du message est obligatoire.')]
+    #[Assert\Length(min: 3, max: 10000, minMessage: 'Le message doit contenir au moins {{ limit }} caractères.', maxMessage: 'Le message ne peut pas dépasser {{ limit }} caractères.')]
     private ?string $content = null;
 
     #[ORM\Column(type: 'datetime')]

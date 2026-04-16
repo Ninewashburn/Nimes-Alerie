@@ -2,17 +2,17 @@ framework:
     rate_limiter:
         api_register:
             policy: fixed_window
-            limit: 5
+            limit: 10000
             interval: '1 minute'
         api_contact:
             policy: fixed_window
-            limit: 3
+            limit: 10000
             interval: '1 minute'
         api_reset_password_ip:
             policy: fixed_window
-            limit: 5
+            limit: 10000
             interval: '1 hour'
         api_reset_password_email:
             policy: fixed_window
-            limit: 1
+            limit: 10000
             interval: '5 minutes'

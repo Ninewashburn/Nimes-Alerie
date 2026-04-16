@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Attribute\Route;
 
 class ResetPasswordController extends AbstractController
@@ -26,10 +27,22 @@ class ResetPasswordController extends AbstractController
         ResetPasswordTokenRepository $resetPasswordTokenRepository,
         EntityManagerInterface $entityManager,
         MailerInterface $mailer,
+        RateLimiterFactory $apiResetPasswordIpLimiter,
+        RateLimiterFactory $apiResetPasswordEmailLimiter,
     ): JsonResponse {
+        $ipLimiter = $apiResetPasswordIpLimiter->create($request->getClientIp());
+        if (!$ipLimiter->consume(1)->isAccepted()) {
+            return $this->json(['message' => 'Si cet email existe, un lien a été envoyé.'], 200);
+        }
+
         $data = json_decode($request->getContent(), true);
 
         if (empty($data['email'])) {
+            return $this->json(['message' => 'Si cet email existe, un lien a été envoyé.'], 200);
+        }
+
+        $emailLimiter = $apiResetPasswordEmailLimiter->create(strtolower((string) $data['email']));
+        if (!$emailLimiter->consume(1)->isAccepted()) {
             return $this->json(['message' => 'Si cet email existe, un lien a été envoyé.'], 200);
         }
 

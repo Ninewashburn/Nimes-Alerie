@@ -69,21 +69,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private Collection $carts;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank(message: 'L\'adresse est obligatoire.')]
+    #[Assert\Length(max: 255, maxMessage: 'L\'adresse ne peut pas dépasser {{ limit }} caractères.')]
     private ?string $address = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 255, maxMessage: 'La seconde adresse ne peut pas dépasser {{ limit }} caractères.')]
     private ?string $secondAddress = null;
 
     #[ORM\Column(type: 'string', length: 100)]
+    #[Assert\NotBlank(message: 'La ville est obligatoire.')]
+    #[Assert\Length(max: 100, maxMessage: 'La ville ne peut pas dépasser {{ limit }} caractères.')]
     private ?string $city = null;
 
     #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Assert\Length(max: 100, maxMessage: 'Le pays ne peut pas dépasser {{ limit }} caractères.')]
     private ?string $country = null;
 
     #[ORM\Column(type: 'string', length: 10, nullable: true)]
+    #[Assert\Length(max: 10, maxMessage: 'Le code postal ne peut pas dépasser {{ limit }} caractères.')]
+    #[Assert\Regex(
+        pattern: '/^[A-Za-z0-9\- ]{2,10}$/',
+        message: 'Le code postal n\'est pas valide.',
+    )]
     private ?string $postalCode = null;
 
     #[ORM\Column(type: 'string', length: 10, nullable: true)]
+    #[Assert\Choice(
+        choices: ['M', 'F', 'Mme', 'M.', 'Autre', 'male', 'female', 'other'],
+        message: 'La civilité sélectionnée n\'est pas valide.',
+    )]
     private ?string $gender = null;
 
     #[ORM\Column(type: 'boolean')]

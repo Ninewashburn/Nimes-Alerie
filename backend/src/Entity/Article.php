@@ -15,6 +15,7 @@ use ApiPlatform\Metadata\Post;
 use App\Repository\ArticleRepository;
 use App\State\ArticleStateProcessor;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 #[ApiFilter(SearchFilter::class, properties: ['name' => 'partial', 'content' => 'partial'])]
@@ -36,9 +37,12 @@ class Article
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\NotBlank(message: 'Le titre est obligatoire.')]
+    #[Assert\Length(max: 200, maxMessage: 'Le titre ne peut pas dépasser {{ limit }} caractères.')]
     private ?string $name = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
+    #[Assert\Length(max: 10000, maxMessage: 'Le contenu ne peut pas dépasser {{ limit }} caractères.')]
     private ?string $content = null;
 
     #[ORM\ManyToOne(targetEntity: User::class)]

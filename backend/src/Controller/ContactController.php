@@ -9,13 +9,22 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Attribute\Route;
 
 class ContactController extends AbstractController
 {
     #[Route('/api/contact', name: 'api_contact', methods: ['POST'])]
-    public function send(Request $request, EntityManagerInterface $em): JsonResponse
-    {
+    public function send(
+        Request $request,
+        EntityManagerInterface $em,
+        RateLimiterFactory $apiContactLimiter,
+    ): JsonResponse {
+        $limiter = $apiContactLimiter->create($request->getClientIp());
+        if (!$limiter->consume(1)->isAccepted()) {
+            return $this->json(['error' => 'Trop de messages envoyés. Réessayez dans une minute.'], 429);
+        }
+
         $data = json_decode($request->getContent(), true);
 
         if (!$data) {
@@ -36,6 +45,10 @@ class ContactController extends AbstractController
 
         if (strlen($message) < 10) {
             return $this->json(['error' => 'Le message doit contenir au moins 10 caractères.'], 422);
+        }
+
+        if (strlen($message) > 5000) {
+            return $this->json(['error' => 'Le message ne peut pas dépasser 5000 caractères.'], 422);
         }
 
         $contact = new ContactMessage();

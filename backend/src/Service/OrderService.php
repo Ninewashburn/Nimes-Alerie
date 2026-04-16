@@ -13,7 +13,7 @@ use App\Enum\OrderStatus;
 use App\Enum\PaymentMethod;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\LockMode;
+use Doctrine\DBAL\LockMode;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
@@ -48,7 +48,7 @@ class OrderService
             throw new \InvalidArgumentException('Delivery address is incomplete');
         }
 
-        return $this->em->wrapInTransaction(function () use (
+        $order = $this->em->wrapInTransaction(function () use (
             $user, $items, $deliveryAddress, $deliveryCity, $deliveryPostal, $deliveryCountry, $paymentMethod
         ): Order {
             $serverTotal   = 0.0;
@@ -142,33 +142,33 @@ class OrderService
 
     private function sendConfirmationEmail(User $user, Order $order): void
     {
-        $items = $order->getItems() ?? [];
-        $itemLines = implode("\n", array_map(
-            fn (array $i) => sprintf('  - %s × %d : %.2f €', $i['title'], $i['quantity'], (float) $i['priceTTC'] * $i['quantity']),
-            $items,
-        ));
-
-        $paymentLabel = match ($order->getBill()?->getPayment()?->value) {
-            'paypal' => 'PayPal',
-            default  => 'Carte bancaire',
-        };
-
-        $email = (new Email())
-            ->from('noreply@nimes-alerie.gal')
-            ->to((string) $user->getEmail())
-            ->subject('Confirmation de votre commande ' . $order->getBill()?->getNumber())
-            ->text(
-                "Bonjour {$user->getFirstName()},\n\n"
-                . "Votre commande a bien été enregistrée. Voici le récapitulatif :\n\n"
-                . "  Référence    : " . $order->getBill()?->getNumber() . "\n"
-                . "  Mode de paiement : {$paymentLabel}\n\n"
-                . "Articles commandés :\n{$itemLines}\n\n"
-                . "  TOTAL TTC : " . number_format((float) $order->getTotal(), 2, ',', ' ') . " €\n\n"
-                . "Merci pour votre confiance.\n"
-                . "L'équipe La Nîmes'Alerie"
-            );
-
         try {
+            $items = $order->getItems() ?? [];
+            $itemLines = implode("\n", array_map(
+                fn (array $i) => sprintf('  - %s × %d : %.2f €', $i['title'], $i['quantity'], (float) $i['priceTTC'] * $i['quantity']),
+                $items,
+            ));
+
+            $paymentLabel = match ($order->getBill()?->getPayment()?->value) {
+                'paypal' => 'PayPal',
+                default  => 'Carte bancaire',
+            };
+
+            $email = (new Email())
+                ->from('noreply@nimes-alerie.gal')
+                ->to((string) $user->getEmail())
+                ->subject('Confirmation de votre commande ' . $order->getBill()?->getNumber())
+                ->text(
+                    "Bonjour {$user->getFirstName()},\n\n"
+                    . "Votre commande a bien été enregistrée. Voici le récapitulatif :\n\n"
+                    . "  Référence    : " . $order->getBill()?->getNumber() . "\n"
+                    . "  Mode de paiement : {$paymentLabel}\n\n"
+                    . "Articles commandés :\n{$itemLines}\n\n"
+                    . "  TOTAL TTC : " . number_format((float) $order->getTotal(), 2, ',', ' ') . " €\n\n"
+                    . "Merci pour votre confiance.\n"
+                    . "L'équipe La Nîmes'Alerie"
+                );
+
             $this->mailer->send($email);
         } catch (\Throwable) {
             // L'envoi d'email ne doit jamais bloquer la création de commande.
