@@ -8,6 +8,7 @@ type LegalType = 'cgu' | 'cgv' | 'mentions';
   standalone: true,
   imports: [],
   templateUrl: './legal.html',
+  styleUrl: './legal.scss',
 })
 export class LegalComponent implements OnInit {
   private route = inject(ActivatedRoute);

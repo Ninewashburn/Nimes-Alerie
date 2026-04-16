@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '@core/services/product.service';
@@ -24,7 +24,13 @@ interface ProductForm {
 export class AdminProductsComponent implements OnInit {
   private productService = inject(ProductService);
 
+  readonly itemsPerPage = 15;
+
   products = signal<Product[]>([]);
+  totalItems = signal(0);
+  currentPage = signal(1);
+  totalPages = computed(() => Math.ceil(this.totalItems() / this.itemsPerPage));
+
   showModal = signal(false);
   submitting = signal(false);
   editingId: number | null = null;
@@ -32,15 +38,19 @@ export class AdminProductsComponent implements OnInit {
   form: ProductForm = this.emptyForm();
 
   ngOnInit(): void {
-    this.loadProducts();
+    this.loadProducts(1);
   }
 
   private emptyForm(): ProductForm {
     return { title: '', description: '', priceHT: '', priceTTC: '', quantity: 0, isActive: true };
   }
 
-  private loadProducts(): void {
-    this.productService.getAll(1, 100).subscribe(({ items }) => this.products.set(items));
+  loadProducts(page: number): void {
+    this.productService.getAll(page, this.itemsPerPage).subscribe(({ items, total }) => {
+      this.products.set(items);
+      this.totalItems.set(total);
+      this.currentPage.set(page);
+    });
   }
 
   openCreate(): void {
@@ -83,7 +93,7 @@ export class AdminProductsComponent implements OnInit {
       next: () => {
         this.closeModal();
         this.submitting.set(false);
-        this.loadProducts();
+        this.loadProducts(this.currentPage());
       },
       error: () => this.submitting.set(false),
     });
@@ -91,7 +101,7 @@ export class AdminProductsComponent implements OnInit {
 
   deleteProduct(id: number): void {
     if (confirm('Supprimer ce produit définitivement ?')) {
-      this.productService.delete(id).subscribe(() => this.loadProducts());
+      this.productService.delete(id).subscribe(() => this.loadProducts(this.currentPage()));
     }
   }
 

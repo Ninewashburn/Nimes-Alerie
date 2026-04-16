@@ -8,6 +8,7 @@ import { environment } from '@env/environment';
   standalone: true,
   imports: [RouterLink],
   templateUrl: './verify-email.html',
+  styleUrl: './verify-email.scss',
 })
 export class VerifyEmailComponent implements OnInit {
   private route = inject(ActivatedRoute);

@@ -40,7 +40,7 @@ class ContactMessageTest extends TestCase
         $msg->setMessage('Mon colis n\'est pas arrivé depuis 3 cycles lunaires.');
         $this->assertSame('Mon colis n\'est pas arrivé depuis 3 cycles lunaires.', $msg->getMessage());
 
-        $msg->setRead(true);
+        $msg->setIsRead(true);
         $this->assertTrue($msg->isRead());
     }
 }

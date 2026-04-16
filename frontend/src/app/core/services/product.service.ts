@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { environment } from '@env/environment';
-import { ApiCollection, Product, Brand, Category } from '@core/models/product.model';
+import { ApiCollection, Product, Brand, Category, Rate } from '@core/models/product.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
@@ -51,5 +51,20 @@ export class ProductService {
     return this.http
       .get<ApiCollection<Category>>(`${environment.apiUrl}/categories`)
       .pipe(map((res) => res['hydra:member']));
+  }
+
+  getRates(productId: number): Observable<Rate[]> {
+    const iri = encodeURIComponent(`/api/products/${productId}`);
+    return this.http
+      .get<ApiCollection<Rate>>(`${environment.apiUrl}/rates?product=${iri}`)
+      .pipe(map((res) => res['hydra:member']));
+  }
+
+  postRate(productId: number, rate: number, testimonial: string): Observable<Rate> {
+    return this.http.post<Rate>(`${environment.apiUrl}/rates`, {
+      rate,
+      testimonial: testimonial || null,
+      product: `/api/products/${productId}`,
+    });
   }
 }

@@ -8,6 +8,7 @@ import { AuthService } from '@core/services/auth.service';
   standalone: true,
   imports: [FormsModule, RouterLink],
   templateUrl: './forgot-password.html',
+  styleUrl: './forgot-password.scss',
 })
 export class ForgotPasswordComponent {
   private authService = inject(AuthService);

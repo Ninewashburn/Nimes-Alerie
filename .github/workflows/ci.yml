@@ -23,7 +23,7 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: nimes_alerie_test
+          MYSQL_DATABASE: nimes_alerie
           MYSQL_USER: app
           MYSQL_PASSWORD: secret
         ports:
@@ -41,7 +41,7 @@ jobs:
     env:
       APP_ENV: test
       APP_SECRET: ci-test-secret-not-a-real-value
-      DATABASE_URL: mysql://app:secret@127.0.0.1:3306/nimes_alerie_test
+      DATABASE_URL: mysql://root:root@127.0.0.1:3306/nimes_alerie?serverVersion=8.0.32
       JWT_SECRET_KEY: '%kernel.project_dir%/config/jwt/private.pem'
       JWT_PUBLIC_KEY: '%kernel.project_dir%/config/jwt/public.pem'
       JWT_PASSPHRASE: ci-test-passphrase
@@ -86,6 +86,9 @@ jobs:
         run: vendor/bin/phpstan analyse --no-progress --memory-limit=512M
         continue-on-error: true
 
+      - name: Create database
+        run: php bin/console doctrine:database:create --env=test
+
       - name: Run migrations
         run: php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
 
@@ -122,3 +125,7 @@ jobs:
 
       - name: Build (production)
         run: npm run build -- --configuration production
+
+      - name: ESLint
+        run: npx eslint src/ --max-warnings=0
+        continue-on-error: true

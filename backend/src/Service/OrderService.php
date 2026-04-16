@@ -13,12 +13,16 @@ use App\Enum\OrderStatus;
 use App\Enum\PaymentMethod;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\LockMode;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 
 class OrderService
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly ProductRepository $productRepo,
+        private readonly MailerInterface $mailer,
     ) {}
 
     /**
@@ -44,81 +48,130 @@ class OrderService
             throw new \InvalidArgumentException('Delivery address is incomplete');
         }
 
-        $serverTotal   = 0.0;
-        $enrichedItems = [];
-        $totalQty      = 0;
-        $products      = [];
+        return $this->em->wrapInTransaction(function () use (
+            $user, $items, $deliveryAddress, $deliveryCity, $deliveryPostal, $deliveryCountry, $paymentMethod
+        ): Order {
+            $serverTotal   = 0.0;
+            $enrichedItems = [];
+            $totalQty      = 0;
 
-        foreach ($items as $item) {
-            $productId = (int) ($item['productId'] ?? 0);
-            $requested = (int) ($item['quantity']  ?? 0);
+            foreach ($items as $item) {
+                $productId = (int) ($item['productId'] ?? 0);
+                $requested = (int) ($item['quantity']  ?? 0);
 
-            if ($productId <= 0 || $requested <= 0) {
-                throw new \InvalidArgumentException("Invalid item (id={$productId})");
+                if ($productId <= 0 || $requested <= 0) {
+                    throw new \InvalidArgumentException("Invalid item (id={$productId})");
+                }
+
+                // Pessimistic write lock: blocks concurrent reads-for-update on the same row.
+                // Prevents two simultaneous orders from both passing the stock check.
+                $product = $this->productRepo->find($productId, LockMode::PESSIMISTIC_WRITE);
+
+                if (!$product) {
+                    throw new \InvalidArgumentException("Product #{$productId} not found");
+                }
+
+                if (!$product->isActive()) {
+                    throw new \DomainException(sprintf(
+                        'Le produit "%s" n\'est plus disponible à la vente.',
+                        $product->getTitle(),
+                    ));
+                }
+
+                if ($product->getQuantity() < $requested) {
+                    throw new \DomainException(sprintf(
+                        'Stock insuffisant pour "%s" : %d disponible(s), %d demandé(s).',
+                        $product->getTitle(),
+                        $product->getQuantity(),
+                        $requested,
+                    ));
+                }
+
+                $unitPrice    = (float) $product->getPriceTTC();
+                $serverTotal += $unitPrice * $requested;
+                $totalQty    += $requested;
+
+                $enrichedItems[] = [
+                    'productId' => $productId,
+                    'title'     => $product->getTitle(),
+                    'quantity'  => $requested,
+                    'priceTTC'  => $product->getPriceTTC(),
+                ];
+
+                $product->setQuantity($product->getQuantity() - $requested);
             }
 
-            $product = $this->productRepo->find($productId);
+            $orderLine = new OrderLine();
+            $orderLine->setQuantity($totalQty);
 
-            if (!$product) {
-                throw new \InvalidArgumentException("Product #{$productId} not found");
-            }
+            $delivery = new Delivery();
+            $delivery->setDeliveryAddress($deliveryAddress);
+            $delivery->setDeliveryCity($deliveryCity);
+            $delivery->setDeliveryPostalCode($deliveryPostal);
+            $delivery->setDeliveryCountry($deliveryCountry);
+            $delivery->setStatus('pending');
+            $delivery->setOrderLine($orderLine);
+            $orderLine->setDelivery($delivery);
 
-            if ($product->getQuantity() < $requested) {
-                throw new \DomainException(sprintf(
-                    'Stock insuffisant pour "%s" : %d disponible(s), %d demandé(s).',
-                    $product->getTitle(),
-                    $product->getQuantity(),
-                    $requested,
-                ));
-            }
+            $bill = new Bill();
+            $bill->setPayment(PaymentMethod::from($paymentMethod));
+            $bill->setNumber('BILL-'.strtoupper(uniqid()));
+            $bill->setCreatedAt(new \DateTimeImmutable());
 
-            $unitPrice    = (float) $product->getPriceTTC();
-            $serverTotal += $unitPrice * $requested;
-            $totalQty    += $requested;
+            $order = new Order();
+            $order->setStatus(OrderStatus::PENDING);
+            $order->setCreatedAt(new \DateTimeImmutable());
+            $order->setTotal((string) round($serverTotal, 2));
+            $order->setItems($enrichedItems);
+            $order->setOrderLine($orderLine);
+            $order->setBill($bill);
+            $order->setUser($user);
 
-            $enrichedItems[] = [
-                'productId' => $productId,
-                'title'     => $product->getTitle(),
-                'quantity'  => $requested,
-                'priceTTC'  => $product->getPriceTTC(),
-            ];
+            $this->em->persist($orderLine);
+            $this->em->persist($delivery);
+            $this->em->persist($bill);
+            $this->em->persist($order);
 
-            $product->setQuantity($product->getQuantity() - $requested);
-            $products[] = $product;
-        }
+            return $order;
+        });
 
-        $orderLine = new OrderLine();
-        $orderLine->setQuantity($totalQty);
-
-        $delivery = new Delivery();
-        $delivery->setDeliveryAddress($deliveryAddress);
-        $delivery->setDeliveryCity($deliveryCity);
-        $delivery->setDeliveryPostalCode($deliveryPostal);
-        $delivery->setDeliveryCountry($deliveryCountry);
-        $delivery->setStatus('pending');
-        $delivery->setOrderLine($orderLine);
-        $orderLine->setDelivery($delivery);
-
-        $bill = new Bill();
-        $bill->setPayment(PaymentMethod::from($paymentMethod));
-        $bill->setNumber('BILL-'.strtoupper(uniqid()));
-        $bill->setCreatedAt(new \DateTimeImmutable());
-
-        $order = new Order();
-        $order->setStatus(OrderStatus::PENDING);
-        $order->setCreatedAt(new \DateTimeImmutable());
-        $order->setTotal((string) round($serverTotal, 2));
-        $order->setItems($enrichedItems);
-        $order->setOrderLine($orderLine);
-        $order->setBill($bill);
-        $order->setUser($user);
-
-        $this->em->persist($orderLine);
-        $this->em->persist($delivery);
-        $this->em->persist($bill);
-        $this->em->persist($order);
-        $this->em->flush();
+        $this->sendConfirmationEmail($user, $order);
 
         return $order;
+    }
+
+    private function sendConfirmationEmail(User $user, Order $order): void
+    {
+        $items = $order->getItems() ?? [];
+        $itemLines = implode("\n", array_map(
+            fn (array $i) => sprintf('  - %s × %d : %.2f €', $i['title'], $i['quantity'], (float) $i['priceTTC'] * $i['quantity']),
+            $items,
+        ));
+
+        $paymentLabel = match ($order->getBill()?->getPayment()?->value) {
+            'paypal' => 'PayPal',
+            default  => 'Carte bancaire',
+        };
+
+        $email = (new Email())
+            ->from('noreply@nimes-alerie.gal')
+            ->to((string) $user->getEmail())
+            ->subject('Confirmation de votre commande ' . $order->getBill()?->getNumber())
+            ->text(
+                "Bonjour {$user->getFirstName()},\n\n"
+                . "Votre commande a bien été enregistrée. Voici le récapitulatif :\n\n"
+                . "  Référence    : " . $order->getBill()?->getNumber() . "\n"
+                . "  Mode de paiement : {$paymentLabel}\n\n"
+                . "Articles commandés :\n{$itemLines}\n\n"
+                . "  TOTAL TTC : " . number_format((float) $order->getTotal(), 2, ',', ' ') . " €\n\n"
+                . "Merci pour votre confiance.\n"
+                . "L'équipe La Nîmes'Alerie"
+            );
+
+        try {
+            $this->mailer->send($email);
+        } catch (\Throwable) {
+            // L'envoi d'email ne doit jamais bloquer la création de commande.
+        }
     }
 }

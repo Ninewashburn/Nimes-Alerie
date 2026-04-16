@@ -32,3 +32,8 @@ services:
   App\EventListener\JWTCreatedListener:
     tags:
       - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_created, method: onJWTCreated }
+
+  App\Service\PayPalService:
+    arguments:
+      $clientId: '%env(PAYPAL_CLIENT_ID)%'
+      $clientSecret: '%env(PAYPAL_CLIENT_SECRET)%'

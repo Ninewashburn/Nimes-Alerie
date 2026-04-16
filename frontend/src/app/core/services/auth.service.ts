@@ -1,7 +1,7 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, switchMap, tap, map } from 'rxjs';
+import { Observable, tap, map } from 'rxjs';
 import { environment } from '@env/environment';
 import { JwtToken, LoginCredentials, User } from '@core/models/product.model';
 
@@ -36,10 +36,8 @@ export class AuthService {
     this.checkToken();
   }
 
-  register(data: RegisterData): Observable<JwtToken> {
-    return this.http
-      .post(`${environment.apiUrl}/register`, data)
-      .pipe(switchMap(() => this.login({ email: data.email, password: data.password })));
+  register(data: RegisterData): Observable<void> {
+    return this.http.post<void>(`${environment.apiUrl}/register`, data);
   }
 
   forgotPassword(email: string): Observable<void> {
@@ -78,8 +76,14 @@ export class AuthService {
   fetchProfile(): void {
     this.http.get<User>(`${environment.apiUrl}/me`).subscribe({
       next: (user) => this.currentUser.set(user),
-      error: () => this.logout(),
+      error: () => this.clearAuth(),
     });
+  }
+
+  private clearAuth(): void {
+    localStorage.removeItem(this.tokenKey);
+    this.currentUser.set(null);
+    this.isAuthenticated.set(false);
   }
 
   private setToken(token: string): void {
@@ -94,9 +98,7 @@ export class AuthService {
       this.isAuthenticated.set(true);
       this.fetchProfile();
     } else if (token) {
-      localStorage.removeItem(this.tokenKey);
-      this.currentUser.set(null);
-      this.isAuthenticated.set(false);
+      this.clearAuth();
     }
   }
 

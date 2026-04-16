@@ -1,0 +1,70 @@
+<div class="fixed inset-0 z-0 pointer-events-none">
+  <div class="absolute inset-0 bg-gradient-to-b from-slate-950/40 via-transparent to-slate-950 z-10"></div>
+  <img alt="Deep Space" class="w-full h-full object-cover scale-110 opacity-60" 
+    src="assets/images/stitch/login-bg.jpg"/>
+  
+  <!-- Technical HUD Overlays -->
+  <div class="absolute inset-0 z-20 pointer-events-none flex flex-col justify-between p-6 opacity-40 font-mono text-[10px] tracking-widest text-blue-500">
+    <div class="flex justify-between items-start">
+      <div class="space-y-1">
+        <p>SCAN_MODE: DEEP_RECON</p>
+        <p>VOID_DETECTED: TRUE</p>
+        <p>LINK_SYNC: FAILED</p>
+      </div>
+      <div class="text-right space-y-1">
+        <p>ERROR_CODE: 0x404</p>
+        <p>SYSTEM_RECOVERY: ACTIVE</p>
+        <p>OXYGEN: 95%</p>
+      </div>
+    </div>
+    <div class="flex justify-between items-end">
+      <div class="animate-pulse">SEARCHING_FOR_SATELLITE_RELAY...</div>
+      <div>2124 © NAVIGATION_CORP</div>
+    </div>
+  </div>
+</div>
+
+<main class="relative z-30 min-h-screen w-full flex items-center justify-center p-6">
+  <div class="max-w-lg w-full glass-panel dark:bg-slate-900/40 rounded-3xl overflow-hidden relative border border-blue-500/30 shadow-[0_0_50px_rgba(0,82,255,0.2)] backdrop-blur-3xl p-12 text-center space-y-10">
+    
+    <!-- Scanning Line -->
+    <div class="scanning-line absolute inset-x-0 top-0 h-1 bg-blue-500/20 pointer-events-none z-10"></div>
+    
+    <div class="space-y-4">
+      <div class="inline-flex items-center justify-center p-5 rounded-full bg-blue-600/10 border border-blue-500/20 mb-2">
+        <span class="material-symbols-outlined text-blue-500 text-5xl animate-pulse" style="font-variation-settings: 'FILL' 1;">explore_off</span>
+      </div>
+      <h1 class="text-4xl md:text-5xl font-black text-white tracking-widest uppercase font-mono italic">
+        Coordonnées <br>
+        <span class="text-blue-500">Introuvables</span>
+      </h1>
+      <p class="font-mono text-xs text-blue-400 tracking-widest uppercase opacity-80">
+        // ERREUR_404 : LE SIGNAL EST PERDU DANS LE VIDE INTERSIDÉRAL
+      </p>
+    </div>
+
+    <p class="text-slate-400 font-mono text-sm leading-relaxed max-w-sm mx-auto">
+      La trajectoire orbitale demandée ne correspond à aucune base de données connue. La transmission a sans doute été déviée par un trou noir.
+    </p>
+
+    <div class="pt-8">
+      <a routerLink="/"
+        class="inline-flex items-center gap-4 px-10 py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-mono font-bold uppercase tracking-[0.3em] text-[10px] transition-all duration-500 hover:scale-[1.05] shadow-[0_0_20px_rgba(0,82,255,0.4)]">
+        <span class="material-symbols-outlined text-sm">navigation</span>
+        Retour à la Station de Contrôle
+      </a>
+    </div>
+
+    <!-- System Status Bar -->
+    <div class="pt-12 border-t border-blue-500/10 flex justify-center gap-8">
+      <div class="text-left space-y-1">
+        <p class="text-[8px] font-mono text-blue-500 uppercase tracking-widest opacity-60">Status</p>
+        <p class="text-[10px] font-mono text-white tracking-tighter">LOST_IN_VOID</p>
+      </div>
+      <div class="text-left space-y-1">
+        <p class="text-[8px] font-mono text-blue-500 uppercase tracking-widest opacity-60">Action</p>
+        <p class="text-[10px] font-mono text-white tracking-tighter">REBOOT_LINK</p>
+      </div>
+    </div>
+  </div>
+</main>

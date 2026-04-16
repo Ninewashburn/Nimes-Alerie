@@ -38,6 +38,22 @@
     </div>
   </section>
 
+  <!-- Barre de recherche -->
+  <section class="max-w-screen-xl mx-auto px-4 md:px-6 relative z-10 mb-6">
+    <div class="relative max-w-xl">
+      <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+      <input
+        [(ngModel)]="searchQuery" [ngModelOptions]="{standalone: true}"
+        type="search" placeholder="Rechercher un article..."
+        class="w-full bg-white/80 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700 rounded-2xl py-3 pl-12 pr-10 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all backdrop-blur" />
+      @if (searchQuery()) {
+        <button (click)="searchQuery.set('')" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      }
+    </div>
+  </section>
+
   <!-- Formulaire rédaction -->
   @if (showForm()) {
     <section class="max-w-screen-xl mx-auto px-4 md:px-6 relative z-10 mb-8">
@@ -81,7 +97,7 @@
       </div>
     } @else {
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        @for (article of articles(); track article.id; let i = $index) {
+        @for (article of filteredArticles(); track article.id; let i = $index) {
           <!-- Article Card -->
           <article [class]="'group relative flex flex-col glass-panel dark:bg-slate-900/60 rounded-3xl border border-white/40 dark:border-slate-700/50 shadow-lg shadow-blue-900/5 hover:shadow-blue-500/20 transition-all duration-500 hover:-translate-y-2 overflow-hidden cursor-pointer ' + (i === 0 ? 'md:col-span-2 md:flex-row' : '')" [routerLink]="['/articles', article.id]">
             

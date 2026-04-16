@@ -4,6 +4,7 @@ FROM php:8.3-fpm-alpine
 RUN apk add --no-cache \
     icu-dev \
     libzip-dev \
+    libsodium-dev \
     zip \
     unzip \
     git \
@@ -11,6 +12,8 @@ RUN apk add --no-cache \
     intl \
     pdo_mysql \
     zip \
+    sodium \
+    sysvsem \
     opcache
 
 # Install Composer

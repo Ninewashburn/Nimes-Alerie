@@ -141,7 +141,7 @@
         <h3 class="text-lg font-black text-slate-900 dark:text-white mb-3 uppercase tracking-tight">Synchronisation Orbitale</h3>
         <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium">Localisation GPS-Galactique en temps réel via la constellation de satellites Nîmes-1.</p>
       </div>
-      
+
       <div class="p-8 border border-blue-100 dark:border-blue-900/30 rounded-3xl bg-white dark:bg-slate-900/40 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group">
         <div class="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center mb-6 group-hover:bg-blue-600 group-hover:text-white transition-all">
           <span class="material-symbols-outlined">thermostat</span>
@@ -149,13 +149,162 @@
         <h3 class="text-lg font-black text-slate-900 dark:text-white mb-3 uppercase tracking-tight">Régulation Thermique</h3>
         <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium">Maintient une température optimale entre -50°C et +120°C lors des rentrées atmosphériques.</p>
       </div>
-      
+
       <div class="p-8 border border-blue-100 dark:border-blue-900/30 rounded-3xl bg-white dark:bg-slate-900/40 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group">
         <div class="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center mb-6 group-hover:bg-blue-600 group-hover:text-white transition-all">
           <span class="material-symbols-outlined">hardware</span>
         </div>
         <h3 class="text-lg font-black text-slate-900 dark:text-white mb-3 uppercase tracking-tight">Alliage Titan-Nîmes</h3>
         <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium">Structure renforcée quasi-indestructible mais ultra-légère pour une agilité K9 maximale.</p>
+      </div>
+    </div>
+
+    <!-- ─── Section Avis / Notation ─────────────────────────────────────────── -->
+    <div class="mt-24">
+      <div class="flex items-center gap-4 mb-10">
+        <div class="flex items-center gap-4 border-l-4 border-blue-600 pl-6">
+          <span class="material-symbols-outlined text-blue-600 text-2xl">reviews</span>
+          <h2 class="text-2xl font-black tracking-tight text-slate-900 dark:text-white uppercase">Rapports de Mission</h2>
+        </div>
+        @if (ratings().length > 0) {
+          <div class="ml-auto flex items-center gap-3">
+            <div class="flex gap-0.5">
+              @for (s of starsArray; track s) {
+                <span class="material-symbols-outlined text-xl"
+                  [class]="s <= averageRating() ? 'text-amber-400' : 'text-slate-300 dark:text-slate-600'">
+                  star
+                </span>
+              }
+            </div>
+            <span class="text-sm font-black text-slate-900 dark:text-white">{{ roundedAvg() }}</span>
+            <span class="text-[10px] font-mono text-slate-400 uppercase tracking-widest">({{ ratings().length }} avis)</span>
+          </div>
+        }
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+
+        <!-- Liste des avis -->
+        <div class="lg:col-span-7 space-y-6">
+          @if (ratings().length === 0) {
+            <div class="flex flex-col items-center justify-center py-16 text-center border-2 border-dashed border-slate-200 dark:border-blue-900/30 rounded-3xl">
+              <span class="material-symbols-outlined text-5xl text-slate-300 dark:text-blue-900/50 mb-4">rate_review</span>
+              <p class="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-blue-400/50">Aucun rapport de mission enregistré</p>
+              <p class="text-[10px] text-slate-300 dark:text-blue-900/50 mt-1 uppercase tracking-widest">Soyez le premier à transmettre votre évaluation</p>
+            </div>
+          }
+
+          @for (r of ratings(); track r.id) {
+            <div class="p-6 bg-white dark:bg-slate-900/40 border border-slate-100 dark:border-blue-900/30 rounded-2xl shadow-sm">
+              <div class="flex items-start justify-between mb-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                    <span class="text-xs font-black text-blue-600 dark:text-blue-400 uppercase">
+                      {{ (r.user?.firstName ?? 'A')[0] }}{{ (r.user?.lastName ?? '?')[0] }}
+                    </span>
+                  </div>
+                  <div>
+                    <p class="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tight">
+                      {{ r.user?.firstName ?? 'Anonyme' }} {{ r.user?.lastName ?? '' }}
+                    </p>
+                    <p class="text-[10px] font-mono text-slate-400 uppercase tracking-widest">Officier certifié</p>
+                  </div>
+                </div>
+                <div class="flex gap-0.5">
+                  @for (s of starsArray; track s) {
+                    <span class="material-symbols-outlined text-base"
+                      [class]="s <= r.rate ? 'text-amber-400' : 'text-slate-200 dark:text-slate-700'">
+                      star
+                    </span>
+                  }
+                </div>
+              </div>
+              @if (r.testimonial) {
+                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mt-3 pl-12 font-medium italic">
+                  "{{ r.testimonial }}"
+                </p>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Formulaire de notation -->
+        <div class="lg:col-span-5">
+          @if (!authService.loggedIn()) {
+            <div class="p-8 bg-slate-50 dark:bg-blue-950/20 border border-slate-100 dark:border-blue-900/30 rounded-2xl text-center">
+              <span class="material-symbols-outlined text-3xl text-slate-400 mb-4 block">lock</span>
+              <p class="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-blue-400 mb-4">Connexion requise</p>
+              <a routerLink="/login" class="bg-blue-600 text-white font-black px-6 py-3 rounded-full text-[10px] uppercase tracking-widest hover:bg-blue-700 transition-colors">
+                Se connecter
+              </a>
+            </div>
+          } @else if (userHasRated()) {
+            <div class="p-8 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-900/30 rounded-2xl text-center">
+              <span class="material-symbols-outlined text-3xl text-emerald-500 mb-3 block">verified</span>
+              <p class="text-xs font-black uppercase tracking-widest text-emerald-700 dark:text-emerald-400">Rapport de mission transmis</p>
+              <p class="text-[10px] text-emerald-600/70 dark:text-emerald-500/60 mt-1 uppercase tracking-widest">Vous avez déjà évalué cet équipement</p>
+            </div>
+          } @else {
+            <div class="p-8 bg-white dark:bg-slate-900/40 border border-slate-100 dark:border-blue-900/30 rounded-2xl shadow-sm">
+              <h3 class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 dark:text-blue-400/60 mb-6">Transmettre votre rapport</h3>
+
+              <!-- Star selector -->
+              <div class="mb-6">
+                <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-blue-400 mb-3">Évaluation *</p>
+                <div class="flex gap-1" (mouseleave)="setHovered(0)">
+                  @for (s of starsArray; track s) {
+                    <button type="button"
+                      (mouseenter)="setHovered(s)"
+                      (click)="selectStar(s)"
+                      class="focus:outline-none transition-transform hover:scale-110 active:scale-95">
+                      <span class="material-symbols-outlined text-3xl transition-colors"
+                        [class]="displayStar(s) === 'full' ? 'text-amber-400' : 'text-slate-200 dark:text-slate-700'">
+                        star
+                      </span>
+                    </button>
+                  }
+                </div>
+              </div>
+
+              <!-- Testimonial -->
+              <div class="mb-6">
+                <label class="block text-[10px] font-black uppercase tracking-widest text-slate-500 dark:text-blue-400 mb-2">Commentaire (optionnel)</label>
+                <textarea
+                  [(ngModel)]="testimonialInput"
+                  rows="4"
+                  maxlength="2000"
+                  placeholder="Décrivez votre expérience avec cet équipement..."
+                  class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-blue-900/50 rounded-xl px-4 py-3 text-sm text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-blue-900/30 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 transition-all resize-none">
+                </textarea>
+              </div>
+
+              @if (submitError()) {
+                <div class="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/30 rounded-xl text-[10px] font-bold uppercase tracking-wide text-red-600 dark:text-red-400 flex items-center gap-2">
+                  <span class="material-symbols-outlined text-sm">error</span>
+                  {{ submitError() }}
+                </div>
+              }
+              @if (submitSuccess()) {
+                <div class="mb-4 p-3 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-900/30 rounded-xl text-[10px] font-bold uppercase tracking-wide text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
+                  <span class="material-symbols-outlined text-sm">check_circle</span>
+                  Rapport transmis avec succès !
+                </div>
+              }
+
+              <button type="button" (click)="submitRating()" [disabled]="submitting() || selectedStar() === 0"
+                class="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white font-black py-4 rounded-full text-[10px] uppercase tracking-[0.2em] shadow-lg shadow-blue-500/20 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-40 disabled:scale-100 transition-all flex items-center justify-center gap-2">
+                @if (submitting()) {
+                  <span class="material-symbols-outlined animate-spin text-sm">sync</span>
+                  Transmission...
+                } @else {
+                  <span class="material-symbols-outlined text-sm">send</span>
+                  Transmettre le Rapport
+                }
+              </button>
+            </div>
+          }
+        </div>
+
       </div>
     </div>
   </div>
