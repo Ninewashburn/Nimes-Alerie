@@ -65,9 +65,11 @@ class Product
     #[ORM\ManyToOne(targetEntity: Brand::class, inversedBy: 'products')]
     private ?Brand $brand = null;
 
+    /** @var Collection<int, mixed> */
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: Rate::class)]
     private Collection $rate;
 
+    /** @var Collection<int, mixed> */
     #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'products')]
     private Collection $category;
 
@@ -176,8 +178,9 @@ class Product
     }
 
     /**
-     * @return Collection|Rate[]
+     * @return Collection<int, Rate>
      */
+    /** @return Collection<int, mixed> */
     public function getRate(): Collection
     {
         return $this->rate;
@@ -206,8 +209,9 @@ class Product
     }
 
     /**
-     * @return Collection|Category[]
+     * @return Collection<int, Category>
      */
+    /** @return Collection<int, mixed> */
     public function getCategory(): Collection
     {
         return $this->category;

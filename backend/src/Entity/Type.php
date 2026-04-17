@@ -36,6 +36,7 @@ class Type
     #[ORM\Column(type: 'text')]
     private ?string $description = null;
 
+    /** @var Collection<int, mixed> */
     #[ORM\OneToMany(mappedBy: 'type', targetEntity: SubType::class, orphanRemoval: true)]
     private Collection $subtype;
 
@@ -74,8 +75,9 @@ class Type
     }
 
     /**
-     * @return Collection|SubType[]
+     * @return Collection<int, SubType>
      */
+    /** @return Collection<int, mixed> */
     public function getSubtypes(): Collection
     {
         return $this->subtype;

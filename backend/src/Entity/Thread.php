@@ -57,6 +57,7 @@ class Thread
     #[ORM\JoinColumn(nullable: false)]
     private ?SubType $subtype = null;
 
+    /** @var Collection<int, mixed> */
     #[ORM\OneToMany(mappedBy: 'thread', targetEntity: Post::class, orphanRemoval: true)]
     private Collection $posts;
 
@@ -119,8 +120,9 @@ class Thread
     }
 
     /**
-     * @return Collection|Post[]
+     * @return Collection<int, Post>
      */
+    /** @return Collection<int, mixed> */
     public function getPosts(): Collection
     {
         return $this->posts;

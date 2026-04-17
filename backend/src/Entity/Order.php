@@ -45,6 +45,7 @@ class Order
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2, nullable: true)]
     private ?string $total = null;
 
+    /** @var array<mixed>|null */
     #[ORM\Column(type: 'json', nullable: true)]
     private ?array $items = null;
 
@@ -117,11 +118,13 @@ class Order
         return $this;
     }
 
+    /** @return array<mixed>|null */
     public function getItems(): ?array
     {
         return $this->items;
     }
 
+    /** @param array<mixed>|null $items */
     public function setItems(?array $items): self
     {
         $this->items = $items;

@@ -16,6 +16,9 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
  */
 final class RateStateProcessor implements ProcessorInterface
 {
+    /**
+     * @param ProcessorInterface<mixed, mixed> $persistProcessor
+     */
     public function __construct(
         #[Autowire(service: 'api_platform.doctrine.orm.state.persist_processor')]
         private ProcessorInterface $persistProcessor,
@@ -30,9 +33,10 @@ final class RateStateProcessor implements ProcessorInterface
      *
      * @return Rate
      */
+    
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
     {
-        if ($data instanceof Rate && null === $data->getId()) {
+        if (null === $data->getId()) {
             $user = $this->security->getUser();
             if ($user instanceof User) {
                 $data->setUser($user);

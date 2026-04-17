@@ -43,6 +43,7 @@ class SubType
     #[ORM\JoinColumn(nullable: false)]
     private ?Type $type = null;
 
+    /** @var Collection<int, mixed> */
     #[ORM\OneToMany(mappedBy: 'subtype', targetEntity: Thread::class)]
     private Collection $threads;
 
@@ -93,8 +94,9 @@ class SubType
     }
 
     /**
-     * @return Collection|Thread[]
+     * @return Collection<int, Thread>
      */
+    /** @return Collection<int, mixed> */
     public function getThreads(): Collection
     {
         return $this->threads;

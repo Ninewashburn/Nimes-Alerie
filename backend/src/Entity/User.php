@@ -37,8 +37,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Email(message: 'The email {{ value }} is not a valid email.', )]
     private ?string $email = null;
 
-    #[ORM\Column(type: 'json')]
     /** @var array<string> */
+    #[ORM\Column(type: 'json')]
+    
     private array $roles = [];
 
     #[ORM\Column(type: 'string')]
@@ -64,9 +65,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     private ?DateTimeInterface $birthAt = null;
 
+    /** @var Collection<int, mixed> */
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Rate::class)]
     private Collection $rate;
 
+    /** @var Collection<int, mixed> */
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Cart::class)]
     private Collection $carts;
 
@@ -221,8 +224,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection|Rate[]
+     * @return Collection<int, Rate>
      */
+    /** @return Collection<int, mixed> */
     public function getRate(): Collection
     {
         return $this->rate;
@@ -251,8 +255,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection|Cart[]
+     * @return Collection<int, Cart>
      */
+    /** @return Collection<int, mixed> */
     public function getCarts(): Collection
     {
         return $this->carts;

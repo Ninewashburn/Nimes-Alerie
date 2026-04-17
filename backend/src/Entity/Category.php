@@ -42,9 +42,11 @@ class Category
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?self $parent = null;
 
+    /** @var Collection<int, mixed> */
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
     private Collection $children;
 
+    /** @var Collection<int, mixed> */
     #[ORM\ManyToMany(targetEntity: Product::class, mappedBy: 'category')]
     private Collection $products;
 
@@ -95,6 +97,7 @@ class Category
         return $this;
     }
 
+    /** @return Collection<int, mixed> */
     public function getChildren(): Collection
     {
         return $this->children;
@@ -122,8 +125,9 @@ class Category
     }
 
     /**
-     * @return Collection|Product[]
+     * @return Collection<int, Product>
      */
+    /** @return Collection<int, mixed> */
     public function getProducts(): Collection
     {
         return $this->products;

@@ -24,6 +24,7 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
+    /** @return array<mixed> */
     public function findArticlesByName(string $name): array
     {
         return $this->createQueryBuilder('p')
@@ -80,6 +81,7 @@ class ProductRepository extends ServiceEntityRepository
      *
      * Return all product name.
      */
+    /** @return array<mixed> */
     public function findAllNames(string $title): array
     {
         // FROM product AS product

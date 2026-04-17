@@ -38,6 +38,7 @@ class Brand
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $logo = null;
 
+    /** @var Collection<int, mixed> */
     #[ORM\OneToMany(mappedBy: 'brand', targetEntity: Product::class)]
     private Collection $products;
 
@@ -76,8 +77,9 @@ class Brand
     }
 
     /**
-     * @return Collection|Product[]
+     * @return Collection<int, Product>
      */
+    /** @return Collection<int, mixed> */
     public function getProducts(): Collection
     {
         return $this->products;
