@@ -35,8 +35,6 @@ class PostRepository extends ServiceEntityRepository
     }
 
     // /**
- * @extends ServiceEntityRepository<Post>
- *
     //  * @return Post[] Returns an array of Post objects
     //  */
     /*

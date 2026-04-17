@@ -24,8 +24,6 @@ class OrderLineRepository extends ServiceEntityRepository
     }
 
     // /**
- * @extends ServiceEntityRepository<OrderLine>
- *
     //  * @return OrderLine[] Returns an array of OrderLine objects
     //  */
     /*

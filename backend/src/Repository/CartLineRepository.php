@@ -24,8 +24,6 @@ class CartLineRepository extends ServiceEntityRepository
     }
 
     // /**
- * @extends ServiceEntityRepository<CartLine>
- *
     //  * @return CartLine[] Returns an array of CartLine objects
     //  */
     /*

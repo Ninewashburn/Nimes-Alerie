@@ -24,8 +24,6 @@ class BillRepository extends ServiceEntityRepository
     }
 
     // /**
- * @extends ServiceEntityRepository<Bill>
- *
     //  * @return Bill[] Returns an array of Bill objects
     //  */
     /*

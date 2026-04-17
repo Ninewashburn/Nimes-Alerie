@@ -24,8 +24,6 @@ class DeliveryRepository extends ServiceEntityRepository
     }
 
     // /**
- * @extends ServiceEntityRepository<Delivery>
- *
     //  * @return Delivery[] Returns an array of Delivery objects
     //  */
     /*

@@ -24,8 +24,6 @@ class ArticleRepository extends ServiceEntityRepository
     }
 
     // /**
- * @extends ServiceEntityRepository<Article>
- *
     //  * @return Article[] Returns an array of Article objects
     //  */
     /*

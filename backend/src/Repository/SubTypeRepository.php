@@ -24,8 +24,6 @@ class SubTypeRepository extends ServiceEntityRepository
     }
 
     // /**
- * @extends ServiceEntityRepository<SubType>
- *
     //  * @return SubType[] Returns an array of SubType objects
     //  */
     /*

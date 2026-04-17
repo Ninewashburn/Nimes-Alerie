@@ -35,8 +35,6 @@ class TypeRepository extends ServiceEntityRepository
     }
 
     // /**
- * @extends ServiceEntityRepository<Type>
- *
     //  * @return Type[] Returns an array of Type objects
     //  */
     /*

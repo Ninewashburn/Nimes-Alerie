@@ -24,8 +24,6 @@ class CartRepository extends ServiceEntityRepository
     }
 
     // /**
- * @extends ServiceEntityRepository<Cart>
- *
     //  * @return Cart[] Returns an array of Cart objects
     //  */
     /*

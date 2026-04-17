@@ -35,8 +35,6 @@ class ProductRepository extends ServiceEntityRepository
     }
 
     //    /**
- * @extends ServiceEntityRepository<Product>
- *
     //     * @param Collection $products
     //     * @param int $limit
     //     * @return array
@@ -55,8 +53,6 @@ class ProductRepository extends ServiceEntityRepository
     //    }
 
     //    /**
- * @extends ServiceEntityRepository<Product>
- *
     //     * @param int $limit
     //     * @param bool $isOrderedByName
     //     * @return array
@@ -98,8 +94,6 @@ class ProductRepository extends ServiceEntityRepository
         ;
     }
     //    // /**
- * @extends ServiceEntityRepository<Product>
- *
     //    //  * @return Product[] Returns an array of Product objects
     //    //  */
     //    /*

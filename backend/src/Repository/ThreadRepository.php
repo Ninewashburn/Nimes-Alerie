@@ -35,8 +35,6 @@ class ThreadRepository extends ServiceEntityRepository
     }
 
     // /**
- * @extends ServiceEntityRepository<Thread>
- *
     //  * @return Thread[] Returns an array of Thread objects
     //  */
     /*

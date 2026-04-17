@@ -24,8 +24,6 @@ class CategoryRepository extends ServiceEntityRepository
     }
 
     // /**
- * @extends ServiceEntityRepository<Category>
- *
     //  * @return Category[] Returns an array of Category objects
     //  */
     /*

@@ -24,8 +24,6 @@ class RateRepository extends ServiceEntityRepository
     }
 
     // /**
- * @extends ServiceEntityRepository<Rate>
- *
     //  * @return Rate[] Returns an array of Rate objects
     //  */
     /*

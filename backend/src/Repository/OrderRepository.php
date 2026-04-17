@@ -23,8 +23,6 @@ class OrderRepository extends ServiceEntityRepository
         parent::__construct($registry, Order::class);
     }
     // /**
- * @extends ServiceEntityRepository<Order>
- *
     //  * @return Order[] Returns an array of Order objects
     //  */
     /*

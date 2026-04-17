@@ -24,8 +24,6 @@ class BrandRepository extends ServiceEntityRepository
     }
 
     // /**
- * @extends ServiceEntityRepository<Brand>
- *
     //  * @return Brand[] Returns an array of Brand objects
     //  */
     /*
