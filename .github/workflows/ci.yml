@@ -23,7 +23,7 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_ROOT_PASSWORD: ci-test-root-pwd
-          MYSQL_DATABASE: nimes_alerie_test_test
+          MYSQL_DATABASE: nimes_alerie_test
           MYSQL_USER: app
           MYSQL_PASSWORD: ci-test-db-pwd
         ports:
@@ -41,7 +41,7 @@ jobs:
     env:
       APP_ENV: test
       APP_SECRET: ci-test-secret-not-a-real-value
-      DATABASE_URL: mysql://app:ci-test-db-pwd@127.0.0.1:3306/nimes_alerie_test_test
+      DATABASE_URL: mysql://root:ci-test-root-pwd@127.0.0.1:3306/nimes_alerie?serverVersion=8.0.32
       JWT_SECRET_KEY: '%kernel.project_dir%/config/jwt/private.pem'
       JWT_PUBLIC_KEY: '%kernel.project_dir%/config/jwt/public.pem'
       JWT_PASSPHRASE: ci-test-passphrase
