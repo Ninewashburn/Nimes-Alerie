@@ -4,12 +4,29 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
 use App\Repository\RateRepository;
+use App\State\RateStateProcessor;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RateRepository::class)]
-#[ApiResource]
+#[ApiResource(operations: [
+    new Get(),
+    new GetCollection(),
+    new Post(
+        security: "is_granted('IS_AUTHENTICATED_FULLY')",
+        processor: RateStateProcessor::class,
+    ),
+    new Patch(security: "is_granted('ROLE_ADMIN') or object.getUser() == user"),
+    new Delete(security: "is_granted('ROLE_ADMIN') or object.getUser() == user"),
+])]
 class Rate
 {
     #[ORM\Id]
@@ -18,15 +35,18 @@ class Rate
     private ?int $id = null;
 
     #[ORM\Column(type: 'integer', nullable: true)]
+    #[Assert\Range(min: 1, max: 5)]
     private ?int $rate = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
+    #[Assert\Length(max: 2000)]
     private ?string $testimonial = null;
 
     #[ORM\ManyToOne(targetEntity: Product::class, inversedBy: 'rate')]
     private ?Product $product = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'rate')]
+    #[ApiProperty(writable: false)]
     private ?User $user = null;
 
     public function getId(): ?int

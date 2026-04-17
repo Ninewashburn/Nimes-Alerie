@@ -44,8 +44,8 @@ class RegistrationController extends AbstractController
         }
 
         $plainPassword = $data['password'];
-        if (strlen($plainPassword) < 6) {
-            return $this->json(['error' => 'Password must be at least 6 characters'], 400);
+        if (strlen($plainPassword) < 8) {
+            return $this->json(['error' => 'Le mot de passe doit contenir au moins 8 caractères.'], 400);
         }
 
         $birthAt = \DateTime::createFromFormat('Y-m-d', $data['birthAt']);

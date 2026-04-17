@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Attribute\Route;
 
 class ResetPasswordController extends AbstractController
@@ -26,7 +27,13 @@ class ResetPasswordController extends AbstractController
         ResetPasswordTokenRepository $resetPasswordTokenRepository,
         EntityManagerInterface $entityManager,
         MailerInterface $mailer,
+        RateLimiterFactory $apiResetPasswordRequestLimiter,
     ): JsonResponse {
+        $limiter = $apiResetPasswordRequestLimiter->create($request->getClientIp() ?? 'unknown');
+        if (!$limiter->consume()->isAccepted()) {
+            return $this->json(['message' => 'Si cet email existe, un lien a été envoyé.'], 200);
+        }
+
         $data = json_decode($request->getContent(), true);
 
         if (empty($data['email'])) {
@@ -75,7 +82,13 @@ class ResetPasswordController extends AbstractController
         ResetPasswordTokenRepository $resetPasswordTokenRepository,
         EntityManagerInterface $entityManager,
         UserPasswordHasherInterface $passwordHasher,
+        RateLimiterFactory $apiResetPasswordConfirmLimiter,
     ): JsonResponse {
+        $limiter = $apiResetPasswordConfirmLimiter->create($request->getClientIp() ?? 'unknown');
+        if (!$limiter->consume()->isAccepted()) {
+            return $this->json(['error' => 'Trop de tentatives.'], 429);
+        }
+
         $data = json_decode($request->getContent(), true);
 
         if (empty($data['token']) || empty($data['password'])) {
@@ -88,8 +101,8 @@ class ResetPasswordController extends AbstractController
             return $this->json(['error' => 'Token invalide ou expiré.'], 400);
         }
 
-        if (strlen($data['password']) < 6) {
-            return $this->json(['error' => 'Le mot de passe doit contenir au moins 6 caractères.'], 400);
+        if (strlen($data['password']) < 8) {
+            return $this->json(['error' => 'Le mot de passe doit contenir au moins 8 caractères.'], 400);
         }
 
         $user = $resetToken->getUser();

@@ -5,11 +5,18 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use App\Repository\DeliveryRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DeliveryRepository::class)]
-#[ApiResource]
+#[ApiResource(operations: [
+    new Get(security: "is_granted('ROLE_ADMIN')"),
+    new GetCollection(security: "is_granted('ROLE_ADMIN')"),
+    new Patch(security: "is_granted('ROLE_ADMIN')"),
+])]
 class Delivery
 {
     #[ORM\Id]

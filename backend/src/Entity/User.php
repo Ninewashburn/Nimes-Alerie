@@ -90,6 +90,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private bool $isVerified = false;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[ApiProperty(readable: false, writable: false)]
     private ?string $emailVerifyToken = null;
 
     public function __construct()

@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Attribute\Route;
 
 class EmailVerificationController extends AbstractController
@@ -18,7 +19,13 @@ class EmailVerificationController extends AbstractController
         Request $request,
         UserRepository $userRepository,
         EntityManagerInterface $entityManager,
+        RateLimiterFactory $apiVerifyEmailLimiter,
     ): JsonResponse {
+        $limiter = $apiVerifyEmailLimiter->create($request->getClientIp() ?? 'unknown');
+        if (!$limiter->consume()->isAccepted()) {
+            return $this->json(['error' => 'Trop de tentatives.'], 429);
+        }
+
         $token = $request->query->get('token');
 
         if (!$token) {
