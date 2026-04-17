@@ -11,7 +11,7 @@ parameters:
     symfony:
         containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
     doctrine:
-        objectManagerLoader: tests/bootstrap.php
+        objectManagerLoader: tests/object-manager.php
     ignoreErrors:
         # Dynamic setters via magic calls in SecurityController
         - '#Call to an undefined method App\\Entity\\User::\$setter\(\)#'
