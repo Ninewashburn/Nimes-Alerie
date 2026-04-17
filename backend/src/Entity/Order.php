@@ -10,6 +10,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use App\Enum\OrderStatus;
 use App\Repository\OrderRepository;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
@@ -27,7 +28,7 @@ class Order
     private ?int $id = null;
 
     #[ORM\Column(type: 'datetime')]
-    private ?\DateTimeInterface $createdAt = null;
+    private ?DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: 'string', length: 50, enumType: OrderStatus::class)]
     private OrderStatus $status = OrderStatus::PENDING;
@@ -56,12 +57,12 @@ class Order
         return $this->id;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -136,12 +137,12 @@ class Order
     public function setCart(?Cart $cart): self
     {
         // unset the owning side of the relation if necessary
-        if ($cart === null && $this->cart !== null) {
+        if (null === $cart && null !== $this->cart) {
             $this->cart->setCommand(null);
         }
 
         // set the owning side of the relation if necessary
-        if ($cart !== null && $cart->getCommand() !== $this) {
+        if (null !== $cart && $cart->getCommand() !== $this) {
             $cart->setCommand($this);
         }
 

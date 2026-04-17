@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use LogicException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,8 +33,8 @@ class SecurityController extends AbstractController
 
         $fields = ['firstName', 'lastName', 'telephone', 'gender', 'address', 'secondAddress', 'city', 'postalCode', 'country'];
         foreach ($fields as $field) {
-            if (array_key_exists($field, $data)) {
-                $setter = 'set' . ucfirst($field);
+            if (\array_key_exists($field, $data)) {
+                $setter = 'set'.ucfirst($field);
                 $user->$setter($data[$field]);
             }
         }
@@ -46,11 +47,12 @@ class SecurityController extends AbstractController
         }
 
         $errors = $validator->validate($user);
-        if (count($errors) > 0) {
+        if (\count($errors) > 0) {
             $errorMessages = [];
             foreach ($errors as $error) {
                 $errorMessages[$error->getPropertyPath()] = $error->getMessage();
             }
+
             return $this->json(['errors' => $errorMessages], 422);
         }
 
@@ -62,7 +64,7 @@ class SecurityController extends AbstractController
     #[Route('/api/logout', name: 'app_logout', methods: ['POST'])]
     public function logout(): void
     {
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+        throw new LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
     #[Route('/api/me', name: 'api_me', methods: ['GET'])]
@@ -74,21 +76,21 @@ class SecurityController extends AbstractController
             return $this->json(['error' => 'Not authenticated'], 401);
         }
 
-        /** @var User $user */
+        /* @var User $user */
         return $this->json([
-            'id'            => $user->getId(),
-            'email'         => $user->getUserIdentifier(),
-            'roles'         => $user->getRoles(),
-            'firstName'     => $user->getFirstName(),
-            'lastName'      => $user->getLastName(),
-            'telephone'     => $user->getTelephone(),
-            'gender'        => $user->getGender(),
-            'birthAt'       => $user->getBirthAt()?->format('Y-m-d'),
-            'address'       => $user->getAddress(),
+            'id' => $user->getId(),
+            'email' => $user->getUserIdentifier(),
+            'roles' => $user->getRoles(),
+            'firstName' => $user->getFirstName(),
+            'lastName' => $user->getLastName(),
+            'telephone' => $user->getTelephone(),
+            'gender' => $user->getGender(),
+            'birthAt' => $user->getBirthAt()?->format('Y-m-d'),
+            'address' => $user->getAddress(),
             'secondAddress' => $user->getSecondAddress(),
-            'city'          => $user->getCity(),
-            'postalCode'    => $user->getPostalCode(),
-            'country'       => $user->getCountry(),
+            'city' => $user->getCity(),
+            'postalCode' => $user->getPostalCode(),
+            'country' => $user->getCountry(),
         ]);
     }
 }

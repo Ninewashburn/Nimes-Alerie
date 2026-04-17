@@ -16,7 +16,8 @@ class AdminController extends AbstractController
 {
     public function __construct(
         private readonly AdminStatsService $statsService,
-    ) {}
+    ) {
+    }
 
     #[Route('/stats', name: 'api_admin_stats', methods: ['GET'])]
     public function stats(): JsonResponse

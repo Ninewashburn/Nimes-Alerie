@@ -22,16 +22,15 @@ class TypeRepository extends ServiceEntityRepository
         parent::__construct($registry, Type::class);
     }
 
-    public function getQbAll() :QueryBuilder
+    public function getQbAll(): QueryBuilder
     {
         $qb = $this->createQueryBuilder('type')
             ->select('type')
             ->orderBy('type.name', 'ASC')
-            ;
+        ;
 
         return $qb;
     }
-
 
     // /**
     //  * @return Type[] Returns an array of Type objects

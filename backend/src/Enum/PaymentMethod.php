@@ -6,6 +6,6 @@ namespace App\Enum;
 
 enum PaymentMethod: string
 {
-    case CARD   = 'card';
+    case CARD = 'card';
     case PAYPAL = 'paypal';
 }

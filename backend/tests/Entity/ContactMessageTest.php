@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Entity;
 
 use App\Entity\ContactMessage;
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 
 class ContactMessageTest extends TestCase
@@ -14,14 +15,14 @@ class ContactMessageTest extends TestCase
         $msg = new ContactMessage();
 
         $this->assertFalse($msg->isRead());
-        $this->assertInstanceOf(\DateTimeImmutable::class, $msg->getCreatedAt());
+        $this->assertInstanceOf(DateTimeImmutable::class, $msg->getCreatedAt());
     }
 
     public function testCreatedAtIsSetOnConstruct(): void
     {
-        $before = new \DateTimeImmutable();
-        $msg    = new ContactMessage();
-        $after  = new \DateTimeImmutable();
+        $before = new DateTimeImmutable();
+        $msg = new ContactMessage();
+        $after = new DateTimeImmutable();
 
         $this->assertGreaterThanOrEqual($before, $msg->getCreatedAt());
         $this->assertLessThanOrEqual($after, $msg->getCreatedAt());

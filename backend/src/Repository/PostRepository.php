@@ -22,7 +22,7 @@ class PostRepository extends ServiceEntityRepository
         parent::__construct($registry, Post::class);
     }
 
-    public function getQbAll() :QueryBuilder
+    public function getQbAll(): QueryBuilder
     {
         $qb = $this->createQueryBuilder('post')
             ->select('post')

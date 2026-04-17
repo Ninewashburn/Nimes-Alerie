@@ -6,8 +6,8 @@ namespace App\Repository;
 
 use App\Entity\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method Product|null find($id, $lockMode = null, $lockVersion = null)
@@ -27,57 +27,54 @@ class ProductRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('p')
             ->select('product.name')
             ->where('product.name LIKE :name')
-            ->setParameter('name', '%' . $name . '%')
+            ->setParameter('name', '%'.$name.'%')
             ->getQuery()
             ->getResult();
     }
 
-//    /**
-//     * @param Collection $products
-//     * @param int $limit
-//     * @return array
-//     */
-//    public function findRelatedProductByCategory(Collection $products, int $limit = 5): array
-//    {
-//        return $this->createQueryBuilder('game')
-//            ->select('product', 'categories')
-//            ->join('product.category', 'categories')
-//            ->where('categories IN(:categories)')
-//            ->setParameter('categories', $products)
-//            ->orderBy('product.title', 'DESC')
-//            ->setMaxResults($limit)
-//            ->getQuery()
-//            ->getResult();
-//    }
+    //    /**
+    //     * @param Collection $products
+    //     * @param int $limit
+    //     * @return array
+    //     */
+    //    public function findRelatedProductByCategory(Collection $products, int $limit = 5): array
+    //    {
+    //        return $this->createQueryBuilder('game')
+    //            ->select('product', 'categories')
+    //            ->join('product.category', 'categories')
+    //            ->where('categories IN(:categories)')
+    //            ->setParameter('categories', $products)
+    //            ->orderBy('product.title', 'DESC')
+    //            ->setMaxResults($limit)
+    //            ->getQuery()
+    //            ->getResult();
+    //    }
 
-//    /**
-//     * @param int $limit
-//     * @param bool $isOrderedByName
-//     * @return array
-//     */
-//    public function findLastGames(int $limit = 10, bool $isOrderedByName = false): array {
-//        // SELECT * FROM game JOIN sur language & genre
-//        $qb = $this->createQueryBuilder('product');
-//
-//        // En fonction des conditions, j'ajoute différent ORDER BY sur ma requête
-//        if ($isOrderedByName) {
-//            $qb->orderBy('product.title', 'ASC');
-//        } else {
-//            $qb->orderBy('product.title', 'DESC');
-//        }
-//
-//        // LIMIT 10 ou LIMIT $limit
-//        return $qb->setMaxResults($limit)
-//            ->getQuery()
-//            ->getResult()
-//            ;
-//    }
+    //    /**
+    //     * @param int $limit
+    //     * @param bool $isOrderedByName
+    //     * @return array
+    //     */
+    //    public function findLastGames(int $limit = 10, bool $isOrderedByName = false): array {
+    //        // SELECT * FROM game JOIN sur language & genre
+    //        $qb = $this->createQueryBuilder('product');
+    //
+    //        // En fonction des conditions, j'ajoute différent ORDER BY sur ma requête
+    //        if ($isOrderedByName) {
+    //            $qb->orderBy('product.title', 'ASC');
+    //        } else {
+    //            $qb->orderBy('product.title', 'DESC');
+    //        }
+    //
+    //        // LIMIT 10 ou LIMIT $limit
+    //        return $qb->setMaxResults($limit)
+    //            ->getQuery()
+    //            ->getResult()
+    //            ;
+    //    }
 
     /**
-     * Return all product name
-     *
-     * @param string $title
-     * @return array
+     * Return all product name.
      */
     public function findAllNames(string $title): array
     {
@@ -87,27 +84,27 @@ class ProductRepository extends ServiceEntityRepository
             ->select('product.title')
             // WHERE product.title LIKE '%$name%' => $name est un paramètre
             ->where('product.title LIKE :title')
-            ->setParameter('title', '%' . $title . '%')
+            ->setParameter('title', '%'.$title.'%')
             ->getQuery()
             ->getResult()
-            ;
+        ;
     }
-//    // /**
-//    //  * @return Product[] Returns an array of Product objects
-//    //  */
-//    /*
-//    public function findByExampleField($value)
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-//    */
+    //    // /**
+    //    //  * @return Product[] Returns an array of Product objects
+    //    //  */
+    //    /*
+    //    public function findByExampleField($value)
+    //    {
+    //        return $this->createQueryBuilder('p')
+    //            ->andWhere('p.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('p.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+    //    */
 
     /*
     public function findOneBySomeField($value): ?Product
@@ -120,5 +117,4 @@ class ProductRepository extends ServiceEntityRepository
         ;
     }
     */
-
 }

@@ -46,12 +46,12 @@ class OrderLine
     public function setDelivery(?Delivery $delivery): self
     {
         // unset the owning side of the relation if necessary
-        if ($delivery === null && $this->delivery !== null) {
+        if (null === $delivery && null !== $this->delivery) {
             $this->delivery->setOrderLine(null);
         }
 
         // set the owning side of the relation if necessary
-        if ($delivery !== null && $delivery->getOrderLine() !== $this) {
+        if (null !== $delivery && $delivery->getOrderLine() !== $this) {
             $delivery->setOrderLine($this);
         }
 

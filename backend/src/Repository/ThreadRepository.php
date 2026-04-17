@@ -22,7 +22,7 @@ class ThreadRepository extends ServiceEntityRepository
         parent::__construct($registry, Thread::class);
     }
 
-    public function getQbAll() :QueryBuilder
+    public function getQbAll(): QueryBuilder
     {
         $qb = $this->createQueryBuilder('thread')
             ->select('thread')

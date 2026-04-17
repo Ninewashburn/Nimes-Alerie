@@ -86,12 +86,12 @@ class CartLine
     public function setCart(?Cart $cart): self
     {
         // unset the owning side of the relation if necessary
-        if ($cart === null && $this->cart !== null) {
+        if (null === $cart && null !== $this->cart) {
             $this->cart->setCartLine(null);
         }
 
         // set the owning side of the relation if necessary
-        if ($cart !== null && $cart->getCartLine() !== $this) {
+        if (null !== $cart && $cart->getCartLine() !== $this) {
             $cart->setCartLine($this);
         }
 

@@ -8,7 +8,6 @@ use App\Entity\ResetPasswordToken;
 use App\Repository\ResetPasswordTokenRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,7 +55,7 @@ class ResetPasswordController extends AbstractController
         $entityManager->flush();
 
         $frontendUrl = $this->getParameter('frontend_url');
-        $resetLink = $frontendUrl . '/reset-password?token=' . $resetToken->getToken();
+        $resetLink = $frontendUrl.'/reset-password?token='.$resetToken->getToken();
 
         $email = (new Email())
             ->from('noreply@nimes-alerie.gal')
@@ -64,11 +63,11 @@ class ResetPasswordController extends AbstractController
             ->subject('Réinitialisation de votre mot de passe')
             ->text(
                 "Bonjour {$user->getFirstName()},\n\n"
-                . "Vous avez demandé la réinitialisation de votre mot de passe.\n\n"
-                . "Cliquez sur le lien suivant pour le réinitialiser (valable 1 heure) :\n"
-                . $resetLink . "\n\n"
-                . "Si vous n'avez pas fait cette demande, ignorez cet email.\n\n"
-                . "L'équipe Nimes-Algérie"
+                ."Vous avez demandé la réinitialisation de votre mot de passe.\n\n"
+                ."Cliquez sur le lien suivant pour le réinitialiser (valable 1 heure) :\n"
+                .$resetLink."\n\n"
+                ."Si vous n'avez pas fait cette demande, ignorez cet email.\n\n"
+                ."L'équipe Nimes-Algérie"
             );
 
         $mailer->send($email);
@@ -101,7 +100,7 @@ class ResetPasswordController extends AbstractController
             return $this->json(['error' => 'Token invalide ou expiré.'], 400);
         }
 
-        if (strlen($data['password']) < 8) {
+        if (\strlen($data['password']) < 8) {
             return $this->json(['error' => 'Le mot de passe doit contenir au moins 8 caractères.'], 400);
         }
 

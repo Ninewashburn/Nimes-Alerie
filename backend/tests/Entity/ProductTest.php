@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Entity;
 
-use App\Entity\Product;
 use App\Entity\Brand;
 use App\Entity\Category;
+use App\Entity\Product;
 use PHPUnit\Framework\TestCase;
 
 class ProductTest extends TestCase

@@ -7,18 +7,20 @@ namespace App\Service;
 use App\Entity\Post;
 use App\Entity\Thread;
 use App\Entity\User;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ForumService
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-    ) {}
+    ) {
+    }
 
     public function createThread(Thread $thread, User $user): void
     {
         $thread->setUser($user);
-        $thread->setCreatedAt(new \DateTimeImmutable());
+        $thread->setCreatedAt(new DateTimeImmutable());
 
         $this->entityManager->persist($thread);
         $this->entityManager->flush();
@@ -28,7 +30,7 @@ class ForumService
     {
         $post->setUser($user);
         $post->setThread($thread);
-        $post->setCreatedAt(new \DateTimeImmutable());
+        $post->setCreatedAt(new DateTimeImmutable());
         $post->setUpVote(0);
         $post->setDownVote(0);
 

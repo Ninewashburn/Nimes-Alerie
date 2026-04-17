@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
 use App\Repository\DeliveryRepository;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: DeliveryRepository::class)]
@@ -25,7 +26,7 @@ class Delivery
     private ?int $id = null;
 
     #[ORM\Column(type: 'date', nullable: true)]
-    private ?\DateTimeInterface $deliveryDate = null;
+    private ?DateTimeInterface $deliveryDate = null;
 
     #[ORM\Column(type: 'string', length: 255)]
     private ?string $status = null;
@@ -50,12 +51,12 @@ class Delivery
         return $this->id;
     }
 
-    public function getDeliveryDate(): ?\DateTimeInterface
+    public function getDeliveryDate(): ?DateTimeInterface
     {
         return $this->deliveryDate;
     }
 
-    public function setDeliveryDate(?\DateTimeInterface $deliveryDate): self
+    public function setDeliveryDate(?DateTimeInterface $deliveryDate): self
     {
         $this->deliveryDate = $deliveryDate;
 

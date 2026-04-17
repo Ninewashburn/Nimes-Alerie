@@ -16,7 +16,8 @@ class PostVoteController extends AbstractController
     public function __construct(
         private readonly PostRepository $postRepository,
         private readonly EntityManagerInterface $em,
-    ) {}
+    ) {
+    }
 
     #[Route('/api/posts/{id}/upvote', name: 'api_post_upvote', methods: ['PATCH'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
@@ -32,7 +33,7 @@ class PostVoteController extends AbstractController
         $this->em->flush();
 
         return $this->json([
-            'upVote'   => $post->getUpVote(),
+            'upVote' => $post->getUpVote(),
             'downVote' => $post->getDownVote(),
         ]);
     }
@@ -51,7 +52,7 @@ class PostVoteController extends AbstractController
         $this->em->flush();
 
         return $this->json([
-            'upVote'   => $post->getUpVote(),
+            'upVote' => $post->getUpVote(),
             'downVote' => $post->getDownVote(),
         ]);
     }

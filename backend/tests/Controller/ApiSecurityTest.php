@@ -28,15 +28,15 @@ class ApiSecurityTest extends WebTestCase
     public static function protectedEndpointsProvider(): array
     {
         return [
-            'GET /api/me'                => ['GET',    '/api/me'],
-            'PATCH /api/me'              => ['PATCH',  '/api/me'],
-            'GET /api/my-orders'         => ['GET',    '/api/my-orders'],
-            'POST /api/orders'           => ['POST',   '/api/orders'],
-            'GET /api/admin/stats'       => ['GET',    '/api/admin/stats'],
-            'GET /api/users'             => ['GET',    '/api/users'],
-            'POST /api/articles'         => ['POST',   '/api/articles'],
-            'POST /api/threads'          => ['POST',   '/api/threads'],
-            'POST /api/posts'            => ['POST',   '/api/posts'],
+            'GET /api/me' => ['GET',    '/api/me'],
+            'PATCH /api/me' => ['PATCH',  '/api/me'],
+            'GET /api/my-orders' => ['GET',    '/api/my-orders'],
+            'POST /api/orders' => ['POST',   '/api/orders'],
+            'GET /api/admin/stats' => ['GET',    '/api/admin/stats'],
+            'GET /api/users' => ['GET',    '/api/users'],
+            'POST /api/articles' => ['POST',   '/api/articles'],
+            'POST /api/threads' => ['POST',   '/api/threads'],
+            'POST /api/posts' => ['POST',   '/api/posts'],
         ];
     }
 
@@ -54,7 +54,7 @@ class ApiSecurityTest extends WebTestCase
 
         // Contact — public POST
         $client->request('POST', '/api/contact', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
-            'email'   => 'test@test.com',
+            'email' => 'test@test.com',
             'message' => 'Message de test suffisamment long.',
         ]));
         $this->assertNotSame(401, $client->getResponse()->getStatusCode());
@@ -66,7 +66,7 @@ class ApiSecurityTest extends WebTestCase
         $client = static::createClient();
 
         $client->request('POST', '/api/orders', [], [], [
-            'CONTENT_TYPE'  => 'application/json',
+            'CONTENT_TYPE' => 'application/json',
             'HTTP_AUTHORIZATION' => 'Bearer fake.jwt.token',
         ], json_encode(['items' => []]));
 

@@ -14,13 +14,13 @@ class RegistrationControllerTest extends WebTestCase
     private function validPayload(array $overrides = []): array
     {
         return array_merge([
-            'email'     => 'nouveau@nimes-alerie.gal',
-            'password'  => self::TEST_PASSWORD,
+            'email' => 'nouveau@nimes-alerie.gal',
+            'password' => self::TEST_PASSWORD,
             'firstName' => 'Astro',
-            'lastName'  => 'Chien',
-            'address'   => '42 rue de l\'Orbite',
-            'city'      => 'Nîmes',
-            'birthAt'   => '1990-01-15',
+            'lastName' => 'Chien',
+            'address' => '42 rue de l\'Orbite',
+            'city' => 'Nîmes',
+            'birthAt' => '1990-01-15',
         ], $overrides);
     }
 

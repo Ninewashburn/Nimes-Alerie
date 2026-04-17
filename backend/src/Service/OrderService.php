@@ -12,20 +12,24 @@ use App\Entity\User;
 use App\Enum\OrderStatus;
 use App\Enum\PaymentMethod;
 use App\Repository\ProductRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use DomainException;
+use InvalidArgumentException;
 
 class OrderService
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly ProductRepository $productRepo,
-    ) {}
+    ) {
+    }
 
     /**
      * @param array<array{productId: int, quantity: int}> $items
      *
-     * @throws \InvalidArgumentException when items are empty or address is incomplete
-     * @throws \DomainException          when stock is insufficient (includes product title + quantities)
+     * @throws InvalidArgumentException when items are empty or address is incomplete
+     * @throws DomainException          when stock is insufficient (includes product title + quantities)
      */
     public function createOrder(
         User $user,
@@ -37,50 +41,45 @@ class OrderService
         string $paymentMethod,
     ): Order {
         if (empty($items)) {
-            throw new \InvalidArgumentException('Cart is empty');
+            throw new InvalidArgumentException('Cart is empty');
         }
 
         if (empty($deliveryAddress) || empty($deliveryCity) || empty($deliveryPostal)) {
-            throw new \InvalidArgumentException('Delivery address is incomplete');
+            throw new InvalidArgumentException('Delivery address is incomplete');
         }
 
-        $serverTotal   = 0.0;
+        $serverTotal = 0.0;
         $enrichedItems = [];
-        $totalQty      = 0;
-        $products      = [];
+        $totalQty = 0;
+        $products = [];
 
         foreach ($items as $item) {
             $productId = (int) ($item['productId'] ?? 0);
-            $requested = (int) ($item['quantity']  ?? 0);
+            $requested = (int) ($item['quantity'] ?? 0);
 
             if ($productId <= 0 || $requested <= 0) {
-                throw new \InvalidArgumentException("Invalid item (id={$productId})");
+                throw new InvalidArgumentException("Invalid item (id={$productId})");
             }
 
             $product = $this->productRepo->find($productId);
 
             if (!$product) {
-                throw new \InvalidArgumentException("Product #{$productId} not found");
+                throw new InvalidArgumentException("Product #{$productId} not found");
             }
 
             if ($product->getQuantity() < $requested) {
-                throw new \DomainException(sprintf(
-                    'Stock insuffisant pour "%s" : %d disponible(s), %d demandé(s).',
-                    $product->getTitle(),
-                    $product->getQuantity(),
-                    $requested,
-                ));
+                throw new DomainException(\sprintf('Stock insuffisant pour "%s" : %d disponible(s), %d demandé(s).', $product->getTitle(), $product->getQuantity(), $requested));
             }
 
-            $unitPrice    = (float) $product->getPriceTTC();
+            $unitPrice = (float) $product->getPriceTTC();
             $serverTotal += $unitPrice * $requested;
-            $totalQty    += $requested;
+            $totalQty += $requested;
 
             $enrichedItems[] = [
                 'productId' => $productId,
-                'title'     => $product->getTitle(),
-                'quantity'  => $requested,
-                'priceTTC'  => $product->getPriceTTC(),
+                'title' => $product->getTitle(),
+                'quantity' => $requested,
+                'priceTTC' => $product->getPriceTTC(),
             ];
 
             $product->setQuantity($product->getQuantity() - $requested);
@@ -102,11 +101,11 @@ class OrderService
         $bill = new Bill();
         $bill->setPayment(PaymentMethod::from($paymentMethod));
         $bill->setNumber('BILL-'.strtoupper(uniqid()));
-        $bill->setCreatedAt(new \DateTimeImmutable());
+        $bill->setCreatedAt(new DateTimeImmutable());
 
         $order = new Order();
         $order->setStatus(OrderStatus::PENDING);
-        $order->setCreatedAt(new \DateTimeImmutable());
+        $order->setCreatedAt(new DateTimeImmutable());
         $order->setTotal((string) round($serverTotal, 2));
         $order->setItems($enrichedItems);
         $order->setOrderLine($orderLine);

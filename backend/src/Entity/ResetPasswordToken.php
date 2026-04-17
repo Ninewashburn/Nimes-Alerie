@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\ResetPasswordTokenRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ResetPasswordTokenRepository::class)]
@@ -23,7 +24,7 @@ class ResetPasswordToken
     private string $token;
 
     #[ORM\Column(type: 'datetime_immutable')]
-    private \DateTimeImmutable $expiresAt;
+    private DateTimeImmutable $expiresAt;
 
     #[ORM\Column(type: 'boolean')]
     private bool $used = false;
@@ -31,7 +32,7 @@ class ResetPasswordToken
     public function __construct()
     {
         $this->token = bin2hex(random_bytes(32));
-        $this->expiresAt = new \DateTimeImmutable('+1 hour');
+        $this->expiresAt = new DateTimeImmutable('+1 hour');
     }
 
     public function getId(): ?int
@@ -56,7 +57,7 @@ class ResetPasswordToken
         return $this->token;
     }
 
-    public function getExpiresAt(): \DateTimeImmutable
+    public function getExpiresAt(): DateTimeImmutable
     {
         return $this->expiresAt;
     }
@@ -75,6 +76,6 @@ class ResetPasswordToken
 
     public function isExpired(): bool
     {
-        return $this->expiresAt < new \DateTimeImmutable();
+        return $this->expiresAt < new DateTimeImmutable();
     }
 }

@@ -18,7 +18,8 @@ class AdminOrderController extends AbstractController
     public function __construct(
         private readonly OrderRepository $orderRepository,
         private readonly EntityManagerInterface $em,
-    ) {}
+    ) {
+    }
 
     #[Route('/api/admin/orders', name: 'api_admin_orders_list', methods: ['GET'])]
     #[IsGranted('ROLE_ADMIN')]
@@ -31,32 +32,32 @@ class AdminOrderController extends AbstractController
         $orders = $this->orderRepository->findBy([], ['id' => 'DESC'], $itemsPerPage, $offset);
         $total = $this->orderRepository->count([]);
 
-        $data = array_map(function ($order) {
+        $data = array_map(static function ($order) {
             $user = $order->getUser();
             $bill = $order->getBill();
 
             return [
-                'id'         => $order->getId(),
-                'status'     => $order->getStatus()->value,
-                'total'      => $order->getTotal(),
-                'items'      => $order->getItems(),
-                'createdAt'  => $order->getCreatedAt()?->format('d/m/Y H:i'),
+                'id' => $order->getId(),
+                'status' => $order->getStatus()->value,
+                'total' => $order->getTotal(),
+                'items' => $order->getItems(),
+                'createdAt' => $order->getCreatedAt()?->format('d/m/Y H:i'),
                 'billNumber' => $bill?->getNumber(),
-                'payment'    => $bill?->getPayment()?->value,
-                'user'       => $user ? [
-                    'id'        => $user->getId(),
-                    'email'     => $user->getEmail(),
+                'payment' => $bill?->getPayment()?->value,
+                'user' => $user ? [
+                    'id' => $user->getId(),
+                    'email' => $user->getEmail(),
                     'firstName' => $user->getFirstName(),
-                    'lastName'  => $user->getLastName(),
+                    'lastName' => $user->getLastName(),
                 ] : null,
             ];
         }, $orders);
 
         return $this->json([
-            'total'        => $total,
-            'page'         => $page,
+            'total' => $total,
+            'page' => $page,
             'itemsPerPage' => $itemsPerPage,
-            'orders'       => $data,
+            'orders' => $data,
         ]);
     }
 
@@ -79,10 +80,11 @@ class AdminOrderController extends AbstractController
         $statusValue = $data['status'];
         $newStatus = OrderStatus::tryFrom($statusValue);
 
-        if ($newStatus === null) {
-            $validValues = array_map(fn (OrderStatus $s) => $s->value, OrderStatus::cases());
+        if (null === $newStatus) {
+            $validValues = array_map(static fn (OrderStatus $s) => $s->value, OrderStatus::cases());
+
             return $this->json([
-                'error'       => sprintf('Invalid status "%s"', $statusValue),
+                'error' => \sprintf('Invalid status "%s"', $statusValue),
                 'validValues' => $validValues,
             ], 400);
         }
@@ -94,18 +96,18 @@ class AdminOrderController extends AbstractController
         $bill = $order->getBill();
 
         return $this->json([
-            'id'         => $order->getId(),
-            'status'     => $order->getStatus()->value,
-            'total'      => $order->getTotal(),
-            'items'      => $order->getItems(),
-            'createdAt'  => $order->getCreatedAt()?->format('d/m/Y H:i'),
+            'id' => $order->getId(),
+            'status' => $order->getStatus()->value,
+            'total' => $order->getTotal(),
+            'items' => $order->getItems(),
+            'createdAt' => $order->getCreatedAt()?->format('d/m/Y H:i'),
             'billNumber' => $bill?->getNumber(),
-            'payment'    => $bill?->getPayment()?->value,
-            'user'       => $user ? [
-                'id'        => $user->getId(),
-                'email'     => $user->getEmail(),
+            'payment' => $bill?->getPayment()?->value,
+            'user' => $user ? [
+                'id' => $user->getId(),
+                'email' => $user->getEmail(),
                 'firstName' => $user->getFirstName(),
-                'lastName'  => $user->getLastName(),
+                'lastName' => $user->getLastName(),
             ] : null,
         ]);
     }

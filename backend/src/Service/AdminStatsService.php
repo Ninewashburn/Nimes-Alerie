@@ -7,6 +7,8 @@ namespace App\Service;
 use App\Repository\OrderRepository;
 use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
+use BackedEnum;
+use DateTimeInterface;
 
 class AdminStatsService
 {
@@ -14,7 +16,8 @@ class AdminStatsService
         private readonly OrderRepository $orderRepo,
         private readonly ProductRepository $productRepo,
         private readonly UserRepository $userRepo,
-    ) {}
+    ) {
+    }
 
     /**
      * @return array{
@@ -60,16 +63,16 @@ class AdminStatsService
             ->getArrayResult();
 
         return [
-            'totalOrders'   => (int) $ordersData['totalOrders'],
-            'totalRevenue'  => (float) ($ordersData['totalRevenue'] ?? 0),
-            'totalUsers'    => (int) $totalUsers,
+            'totalOrders' => (int) $ordersData['totalOrders'],
+            'totalRevenue' => (float) ($ordersData['totalRevenue'] ?? 0),
+            'totalUsers' => (int) $totalUsers,
             'totalProducts' => (int) $totalProducts,
-            'lowStock'      => $lowStock,
-            'recentOrders'  => array_map(fn ($o) => [
-                'id'        => $o['id'],
-                'total'     => $o['total'],
-                'status'    => $o['status'] instanceof \BackedEnum ? $o['status']->value : $o['status'],
-                'createdAt' => $o['createdAt'] instanceof \DateTimeInterface
+            'lowStock' => $lowStock,
+            'recentOrders' => array_map(static fn ($o) => [
+                'id' => $o['id'],
+                'total' => $o['total'],
+                'status' => $o['status'] instanceof BackedEnum ? $o['status']->value : $o['status'],
+                'createdAt' => $o['createdAt'] instanceof DateTimeInterface
                     ? $o['createdAt']->format('d/m/Y H:i')
                     : $o['createdAt'],
             ], $recentOrders),

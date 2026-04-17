@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use App\Enum\PaymentMethod;
 use App\Repository\BillRepository;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BillRepository::class)]
@@ -27,7 +28,7 @@ class Bill
     private ?string $number = null;
 
     #[ORM\Column(type: 'datetime')]
-    private ?\DateTimeInterface $createdAt = null;
+    private ?DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: 'string', length: 20, enumType: PaymentMethod::class)]
     private PaymentMethod $payment = PaymentMethod::CARD;
@@ -52,12 +53,12 @@ class Bill
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -84,12 +85,12 @@ class Bill
     public function setCommand(?Order $command): self
     {
         // unset the owning side of the relation if necessary
-        if ($command === null && $this->command !== null) {
+        if (null === $command && null !== $this->command) {
             $this->command->setBill(null);
         }
 
         // set the owning side of the relation if necessary
-        if ($command !== null && $command->getBill() !== $this) {
+        if (null !== $command && $command->getBill() !== $this) {
             $command->setBill($this);
         }
 

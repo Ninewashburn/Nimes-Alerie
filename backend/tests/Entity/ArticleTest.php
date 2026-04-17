@@ -38,7 +38,7 @@ class ArticleTest extends TestCase
     public function testUserRelation(): void
     {
         $article = new Article();
-        $user    = new User();
+        $user = new User();
 
         $article->setUser($user);
         $this->assertSame($user, $article->getUser());

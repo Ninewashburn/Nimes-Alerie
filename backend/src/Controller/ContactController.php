@@ -31,7 +31,7 @@ class ContactController extends AbstractController
             return $this->json(['error' => 'Invalid request body'], 400);
         }
 
-        $email   = trim($data['email']   ?? '');
+        $email = trim($data['email'] ?? '');
         $subject = trim($data['subject'] ?? '');
         $message = trim($data['message'] ?? '');
 
@@ -39,11 +39,11 @@ class ContactController extends AbstractController
             return $this->json(['error' => 'Email et message sont obligatoires.'], 400);
         }
 
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if (!filter_var($email, \FILTER_VALIDATE_EMAIL)) {
             return $this->json(['error' => 'Adresse email invalide.'], 422);
         }
 
-        if (strlen($message) < 10 || strlen($message) > 5000) {
+        if (\strlen($message) < 10 || \strlen($message) > 5000) {
             return $this->json(['error' => 'Le message doit contenir entre 10 et 5000 caractères.'], 422);
         }
 

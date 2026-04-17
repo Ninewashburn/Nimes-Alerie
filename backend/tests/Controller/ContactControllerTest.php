@@ -13,7 +13,7 @@ class ContactControllerTest extends WebTestCase
         $client = static::createClient();
 
         $client->request('POST', '/api/contact', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
-            'email'   => 'pilote@nimes-alerie.gal',
+            'email' => 'pilote@nimes-alerie.gal',
             'subject' => 'general',
             'message' => 'Bonjour, je voudrais des informations sur vos croquettes galactiques.',
         ]));
@@ -39,7 +39,7 @@ class ContactControllerTest extends WebTestCase
         $client = static::createClient();
 
         $client->request('POST', '/api/contact', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
-            'email'   => 'pas-un-email',
+            'email' => 'pas-un-email',
             'message' => 'Message avec email invalide.',
         ]));
 
@@ -60,7 +60,7 @@ class ContactControllerTest extends WebTestCase
         $client = static::createClient();
 
         $client->request('POST', '/api/contact', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
-            'email'   => 'pilote@nimes-alerie.gal',
+            'email' => 'pilote@nimes-alerie.gal',
             'message' => 'Court',
         ]));
 

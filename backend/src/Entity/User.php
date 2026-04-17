@@ -9,13 +9,14 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use App\Repository\UserRepository;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
     operations: [
@@ -33,7 +34,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[Assert\Email(message: 'The email {{ value }} is not a valid email.',)]
+    #[Assert\Email(message: 'The email {{ value }} is not a valid email.', )]
     private ?string $email = null;
 
     #[ORM\Column(type: 'json')]
@@ -60,7 +61,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'date')]
     #[Assert\NotBlank]
-    private ?\DateTimeInterface $birthAt = null;
+    private ?DateTimeInterface $birthAt = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Rate::class)]
     private Collection $rate;
@@ -125,8 +126,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return (string) $this->email;
     }
-
-
 
     /**
      * @see UserInterface
@@ -207,19 +206,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getBirthAt(): ?\DateTimeInterface
+    public function getBirthAt(): ?DateTimeInterface
     {
         return $this->birthAt;
     }
 
-    public function setBirthAt(\DateTimeInterface $birthAt): self
+    public function setBirthAt(DateTimeInterface $birthAt): self
     {
         $this->birthAt = $birthAt;
 
         return $this;
     }
-
-
 
     /**
      * @return Collection|Rate[]

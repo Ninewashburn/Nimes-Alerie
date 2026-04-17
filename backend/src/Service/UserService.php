@@ -13,7 +13,8 @@ class UserService
     public function __construct(
         private EntityManagerInterface $entityManager,
         private UserPasswordHasherInterface $passwordHasher,
-    ) {}
+    ) {
+    }
 
     public function createUser(User $user, string $plainPassword): void
     {
@@ -27,7 +28,7 @@ class UserService
 
     public function updateUser(User $user, ?string $plainPassword = null): void
     {
-        if ($plainPassword !== null) {
+        if (null !== $plainPassword) {
             $user->setPassword(
                 $this->passwordHasher->hashPassword($user, $plainPassword)
             );

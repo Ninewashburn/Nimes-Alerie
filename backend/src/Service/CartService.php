@@ -12,7 +12,8 @@ class CartService
     public function __construct(
         private RequestStack $requestStack,
         private ProductRepository $productRepository,
-    ) {}
+    ) {
+    }
 
     /**
      * @return array{items: array<int, array{produit: \App\Entity\Product, quantite: int}>, total: float}
@@ -25,7 +26,7 @@ class CartService
 
         foreach ($panier as $id => $quantite) {
             $product = $this->productRepository->find($id);
-            if ($product !== null) {
+            if (null !== $product) {
                 $dataPanier[] = [
                     'produit' => $product,
                     'quantite' => $quantite,
@@ -42,7 +43,7 @@ class CartService
         $panier = $this->getCart();
 
         if (!empty($panier[$productId])) {
-            $panier[$productId]++;
+            ++$panier[$productId];
         } else {
             $panier[$productId] = 1;
         }
@@ -56,7 +57,7 @@ class CartService
 
         if (!empty($panier[$productId])) {
             if ($panier[$productId] > 1) {
-                $panier[$productId]--;
+                --$panier[$productId];
             } else {
                 unset($panier[$productId]);
             }

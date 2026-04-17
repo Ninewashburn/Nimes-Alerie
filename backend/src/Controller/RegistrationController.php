@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\User;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class RegistrationController extends AbstractController
@@ -38,17 +39,17 @@ class RegistrationController extends AbstractController
         }
 
         $requiredFields = ['email', 'password', 'firstName', 'lastName', 'address', 'city', 'birthAt'];
-        $missing = array_filter($requiredFields, fn(string $f) => empty($data[$f]));
+        $missing = array_filter($requiredFields, static fn (string $f) => empty($data[$f]));
         if ($missing) {
-            return $this->json(['error' => 'Missing required fields: ' . implode(', ', $missing)], 400);
+            return $this->json(['error' => 'Missing required fields: '.implode(', ', $missing)], 400);
         }
 
         $plainPassword = $data['password'];
-        if (strlen($plainPassword) < 8) {
+        if (\strlen($plainPassword) < 8) {
             return $this->json(['error' => 'Le mot de passe doit contenir au moins 8 caractères.'], 400);
         }
 
-        $birthAt = \DateTime::createFromFormat('Y-m-d', $data['birthAt']);
+        $birthAt = DateTime::createFromFormat('Y-m-d', $data['birthAt']);
         if (!$birthAt) {
             return $this->json(['error' => 'Invalid date format. Use YYYY-MM-DD'], 400);
         }
@@ -76,11 +77,12 @@ class RegistrationController extends AbstractController
         );
 
         $errors = $validator->validate($user);
-        if (count($errors) > 0) {
+        if (\count($errors) > 0) {
             $errorMessages = [];
             foreach ($errors as $error) {
                 $errorMessages[$error->getPropertyPath()] = $error->getMessage();
             }
+
             return $this->json(['errors' => $errorMessages], 422);
         }
 
@@ -93,7 +95,7 @@ class RegistrationController extends AbstractController
         $entityManager->flush();
 
         $frontendUrl = $this->getParameter('frontend_url');
-        $verifyLink = $frontendUrl . '/verify-email?token=' . $token;
+        $verifyLink = $frontendUrl.'/verify-email?token='.$token;
 
         $verificationEmail = (new Email())
             ->from('noreply@nimes-alerie.gal')
@@ -101,10 +103,10 @@ class RegistrationController extends AbstractController
             ->subject('Confirmez votre adresse email')
             ->text(
                 "Bonjour {$user->getFirstName()},\n\n"
-                . "Merci de vous être inscrit(e) sur Nimes-Algérie.\n\n"
-                . "Veuillez confirmer votre adresse email en cliquant sur le lien suivant :\n"
-                . $verifyLink . "\n\n"
-                . "L'équipe Nimes-Algérie"
+                ."Merci de vous être inscrit(e) sur Nimes-Algérie.\n\n"
+                ."Veuillez confirmer votre adresse email en cliquant sur le lien suivant :\n"
+                .$verifyLink."\n\n"
+                ."L'équipe Nimes-Algérie"
             );
 
         $mailer->send($verificationEmail);

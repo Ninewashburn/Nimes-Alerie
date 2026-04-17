@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\State;
 
-use ApiPlatform\Doctrine\Common\State\PersistProcessor;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\Entity\Article;
@@ -23,7 +22,7 @@ final class ArticleStateProcessor implements ProcessorInterface
 
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
     {
-        if ($data instanceof Article && $data->getId() === null) {
+        if ($data instanceof Article && null === $data->getId()) {
             $user = $this->security->getUser();
             if ($user instanceof User) {
                 $data->setUser($user);

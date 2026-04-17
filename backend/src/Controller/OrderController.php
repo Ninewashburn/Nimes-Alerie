@@ -7,6 +7,8 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Repository\OrderRepository;
 use App\Service\OrderService;
+use DomainException;
+use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +19,8 @@ class OrderController extends AbstractController
 {
     public function __construct(
         private readonly OrderService $orderService,
-    ) {}
+    ) {
+    }
 
     #[Route('/api/my-orders', name: 'api_my_orders', methods: ['GET'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
@@ -28,14 +31,14 @@ class OrderController extends AbstractController
 
         $orders = $orderRepo->findBy(['user' => $user], ['id' => 'DESC']);
 
-        return $this->json(array_map(fn ($o) => [
-            'id'         => $o->getId(),
-            'status'     => $o->getStatus()->value,
-            'total'      => $o->getTotal(),
-            'items'      => $o->getItems(),
-            'createdAt'  => $o->getCreatedAt()?->format('d/m/Y'),
+        return $this->json(array_map(static fn ($o) => [
+            'id' => $o->getId(),
+            'status' => $o->getStatus()->value,
+            'total' => $o->getTotal(),
+            'items' => $o->getItems(),
+            'createdAt' => $o->getCreatedAt()?->format('d/m/Y'),
             'billNumber' => $o->getBill()?->getNumber(),
-            'payment'    => $o->getBill()?->getPayment()?->value,
+            'payment' => $o->getBill()?->getPayment()?->value,
         ], $orders));
     }
 
@@ -56,26 +59,26 @@ class OrderController extends AbstractController
             $order = $this->orderService->createOrder(
                 user: $user,
                 items: $data['items'] ?? [],
-                deliveryAddress: $data['deliveryAddress']    ?? '',
-                deliveryCity: $data['deliveryCity']       ?? '',
+                deliveryAddress: $data['deliveryAddress'] ?? '',
+                deliveryCity: $data['deliveryCity'] ?? '',
                 deliveryPostal: $data['deliveryPostalCode'] ?? '',
-                deliveryCountry: $data['deliveryCountry']    ?? 'France',
-                paymentMethod: $data['paymentMethod']      ?? 'card',
+                deliveryCountry: $data['deliveryCountry'] ?? 'France',
+                paymentMethod: $data['paymentMethod'] ?? 'card',
             );
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             return $this->json(['error' => $e->getMessage()], 400);
-        } catch (\DomainException $e) {
+        } catch (DomainException $e) {
             return $this->json(['error' => $e->getMessage()], 409);
         }
 
         return $this->json([
-            'id'         => $order->getId(),
+            'id' => $order->getId(),
             'billNumber' => $order->getBill()?->getNumber(),
-            'status'     => $order->getStatus()->value,
-            'total'      => $order->getTotal(),
+            'status' => $order->getStatus()->value,
+            'total' => $order->getTotal(),
             'itemsCount' => array_sum(array_column($order->getItems() ?? [], 'quantity')),
-            'createdAt'  => $order->getCreatedAt()->format('Y-m-d H:i:s'),
-            'payment'    => $order->getBill()?->getPayment()?->value,
+            'createdAt' => $order->getCreatedAt()->format('Y-m-d H:i:s'),
+            'payment' => $order->getBill()?->getPayment()?->value,
         ], 201);
     }
 }

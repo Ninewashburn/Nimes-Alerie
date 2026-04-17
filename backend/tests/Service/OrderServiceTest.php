@@ -9,6 +9,8 @@ use App\Entity\User;
 use App\Repository\ProductRepository;
 use App\Service\OrderService;
 use Doctrine\ORM\EntityManagerInterface;
+use DomainException;
+use InvalidArgumentException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -20,14 +22,14 @@ class OrderServiceTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->em          = $this->createMock(EntityManagerInterface::class);
+        $this->em = $this->createMock(EntityManagerInterface::class);
         $this->productRepo = $this->createMock(ProductRepository::class);
         $this->orderService = new OrderService($this->em, $this->productRepo);
     }
 
     public function testCreateOrderThrowsOnEmptyItems(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Cart is empty');
 
         $this->orderService->createOrder(
@@ -43,7 +45,7 @@ class OrderServiceTest extends TestCase
 
     public function testCreateOrderThrowsOnIncompleteAddress(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Delivery address is incomplete');
 
         $this->orderService->createOrder(
@@ -61,7 +63,7 @@ class OrderServiceTest extends TestCase
     {
         $this->productRepo->method('find')->willReturn(null);
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Product #99 not found');
 
         $this->orderService->createOrder(
@@ -84,7 +86,7 @@ class OrderServiceTest extends TestCase
 
         $this->productRepo->method('find')->willReturn($product);
 
-        $this->expectException(\DomainException::class);
+        $this->expectException(DomainException::class);
         $this->expectExceptionMessageMatches('/Stock insuffisant/');
 
         $this->orderService->createOrder(
@@ -150,7 +152,7 @@ class OrderServiceTest extends TestCase
 
     public function testCreateOrderThrowsOnInvalidItem(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid item');
 
         $this->orderService->createOrder(
