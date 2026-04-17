@@ -29,6 +29,7 @@ frontend/build_error*.txt
 ###< Frontend (Angular) ###
 
 ###> Docker ###
+.env
 docker-compose.override.yml
 compose.override.yaml
 ###< Docker ###

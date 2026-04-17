@@ -1,8 +1,8 @@
 # ─────────────────────────────────────────────────────────────────────────────
 # DEVELOPMENT-ONLY compose file.
-# Every credential below is a dummy placeholder for local dev.
-# NEVER deploy this file as-is: override via a `docker-compose.override.yml`,
-# a `.env` file, or a dedicated prod compose with secrets from a vault.
+# All credentials are read from environment variables (with dev-only defaults).
+# Copy `.env.docker.example` to `.env` at the repo root and adjust as needed.
+# NEVER deploy this file as-is in production — use a secrets manager.
 # ─────────────────────────────────────────────────────────────────────────────
 services:
   php:
@@ -15,16 +15,15 @@ services:
     depends_on:
       - database
     environment:
-      DATABASE_URL: mysql://app:PLACEHOLDER_DB_PWD@database:3306/nimes_alerie?serverVersion=8.0
-      APP_ENV: dev
-      # ⚠️  PRODUCTION : remplacer ces valeurs par des secrets forts avant tout déploiement
-      APP_SECRET: PLACEHOLDER_APP_SECRET      # ex: php -r "echo bin2hex(random_bytes(16));"
+      DATABASE_URL: mysql://${MYSQL_USER:-app}:${MYSQL_PASSWORD}@database:3306/${MYSQL_DATABASE:-nimes_alerie}?serverVersion=8.0
+      APP_ENV: ${APP_ENV:-dev}
+      APP_SECRET: ${APP_SECRET}
       JWT_SECRET_KEY: '%kernel.project_dir%/config/jwt/private.pem'
       JWT_PUBLIC_KEY: '%kernel.project_dir%/config/jwt/public.pem'
-      JWT_PASSPHRASE: PLACEHOLDER_JWT_PASS               # clé de déchiffrement de la clé privée JWT
+      JWT_PASSPHRASE: ${JWT_PASSPHRASE}
       CORS_ALLOW_ORIGIN: '^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'
-      MAILER_DSN: null://null                 # ⚠️  PRODUCTION : smtp://user:pass@host:port
-      FRONTEND_URL: http://localhost:4200
+      MAILER_DSN: ${MAILER_DSN:-null://null}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:4200}
 
   nginx:
     image: nginx:alpine
@@ -39,13 +38,12 @@ services:
   database:
     image: mysql:8.0
     ports:
-      # ⚠️  PRODUCTION : ne pas exposer le port 3306 publiquement — supprimer cette ligne
-      - "3306:3306"
+      - "${MYSQL_PORT:-3306}:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: PLACEHOLDER_ROOT_PWD     # ⚠️  PRODUCTION : utiliser un mot de passe fort
-      MYSQL_DATABASE: nimes_alerie
-      MYSQL_USER: app
-      MYSQL_PASSWORD: PLACEHOLDER_DB_PWD        # ⚠️  PRODUCTION : utiliser un mot de passe fort
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-nimes_alerie}
+      MYSQL_USER: ${MYSQL_USER:-app}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - db_data:/var/lib/mysql
 
