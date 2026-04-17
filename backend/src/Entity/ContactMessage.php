@@ -28,7 +28,7 @@ class ContactMessage
     #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeImmutable $createdAt;
 
-    #[ORM\Column(type: 'boolean')]
+    #[ORM\Column(name: 'is_read', type: 'boolean')]
     private bool $read = false;
 
     public function __construct()
