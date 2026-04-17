@@ -1,13 +1,13 @@
 import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { AuthService } from '@core/services/auth.service';
 import { CheckoutService, MyOrder } from '@core/services/checkout.service';
 
 @Component({
   selector: 'app-space-base',
   standalone: true,
-  imports: [RouterLink, CurrencyPipe],
+  imports: [RouterLink, CurrencyPipe, DatePipe],
   templateUrl: './space-base.html',
   styleUrl: './space-base.scss',
 })
@@ -18,24 +18,39 @@ export class SpaceBaseComponent implements OnInit {
   orders = signal<MyOrder[]>([]);
   loading = signal(true);
   error = signal('');
+  currentTime = signal(new Date());
+
+  // Helper function for robust status mapping
+  normalizeStatus(status: string): string {
+    const s = (status || '').toLowerCase().trim();
+    if (s.includes('attente') || s === 'pending') return 'pending';
+    if (s.includes('préparation') || s === 'preparing') return 'preparing';
+    if (s.includes('expédiée') || s === 'shipped') return 'shipped';
+    if (s.includes('remboursée') || s === 'refunded') return 'refunded';
+    if (s.includes('annulée') || s === 'cancelled') return 'cancelled';
+    return s;
+  }
 
   totalSpent = computed(() => this.orders().reduce((sum, o) => sum + (+o.total || 0), 0));
 
   readonly statusLabels: Record<string, string> = {
-    pending: 'En attente',
-    preparing: 'En préparation',
-    shipped: 'Expédiée',
-    refunded: 'Remboursée',
+    pending: 'ORBITAL',
+    preparing: 'DESCENT',
+    shipped: 'LANDED',
+    refunded: 'ABORTED',
+    cancelled: 'CANCELLED',
   };
 
   readonly statusColors: Record<string, string> = {
-    pending: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400',
-    preparing: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400',
-    shipped: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400',
-    refunded: 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400',
+    pending: 'bg-amber-500/10 text-amber-600 border border-amber-500/20 shadow-[0_0_10px_rgba(245,158,11,0.1)]',
+    preparing: 'bg-blue-500/10 text-blue-600 border border-blue-500/20 shadow-[0_0_10px_rgba(59,130,246,0.1)]',
+    shipped: 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 shadow-[0_0_10px_rgba(16,185,129,0.1)]',
+    refunded: 'bg-red-500/10 text-red-600 border border-red-500/20 shadow-[0_0_10px_rgba(239,68,68,0.1)]',
+    cancelled: 'bg-slate-500/10 text-slate-600 border border-slate-500/20 shadow-sm',
   };
 
   ngOnInit() {
+    setInterval(() => this.currentTime.set(new Date()), 1000);
     this.checkoutService.getMyOrders().subscribe({
       next: (orders) => {
         this.orders.set(orders);

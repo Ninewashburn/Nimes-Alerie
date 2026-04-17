@@ -1,10 +1,13 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
-import { inject } from '@angular/core';
+import { inject, Injector } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
 import { AuthService } from '@core/services/auth.service';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const authService = inject(AuthService);
+  const injector = inject(Injector);
+  // Break circularity HttpClient -> Interceptor -> AuthService -> HttpClient
+  // using lazy retrieval from injector
+  const authService = injector.get(AuthService);
   const token = authService.getToken();
 
   const cloned = token

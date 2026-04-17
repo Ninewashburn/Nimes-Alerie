@@ -1,53 +1,73 @@
-/* Fonts are loaded via <link> tags in index.html to avoid Angular's
-   build-time font inlining which requires network access during CI. */
+/* Global styles for La Nimes'Alerie - Stitch Design System */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Global styles for La Nimes'Alerie */
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: 'Public Sans', sans-serif;
+  overflow-x: hidden;
 }
 
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.line-clamp-3 {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-/* --- Stitch UI Classes --- */
-.material-symbols-outlined {
-  font-variation-settings:
-    'FILL' 0,
-    'wght' 400,
-    'GRAD' 0,
-    'opsz' 24;
-}
+/* --- Premium Design System: Glassmorphism & Depth --- */
 
 .glass-panel {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  @apply bg-white/70 dark:bg-slate-900/60 backdrop-blur-3xl;
 }
 
-html.dark .glass-panel {
-  background: rgba(17, 24, 39, 0.85);
+.glass-panel-heavy {
+  @apply bg-white/90 dark:bg-slate-900/40 backdrop-blur-[50px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)];
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
-.anti-gravity-shadow {
-  box-shadow: 0 20px 40px -15px rgba(0, 82, 255, 0.2);
+.cockpit-stats {
+  @apply font-mono font-black italic tracking-tighter;
+}
+
+/* --- Galactic Animations --- */
+
+@keyframes nebula-pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+@keyframes scan-line {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(1000%); }
+}
+
+@keyframes float-orbital {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-10px) rotate(1deg); }
+}
+
+.animate-nebula {
+  animation: nebula-pulse 20s infinite ease-in-out;
+}
+
+.animate-scan {
+  animation: scan-line 8s infinite linear;
+}
+
+.animate-float {
+  animation: float-orbital 6s infinite ease-in-out;
+}
+
+/* --- Scrollbar HUD --- */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #020617;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3b82f6;
 }
