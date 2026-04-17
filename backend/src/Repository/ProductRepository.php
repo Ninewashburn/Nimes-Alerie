@@ -76,8 +76,8 @@ class ProductRepository extends ServiceEntityRepository
     //    }
 
     /**
- * @extends ServiceEntityRepository<Product>
- *
+     * @extends ServiceEntityRepository<Product>
+     *
      * Return all product name.
      */
     public function findAllNames(string $title): array

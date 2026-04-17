@@ -24,10 +24,10 @@ final class RateStateProcessor implements ProcessorInterface
     }
 
     /**
-     * @param Rate $data
-     * @param Operation $operation
+     * @param Rate                 $data
      * @param array<string, mixed> $uriVariables
      * @param array<string, mixed> $context
+     *
      * @return Rate
      */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
