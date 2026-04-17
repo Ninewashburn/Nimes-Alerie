@@ -33,7 +33,6 @@ final class RateStateProcessor implements ProcessorInterface
      *
      * @return Rate
      */
-    
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
     {
         if (null === $data->getId()) {

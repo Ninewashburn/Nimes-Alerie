@@ -54,8 +54,8 @@ class OrderService
         $products = [];
 
         foreach ($items as $item) {
-            $productId = (int) ($item['productId']);
-            $requested = (int) ($item['quantity']);
+            $productId = (int) $item['productId'];
+            $requested = (int) $item['quantity'];
 
             if ($productId <= 0 || $requested <= 0) {
                 throw new InvalidArgumentException("Invalid item (id={$productId})");
