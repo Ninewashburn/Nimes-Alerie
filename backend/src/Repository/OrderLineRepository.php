@@ -9,10 +9,12 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * @extends ServiceEntityRepository<OrderLine>
+ *
  * @method OrderLine|null find($id, $lockMode = null, $lockVersion = null)
- * @method OrderLine|null findOneBy(array $criteria, array $orderBy = null)
+ * @method OrderLine|null findOneBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null)
  * @method OrderLine[]    findAll()
- * @method OrderLine[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method OrderLine[]    findBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null, $limit = null, $offset = null)
  */
 class OrderLineRepository extends ServiceEntityRepository
 {
@@ -22,6 +24,8 @@ class OrderLineRepository extends ServiceEntityRepository
     }
 
     // /**
+ * @extends ServiceEntityRepository<OrderLine>
+ *
     //  * @return OrderLine[] Returns an array of OrderLine objects
     //  */
     /*

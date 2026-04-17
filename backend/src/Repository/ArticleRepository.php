@@ -9,10 +9,12 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * @extends ServiceEntityRepository<Article>
+ *
  * @method Article|null find($id, $lockMode = null, $lockVersion = null)
- * @method Article|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Article|null findOneBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null)
  * @method Article[]    findAll()
- * @method Article[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Article[]    findBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null, $limit = null, $offset = null)
  */
 class ArticleRepository extends ServiceEntityRepository
 {
@@ -22,6 +24,8 @@ class ArticleRepository extends ServiceEntityRepository
     }
 
     // /**
+ * @extends ServiceEntityRepository<Article>
+ *
     //  * @return Article[] Returns an array of Article objects
     //  */
     /*

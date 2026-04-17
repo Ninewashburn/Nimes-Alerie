@@ -12,6 +12,9 @@ use DateTime;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
+/**
+ * @implements ProcessorInterface<Thread, Thread>
+ */
 final class ThreadStateProcessor implements ProcessorInterface
 {
     public function __construct(

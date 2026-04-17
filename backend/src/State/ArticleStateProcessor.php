@@ -11,6 +11,9 @@ use App\Entity\User;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
+/**
+ * @implements ProcessorInterface<Article, Article>
+ */
 final class ArticleStateProcessor implements ProcessorInterface
 {
     public function __construct(

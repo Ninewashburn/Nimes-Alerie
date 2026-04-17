@@ -10,10 +10,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * @extends ServiceEntityRepository<Product>
+ *
  * @method Product|null find($id, $lockMode = null, $lockVersion = null)
- * @method Product|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Product|null findOneBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null)
  * @method Product[]    findAll()
- * @method Product[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Product[]    findBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null, $limit = null, $offset = null)
  */
 class ProductRepository extends ServiceEntityRepository
 {
@@ -33,6 +35,8 @@ class ProductRepository extends ServiceEntityRepository
     }
 
     //    /**
+ * @extends ServiceEntityRepository<Product>
+ *
     //     * @param Collection $products
     //     * @param int $limit
     //     * @return array
@@ -51,6 +55,8 @@ class ProductRepository extends ServiceEntityRepository
     //    }
 
     //    /**
+ * @extends ServiceEntityRepository<Product>
+ *
     //     * @param int $limit
     //     * @param bool $isOrderedByName
     //     * @return array
@@ -74,6 +80,8 @@ class ProductRepository extends ServiceEntityRepository
     //    }
 
     /**
+ * @extends ServiceEntityRepository<Product>
+ *
      * Return all product name.
      */
     public function findAllNames(string $title): array
@@ -90,6 +98,8 @@ class ProductRepository extends ServiceEntityRepository
         ;
     }
     //    // /**
+ * @extends ServiceEntityRepository<Product>
+ *
     //    //  * @return Product[] Returns an array of Product objects
     //    //  */
     //    /*

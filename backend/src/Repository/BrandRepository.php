@@ -9,10 +9,12 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * @extends ServiceEntityRepository<Brand>
+ *
  * @method Brand|null find($id, $lockMode = null, $lockVersion = null)
- * @method Brand|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Brand|null findOneBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null)
  * @method Brand[]    findAll()
- * @method Brand[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Brand[]    findBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null, $limit = null, $offset = null)
  */
 class BrandRepository extends ServiceEntityRepository
 {
@@ -22,6 +24,8 @@ class BrandRepository extends ServiceEntityRepository
     }
 
     // /**
+ * @extends ServiceEntityRepository<Brand>
+ *
     //  * @return Brand[] Returns an array of Brand objects
     //  */
     /*

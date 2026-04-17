@@ -23,9 +23,9 @@ class SecurityController extends AbstractController
         UserPasswordHasherInterface $hasher,
         ValidatorInterface $validator,
     ): JsonResponse {
-        /** @var User $user */
+        /** @var User|null $user */
         $user = $this->getUser();
-        if (!$user) {
+        if (null === $user) {
             return $this->json(['error' => 'Not authenticated'], 401);
         }
 
@@ -70,13 +70,13 @@ class SecurityController extends AbstractController
     #[Route('/api/me', name: 'api_me', methods: ['GET'])]
     public function me(): JsonResponse
     {
+        /** @var User|null $user */
         $user = $this->getUser();
 
-        if (!$user) {
+        if (null === $user) {
             return $this->json(['error' => 'Not authenticated'], 401);
         }
 
-        /* @var User $user */
         return $this->json([
             'id' => $user->getId(),
             'email' => $user->getUserIdentifier(),

@@ -9,10 +9,12 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * @extends ServiceEntityRepository<SubType>
+ *
  * @method SubType|null find($id, $lockMode = null, $lockVersion = null)
- * @method SubType|null findOneBy(array $criteria, array $orderBy = null)
+ * @method SubType|null findOneBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null)
  * @method SubType[]    findAll()
- * @method SubType[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method SubType[]    findBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null, $limit = null, $offset = null)
  */
 class SubTypeRepository extends ServiceEntityRepository
 {
@@ -22,6 +24,8 @@ class SubTypeRepository extends ServiceEntityRepository
     }
 
     // /**
+ * @extends ServiceEntityRepository<SubType>
+ *
     //  * @return SubType[] Returns an array of SubType objects
     //  */
     /*

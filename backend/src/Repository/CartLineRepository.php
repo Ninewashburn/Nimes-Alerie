@@ -9,10 +9,12 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * @extends ServiceEntityRepository<CartLine>
+ *
  * @method CartLine|null find($id, $lockMode = null, $lockVersion = null)
- * @method CartLine|null findOneBy(array $criteria, array $orderBy = null)
+ * @method CartLine|null findOneBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null)
  * @method CartLine[]    findAll()
- * @method CartLine[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method CartLine[]    findBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null, $limit = null, $offset = null)
  */
 class CartLineRepository extends ServiceEntityRepository
 {
@@ -22,6 +24,8 @@ class CartLineRepository extends ServiceEntityRepository
     }
 
     // /**
+ * @extends ServiceEntityRepository<CartLine>
+ *
     //  * @return CartLine[] Returns an array of CartLine objects
     //  */
     /*

@@ -9,10 +9,12 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * @extends ServiceEntityRepository<Order>
+ *
  * @method Order|null find($id, $lockMode = null, $lockVersion = null)
- * @method Order|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Order|null findOneBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null)
  * @method Order[]    findAll()
- * @method Order[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Order[]    findBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null, $limit = null, $offset = null)
  */
 class OrderRepository extends ServiceEntityRepository
 {
@@ -21,6 +23,8 @@ class OrderRepository extends ServiceEntityRepository
         parent::__construct($registry, Order::class);
     }
     // /**
+ * @extends ServiceEntityRepository<Order>
+ *
     //  * @return Order[] Returns an array of Order objects
     //  */
     /*

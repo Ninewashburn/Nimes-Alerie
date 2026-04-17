@@ -10,10 +10,12 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * @extends ServiceEntityRepository<Type>
+ *
  * @method Type|null find($id, $lockMode = null, $lockVersion = null)
- * @method Type|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Type|null findOneBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null)
  * @method Type[]    findAll()
- * @method Type[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Type[]    findBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null, $limit = null, $offset = null)
  */
 class TypeRepository extends ServiceEntityRepository
 {
@@ -33,6 +35,8 @@ class TypeRepository extends ServiceEntityRepository
     }
 
     // /**
+ * @extends ServiceEntityRepository<Type>
+ *
     //  * @return Type[] Returns an array of Type objects
     //  */
     /*

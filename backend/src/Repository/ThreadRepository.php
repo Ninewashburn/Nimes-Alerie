@@ -10,10 +10,12 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * @extends ServiceEntityRepository<Thread>
+ *
  * @method Thread|null find($id, $lockMode = null, $lockVersion = null)
- * @method Thread|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Thread|null findOneBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null)
  * @method Thread[]    findAll()
- * @method Thread[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Thread[]    findBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null, $limit = null, $offset = null)
  */
 class ThreadRepository extends ServiceEntityRepository
 {
@@ -33,6 +35,8 @@ class ThreadRepository extends ServiceEntityRepository
     }
 
     // /**
+ * @extends ServiceEntityRepository<Thread>
+ *
     //  * @return Thread[] Returns an array of Thread objects
     //  */
     /*

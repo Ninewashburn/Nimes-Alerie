@@ -9,10 +9,12 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * @extends ServiceEntityRepository<Rate>
+ *
  * @method Rate|null find($id, $lockMode = null, $lockVersion = null)
- * @method Rate|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Rate|null findOneBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null)
  * @method Rate[]    findAll()
- * @method Rate[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Rate[]    findBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null, $limit = null, $offset = null)
  */
 class RateRepository extends ServiceEntityRepository
 {
@@ -22,6 +24,8 @@ class RateRepository extends ServiceEntityRepository
     }
 
     // /**
+ * @extends ServiceEntityRepository<Rate>
+ *
     //  * @return Rate[] Returns an array of Rate objects
     //  */
     /*

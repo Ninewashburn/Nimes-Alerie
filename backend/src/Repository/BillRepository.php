@@ -9,10 +9,12 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * @extends ServiceEntityRepository<Bill>
+ *
  * @method Bill|null find($id, $lockMode = null, $lockVersion = null)
- * @method Bill|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Bill|null findOneBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null)
  * @method Bill[]    findAll()
- * @method Bill[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Bill[]    findBy(array<string, mixed> $criteria, array<string, string>|null $orderBy = null, $limit = null, $offset = null)
  */
 class BillRepository extends ServiceEntityRepository
 {
@@ -22,6 +24,8 @@ class BillRepository extends ServiceEntityRepository
     }
 
     // /**
+ * @extends ServiceEntityRepository<Bill>
+ *
     //  * @return Bill[] Returns an array of Bill objects
     //  */
     /*

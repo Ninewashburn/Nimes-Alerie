@@ -6,16 +6,15 @@ namespace App\State;
 
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
-use App\Entity\Post;
+use App\Entity\Rate;
 use App\Entity\User;
-use DateTime;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
- * @implements ProcessorInterface<Post, Post>
+ * @implements ProcessorInterface<Rate, Rate>
  */
-final class PostStateProcessor implements ProcessorInterface
+final class RateStateProcessor implements ProcessorInterface
 {
     public function __construct(
         #[Autowire(service: 'api_platform.doctrine.orm.state.persist_processor')]
@@ -24,16 +23,18 @@ final class PostStateProcessor implements ProcessorInterface
     ) {
     }
 
+    /**
+     * @param Rate $data
+     * @param Operation $operation
+     * @param array<string, mixed> $uriVariables
+     * @param array<string, mixed> $context
+     * @return Rate
+     */
     public function process(mixed $data, Operation $operation, array $uriVariables = [], array $context = []): mixed
     {
-        if ($data instanceof Post) {
-            if (null === $data->getId()) {
-                $data->setCreatedAt(new DateTime());
-                $data->setUpVote(0);
-                $data->setDownVote(0);
-            }
+        if ($data instanceof Rate && null === $data->getId()) {
             $user = $this->security->getUser();
-            if ($user instanceof User && null === $data->getUser()) {
+            if ($user instanceof User) {
                 $data->setUser($user);
             }
         }
