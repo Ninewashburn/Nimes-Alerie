@@ -11,6 +11,8 @@ use App\Repository\PostVoteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -25,15 +27,29 @@ class PostVoteController extends AbstractController
 
     #[Route('/api/posts/{id}/upvote', name: 'api_post_upvote', methods: ['PATCH'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function upvote(int $id): JsonResponse
+    public function upvote(int $id, Request $request, RateLimiterFactory $apiPostVoteLimiter): JsonResponse
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $limiter = $apiPostVoteLimiter->create('vote_'.$user->getId());
+        if (!$limiter->consume()->isAccepted()) {
+            return $this->json(['error' => 'Trop de votes. Réessayez plus tard.'], 429);
+        }
+
         return $this->handleVote($id, PostVote::VALUE_UP);
     }
 
     #[Route('/api/posts/{id}/downvote', name: 'api_post_downvote', methods: ['PATCH'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function downvote(int $id): JsonResponse
+    public function downvote(int $id, Request $request, RateLimiterFactory $apiPostVoteLimiter): JsonResponse
     {
+        /** @var User $user */
+        $user = $this->getUser();
+        $limiter = $apiPostVoteLimiter->create('vote_'.$user->getId());
+        if (!$limiter->consume()->isAccepted()) {
+            return $this->json(['error' => 'Trop de votes. Réessayez plus tard.'], 429);
+        }
+
         return $this->handleVote($id, PostVote::VALUE_DOWN);
     }
 
