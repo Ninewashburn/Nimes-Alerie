@@ -77,7 +77,6 @@ class Type
     /**
      * @return Collection<int, SubType>
      */
-    /** @return Collection<int, mixed> */
     public function getSubtypes(): Collection
     {
         return $this->subtype;

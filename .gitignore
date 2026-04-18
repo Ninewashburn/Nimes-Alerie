@@ -18,6 +18,8 @@ backend/vendor/
 backend/.phpunit.cache/
 backend/phpunit.xml
 backend/.phpunit.result.cache
+backend/.php-cs-fixer.cache
+backend/phpstan_errors.txt
 ###< Backend (Symfony) ###
 
 ###> Frontend (Angular) ###

@@ -52,7 +52,6 @@ class CartLine
     /**
      * @return Collection<int, Product>
      */
-    /** @return Collection<int, mixed> */
     public function getProducts(): Collection
     {
         return $this->products;

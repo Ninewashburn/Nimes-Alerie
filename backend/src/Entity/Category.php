@@ -97,7 +97,9 @@ class Category
         return $this;
     }
 
-    /** @return Collection<int, mixed> */
+    /**
+     * @return Collection<int, Category>
+     */
     public function getChildren(): Collection
     {
         return $this->children;
@@ -127,7 +129,6 @@ class Category
     /**
      * @return Collection<int, Product>
      */
-    /** @return Collection<int, mixed> */
     public function getProducts(): Collection
     {
         return $this->products;

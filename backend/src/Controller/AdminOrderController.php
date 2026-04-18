@@ -25,7 +25,7 @@ class AdminOrderController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function list(Request $request): JsonResponse
     {
-        $page = max(1, (int) $request->query->get('page', 1));
+        $page = max(1, min(10000, (int) $request->query->get('page', 1)));
         $itemsPerPage = max(1, min(100, (int) $request->query->get('itemsPerPage', 20)));
         $offset = ($page - 1) * $itemsPerPage;
 

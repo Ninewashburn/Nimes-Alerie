@@ -100,8 +100,8 @@ class ResetPasswordController extends AbstractController
             return $this->json(['error' => 'Token invalide ou expiré.'], 400);
         }
 
-        if (\strlen($data['password']) < 8) {
-            return $this->json(['error' => 'Le mot de passe doit contenir au moins 8 caractères.'], 400);
+        if (\strlen($data['password']) < 8 || !preg_match('/[A-Z]/', $data['password']) || !preg_match('/[0-9]/', $data['password'])) {
+            return $this->json(['error' => 'Le mot de passe doit contenir au moins 8 caractères, une majuscule et un chiffre.'], 400);
         }
 
         $user = $resetToken->getUser();

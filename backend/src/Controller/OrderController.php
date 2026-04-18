@@ -12,6 +12,7 @@ use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -44,10 +45,15 @@ class OrderController extends AbstractController
 
     #[Route('/api/orders', name: 'api_create_order', methods: ['POST'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function createOrder(Request $request): JsonResponse
+    public function createOrder(Request $request, RateLimiterFactory $apiOrderCreateLimiter): JsonResponse
     {
         /** @var User $user */
         $user = $this->getUser();
+
+        $limiter = $apiOrderCreateLimiter->create((string) $user->getId());
+        if (!$limiter->consume()->isAccepted()) {
+            return $this->json(['error' => 'Trop de commandes. Réessayez plus tard.'], 429);
+        }
 
         $data = json_decode($request->getContent(), true);
 

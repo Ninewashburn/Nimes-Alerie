@@ -48,6 +48,10 @@ class OrderService
             throw new InvalidArgumentException('Delivery address is incomplete');
         }
 
+        if (\strlen($deliveryAddress) > 255 || \strlen($deliveryCity) > 100 || \strlen($deliveryPostal) > 20 || \strlen($deliveryCountry) > 100) {
+            throw new InvalidArgumentException('Delivery address fields exceed maximum length');
+        }
+
         $serverTotal = 0.0;
         $enrichedItems = [];
         $totalQty = 0;

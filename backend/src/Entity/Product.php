@@ -180,7 +180,6 @@ class Product
     /**
      * @return Collection<int, Rate>
      */
-    /** @return Collection<int, mixed> */
     public function getRate(): Collection
     {
         return $this->rate;
@@ -211,7 +210,6 @@ class Product
     /**
      * @return Collection<int, Category>
      */
-    /** @return Collection<int, mixed> */
     public function getCategory(): Collection
     {
         return $this->category;

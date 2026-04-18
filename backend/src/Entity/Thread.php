@@ -122,7 +122,6 @@ class Thread
     /**
      * @return Collection<int, Post>
      */
-    /** @return Collection<int, mixed> */
     public function getPosts(): Collection
     {
         return $this->posts;

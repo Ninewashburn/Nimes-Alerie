@@ -225,7 +225,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Rate>
      */
-    /** @return Collection<int, mixed> */
     public function getRate(): Collection
     {
         return $this->rate;
@@ -256,7 +255,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return Collection<int, Cart>
      */
-    /** @return Collection<int, mixed> */
     public function getCarts(): Collection
     {
         return $this->carts;

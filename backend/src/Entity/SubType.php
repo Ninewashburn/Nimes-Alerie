@@ -96,7 +96,6 @@ class SubType
     /**
      * @return Collection<int, Thread>
      */
-    /** @return Collection<int, mixed> */
     public function getThreads(): Collection
     {
         return $this->threads;
